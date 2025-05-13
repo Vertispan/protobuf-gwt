@@ -1,0 +1,36 @@
+recipeList:
+#  - ChangeMethodAccessLevel:
+
+  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
+      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
+
+#  # MessageSchema does some reflection that we don't really need
+#  - com.example.gwt.MakeClassGwtIncompatible:
+#      fullyQualifiedClassName: com.google.protobuf.MessageSchema
+#      fullyQualifiedClassName: com.google.protobuf.BinaryReader
+#      fullyQualifiedClassName: com.google.protobuf.MessageSetSchema
+#
+#  - com.example.gwt.MakeMethodGwtIncompatible:
+#      method: com.google.protobuf.ArrayDecoders decodeExtensionOrUnknownField
+#      method: com.google.protobuf.ArrayDecoders decodeExtension
+#      method: com.google.protobuf.ArrayDecoders decodeGroupField
+#      method: com.google.protobuf.ArrayDecoders decodeGroupList
+#      method: com.google.protobuf.Protobuf getTotalSchemaSize
+#      method: com.google.protobuf.Protobuf schemaFor
+#      method: com.google.protobuf.Protobuf isInitialized
+#      method: com.google.protobuf.Protobuf makeImmutable
+#      method: com.google.protobuf.CodedInputStreamReader readMessageList(java.util.List<T>, java.lang.Class<T>, com.google.protobuf.ExtensionRegistryLite)
+#      method: com.google.protobuf.Reader readMessageList(java.util.List<T>, java.lang.Class<T>, com.google.protobuf.ExtensionRegistryLite)
+
+  #Unused, experimental classes, which use reflection
+  - com.example.gwt.MakeClassGwtIncompatible:
+      fullyQualifiedClassName: com.google.protobuf.FieldInfo
+  - com.example.gwt.MakeClassGwtIncompatible:
+      fullyQualifiedClassName: com.google.protobuf.DescriptorMessageInfoFactory
+  - com.example.gwt.MakeClassGwtIncompatible:
+        fullyQualifiedClassName: com.google.protobuf.StructuralMessageInfo
+  - com.example.gwt.MakeMethodGwtIncompatible:
+      method: com.google.protobuf.ManifestSchemaFactory.createSchema
+
