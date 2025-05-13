@@ -21,8 +21,8 @@ public class MakeClassGwtIncompatible extends Recipe {
     private final String fullyQualifiedClassName;
 
     @JsonCreator
-    public MakeClassGwtIncompatible(@NonNull @JsonProperty("fullyQualifiedClassName") String className) {
-        this.fullyQualifiedClassName = className;
+    public MakeClassGwtIncompatible(@NonNull @JsonProperty("fullyQualifiedClassName") String fullyQualifiedClassName) {
+        this.fullyQualifiedClassName = fullyQualifiedClassName;
     }
 
     @NlsRewrite.DisplayName

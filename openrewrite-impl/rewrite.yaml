@@ -1,3 +1,6 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.example.gwt.ProtobufForGwt
 recipeList:
 #  - ChangeMethodAccessLevel:
 
@@ -5,6 +8,13 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
       newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
+      ignoreDefinition: true
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.google.protobuf.Utf8.Processor partialIsValidUtf8(int, java.nio.ByteBuffer, int, int)
+      newMethodName: com.google.protobuf.Utf8.Processor partialIsValidUtf8Default(int, java.nio.ByteBuffer, int, int)
+      ignoreDefinition: true
+  - com.example.gwt.MakeMethodGwtIncompatible:
+      method: com.google.protobuf.Utf8.Processor partialIsValidUtf8(int, java.nio.ByteBuffer, int, int)
 
 #  # MessageSchema does some reflection that we don't really need
 #  - com.example.gwt.MakeClassGwtIncompatible:
@@ -25,12 +35,14 @@ recipeList:
 #      method: com.google.protobuf.Reader readMessageList(java.util.List<T>, java.lang.Class<T>, com.google.protobuf.ExtensionRegistryLite)
 
   #Unused, experimental classes, which use reflection
-  - com.example.gwt.MakeClassGwtIncompatible:
-      fullyQualifiedClassName: com.google.protobuf.FieldInfo
-  - com.example.gwt.MakeClassGwtIncompatible:
-      fullyQualifiedClassName: com.google.protobuf.DescriptorMessageInfoFactory
-  - com.example.gwt.MakeClassGwtIncompatible:
-        fullyQualifiedClassName: com.google.protobuf.StructuralMessageInfo
-  - com.example.gwt.MakeMethodGwtIncompatible:
-      method: com.google.protobuf.ManifestSchemaFactory.createSchema
+#  - com.example.gwt.MakeClassGwtIncompatible:
+#      fullyQualifiedClassName: com.google.protobuf.FieldInfo
+#  - com.example.gwt.MakeClassGwtIncompatible:
+#      fullyQualifiedClassName: com.google.protobuf.DescriptorMessageInfoFactory
+#  - com.example.gwt.MakeClassGwtIncompatible:
+#        fullyQualifiedClassName: com.google.protobuf.StructuralMessageInfo
+#  - com.example.gwt.MakeMethodGwtIncompatible:
+#      method: com.google.protobuf.ManifestSchemaFactory.createSchema
 
+#  - org.openrewrite.DeleteSourceFiles:
+#      filePattern:
