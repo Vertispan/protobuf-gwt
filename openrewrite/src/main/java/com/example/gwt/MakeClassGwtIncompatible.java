@@ -7,6 +7,7 @@ import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite;
 import org.openrewrite.Option;
 import org.openrewrite.Recipe;
+import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.tree.J;
@@ -37,6 +38,11 @@ public class MakeClassGwtIncompatible extends Recipe {
         return "Marks a class as being incompatible in GWT and J2CL";
     }
 
+    @Override
+    public TreeVisitor<?, ExecutionContext> getVisitor() {
+        return new MakeClassGwtIncompatibleVisitor();
+    }
+
     public class MakeClassGwtIncompatibleVisitor extends JavaIsoVisitor<ExecutionContext> {
         private final String importComponent = "com.google.gwt.core.client.GwtIncompatible";
         private final JavaTemplate componentAnnotationTemplate =
@@ -46,6 +52,7 @@ public class MakeClassGwtIncompatible extends Recipe {
         @Override
         public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext executionContext) {
             // Don't make changes to classes that don't match the fully qualified name
+            System.out.println(classDecl.getType().getFullyQualifiedName());
             if (classDecl.getType() == null || !classDecl.getType().getFullyQualifiedName().equals(fullyQualifiedClassName)) {
                 return classDecl;
             }
