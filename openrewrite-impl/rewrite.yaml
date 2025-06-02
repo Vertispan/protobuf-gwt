@@ -5,16 +5,73 @@ recipeList:
 #  - ChangeMethodAccessLevel:
 
   # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
-  - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
-      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
-      ignoreDefinition: true
+#  - org.openrewrite.java.ChangeType:
+#      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
+#      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
+#      ignoreDefinition: true
+#  - com.example.gwt.EliminateUnreachableTypes:
+#      - target: com.google.protobuf.CodedInputStreamReader forCodedInput
   - org.openrewrite.java.ChangeMethodName:
-      methodPattern: com.google.protobuf.Utf8.Processor partialIsValidUtf8(int, java.nio.ByteBuffer, int, int)
-      newMethodName: com.google.protobuf.Utf8.Processor partialIsValidUtf8Default(int, java.nio.ByteBuffer, int, int)
+      methodPattern: com.google.protobuf.Utf8$Processor partialIsValidUtf8(int,java.nio.ByteBuffer,int,int)
+      newMethodName: partialIsValidUtf8Default
+#      matchOverrides: true
       ignoreDefinition: true
-  - com.example.gwt.MakeMethodGwtIncompatible:
-      method: com.google.protobuf.Utf8.Processor partialIsValidUtf8(int, java.nio.ByteBuffer, int, int)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Protobuf getTotalSchemaSize(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Protobuf isInitialized(..)
+      matchOverrides: true
+
+  # Ensure we only create CodedOutputStreams that make sense in a browse
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedOutputStream newInstance(java.nio.ByteBuffer,int)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedOutputStream newInstance(java.nio.ByteBuffer)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedOutputStream newUnsafeInstance(..)
+  # rename newSafeInstance to newInstance to replace the removed non-deprecated method
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.google.protobuf.CodedOutputStream newSafeInstance(..)
+      newMethodName: newInstance
+  - org.openrewrite.java.ChangeMethodAccessLevel:
+      methodPattern: com.google.protobuf.CodedOutputStream newInstance(..)
+      newAccessLevel: public
+
+  - com.example.gwt.CopyMethod:
+      source: com.google.protobuf.MessageSchema getMutableUnknownFields(..)
+      targetClass: com.google.protobuf.ArrayDecoders
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ArrayDecoders mergeGroupField(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ArrayDecoders decodeGroupField(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ArrayDecoders decodeGroupList(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ArrayDecoders decodeExtension(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ArrayDecoders decodeExtensionOrUnknownField(..)
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+        methodPattern: com.google.protobuf.ManifestSchemaFactory <constructor>()
+        replacement: 'null'
+
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Protobuf registerSchemaOverride(..)
+      matchOverrides: true
+#  - com.example.gwt.RemoveMethod:
+#      target: com.google.protobuf.CodedOutputStream writeMessageNoTag(..)
+#      matchOverrides: true
+  - org.openrewrite.java.RemoveUnusedImports: { }
+
+  - com.example.gwt.EliminateUnreachableTypes:
+      entrypointTypes:
+#        - com.google.protobuf.Any
+        - com.google.protobuf.CodedInputStream
+        - com.google.protobuf.CodedOutputStream
+        - com.google.protobuf.AbstractMessageLite
+#  - com.example.gwt.MakeMethodGwtIncompatible:
+#      incompatibleMethod: com.google.protobuf.Utf8$Processor partialIsValidUtf8(int,java.nio.ByteBuffer,int,int)
 
 #  # MessageSchema does some reflection that we don't really need
 #  - com.example.gwt.MakeClassGwtIncompatible:

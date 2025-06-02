@@ -19,7 +19,7 @@ import java.util.Set;
 
 /**
  * Copies some method to another location, and changes all specified usages to the new location.
- *
+ * <p>
  * This is currently only intended for static methods, so that a given class can have its own copy of the
  * method and the other class can be safely removed.
  */
@@ -44,8 +44,6 @@ public class CopyMethod extends ScanningRecipe<Set<J.MethodDeclaration>> {
         this.targetClass = targetClass;
         matcher = new MethodMatcher(source, false);
     }
-
-
 
     @Override
     public Set<J.MethodDeclaration> getInitialValue(ExecutionContext ctx) {
