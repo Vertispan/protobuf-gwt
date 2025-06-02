@@ -52,7 +52,7 @@ public class MakeClassGwtIncompatible extends Recipe {
         @Override
         public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext executionContext) {
             // Don't make changes to classes that don't match the fully qualified name
-            System.out.println(classDecl.getType().getFullyQualifiedName());
+//            System.out.println(classDecl.getType().getFullyQualifiedName());
             if (classDecl.getType() == null || !classDecl.getType().getFullyQualifiedName().equals(fullyQualifiedClassName)) {
                 return classDecl;
             }

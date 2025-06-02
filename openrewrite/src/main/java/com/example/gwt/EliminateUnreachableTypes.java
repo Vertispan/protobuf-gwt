@@ -11,12 +11,10 @@ import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeTree;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -73,11 +71,15 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
     }
 
     private void recordDependencies(Map<String, TypeModel> acc, Set<JavaType.Class> keep, Set<JavaType.Class> types) {
+        recordDependencies(acc, keep, types, 0);
+    }
+    private void recordDependencies(Map<String, TypeModel> acc, Set<JavaType.Class> keep, Set<JavaType.Class> types, int depth) {
         for (JavaType.Class type : types) {
             TypeModel typeModel = acc.get(type.toString());
             if (typeModel != null && keep.add(type)) {
+//                System.out.println("  ".repeat(depth) + type);
                 // If we have sources for this type and haven't already added it, add it and all its dependencies
-                recordDependencies(acc, keep, typeModel.getDependencies());
+                recordDependencies(acc, keep, typeModel.getDependencies(), depth + 1);
             }
         }
     }
