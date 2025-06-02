@@ -46,6 +46,12 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
         return new LinkedHashMap<>();
     }
 
+
+    @Override
+    public boolean causesAnotherCycle() {
+        return true;
+    }
+
     @Override
     public TreeVisitor<?, ExecutionContext> getScanner(Map<String, TypeModel> acc) {
         return new ScanAllDependencies(acc);

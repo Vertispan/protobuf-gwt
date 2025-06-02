@@ -30,9 +30,6 @@ recipeList:
       methodPattern: com.google.protobuf.CodedOutputStream newInstance(..)
       newAccessLevel: public
 
-  - com.example.gwt.CopyMethod:
-      source: com.google.protobuf.MessageSchema getMutableUnknownFields(..)
-      targetClass: com.google.protobuf.ArrayDecoders
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.ArrayDecoders mergeGroupField(..)
   - com.example.gwt.RemoveMethod:
@@ -50,50 +47,27 @@ recipeList:
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.Protobuf registerSchemaOverride(..)
       matchOverrides: true
+
+  - com.example.gwt.protobuf.CodedInputStreamNewInstanceByteBuffer
+  - com.example.gwt.protobuf.CodedInputStreamNewInstanceIterable
+
   - org.openrewrite.java.RemoveUnusedImports: { }
-
-
-  - com.example.gwt.RemoveMethod:
-      target: com.google.protobuf.CodedInputStream newInstance(java.lang.Iterable)
-  - com.example.gwt.RemoveMethod:
-      target: com.google.protobuf.CodedInputStream newInstance(java.lang.Iterable,boolean)
-  - com.example.gwt.RemoveMethod:
-      target: com.google.protobuf.CodedInputStream newInstance(java.nio.ByteBuffer)
-  - com.example.gwt.RemoveMethod:
-      target: com.google.protobuf.CodedInputStream newInstance(java.nio.ByteBuffer,boolean)
 
   - com.example.gwt.EliminateUnreachableTypes:
       entrypointTypes:
         - com.google.protobuf.CodedInputStream
         - com.google.protobuf.CodedOutputStream
         - com.google.protobuf.AbstractMessageLite
+        # Need to explicitly keep our own replacement type
         - com.google.protobuf.SafeUtil
+        # OpenRewrite seems to lose track of this
+        - com.google.protobuf.IterableByteBufferInputStream
 
  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
-  - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
-      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
-      ignoreDefinition: true
-#  - com.example.gwt.MakeMethodGwtIncompatible:
-#      incompatibleMethod: com.google.protobuf.Utf8$Processor partialIsValidUtf8(int,java.nio.ByteBuffer,int,int)
-
-#  # MessageSchema does some reflection that we don't really need
-#  - com.example.gwt.MakeClassGwtIncompatible:
-#      fullyQualifiedClassName: com.google.protobuf.MessageSchema
-#      fullyQualifiedClassName: com.google.protobuf.BinaryReader
-#      fullyQualifiedClassName: com.google.protobuf.MessageSetSchema
-#
-#  - com.example.gwt.MakeMethodGwtIncompatible:
-#      method: com.google.protobuf.ArrayDecoders decodeExtensionOrUnknownField
-#      method: com.google.protobuf.ArrayDecoders decodeExtension
-#      method: com.google.protobuf.ArrayDecoders decodeGroupField
-#      method: com.google.protobuf.ArrayDecoders decodeGroupList
-#      method: com.google.protobuf.Protobuf getTotalSchemaSize
-#      method: com.google.protobuf.Protobuf schemaFor
-#      method: com.google.protobuf.Protobuf isInitialized
-#      method: com.google.protobuf.Protobuf makeImmutable
-#      method: com.google.protobuf.CodedInputStreamReader readMessageList(java.util.List<T>, java.lang.Class<T>, com.google.protobuf.ExtensionRegistryLite)
-#      method: com.google.protobuf.Reader readMessageList(java.util.List<T>, java.lang.Class<T>, com.google.protobuf.ExtensionRegistryLite)
+#  - org.openrewrite.java.ChangeType:
+#      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
+#      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
+#      ignoreDefinition: true
 
   #Unused, experimental classes, which use reflection
 #  - com.example.gwt.MakeClassGwtIncompatible:
