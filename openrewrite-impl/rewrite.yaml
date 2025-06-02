@@ -2,15 +2,7 @@
 type: specs.openrewrite.org/v1beta/recipe
 name: com.example.gwt.ProtobufForGwt
 recipeList:
-#  - ChangeMethodAccessLevel:
 
-  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
-#  - org.openrewrite.java.ChangeType:
-#      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
-#      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
-#      ignoreDefinition: true
-#  - com.example.gwt.EliminateUnreachableTypes:
-#      - target: com.google.protobuf.CodedInputStreamReader forCodedInput
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: com.google.protobuf.Utf8$Processor partialIsValidUtf8(int,java.nio.ByteBuffer,int,int)
       newMethodName: partialIsValidUtf8Default
@@ -55,21 +47,33 @@ recipeList:
         methodPattern: com.google.protobuf.ManifestSchemaFactory <constructor>()
         replacement: 'null'
 
-
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.Protobuf registerSchemaOverride(..)
       matchOverrides: true
-#  - com.example.gwt.RemoveMethod:
-#      target: com.google.protobuf.CodedOutputStream writeMessageNoTag(..)
-#      matchOverrides: true
   - org.openrewrite.java.RemoveUnusedImports: { }
+
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedInputStream newInstance(java.lang.Iterable)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedInputStream newInstance(java.lang.Iterable,boolean)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedInputStream newInstance(java.nio.ByteBuffer)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.CodedInputStream newInstance(java.nio.ByteBuffer,boolean)
 
   - com.example.gwt.EliminateUnreachableTypes:
       entrypointTypes:
-#        - com.google.protobuf.Any
         - com.google.protobuf.CodedInputStream
         - com.google.protobuf.CodedOutputStream
         - com.google.protobuf.AbstractMessageLite
+        - com.google.protobuf.SafeUtil
+
+ # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
+      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
+      ignoreDefinition: true
 #  - com.example.gwt.MakeMethodGwtIncompatible:
 #      incompatibleMethod: com.google.protobuf.Utf8$Processor partialIsValidUtf8(int,java.nio.ByteBuffer,int,int)
 
