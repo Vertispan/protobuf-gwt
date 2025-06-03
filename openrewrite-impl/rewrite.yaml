@@ -48,8 +48,9 @@ recipeList:
       target: com.google.protobuf.Protobuf registerSchemaOverride(..)
       matchOverrides: true
 
-  - com.example.gwt.protobuf.CodedInputStreamNewInstanceByteBuffer
-  - com.example.gwt.protobuf.CodedInputStreamNewInstanceIterable
+  - com.example.gwt.protobuf.codedinputstream.CodedInputStreamNewInstanceByteBuffer
+  - com.example.gwt.protobuf.codedinputstream.CodedInputStreamNewInstanceIterable
+  - com.example.gwt.protobuf.utf8.Utf8SafeProcessor
 
   - org.openrewrite.java.RemoveUnusedImports: { }
 
@@ -60,24 +61,39 @@ recipeList:
         - com.google.protobuf.AbstractMessageLite
         # Need to explicitly keep our own replacement type
         - com.google.protobuf.SafeUtil
-        # OpenRewrite seems to lose track of this
+        # OpenRewrite seems to lose track of these
         - com.google.protobuf.IterableByteBufferInputStream
+        - com.google.protobuf.Utf8$SafeProcessor
 
- # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
+# # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
 #  - org.openrewrite.java.ChangeType:
 #      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
 #      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
 #      ignoreDefinition: true
-
-  #Unused, experimental classes, which use reflection
-#  - com.example.gwt.MakeClassGwtIncompatible:
-#      fullyQualifiedClassName: com.google.protobuf.FieldInfo
-#  - com.example.gwt.MakeClassGwtIncompatible:
-#      fullyQualifiedClassName: com.google.protobuf.DescriptorMessageInfoFactory
-#  - com.example.gwt.MakeClassGwtIncompatible:
-#        fullyQualifiedClassName: com.google.protobuf.StructuralMessageInfo
-#  - com.example.gwt.MakeMethodGwtIncompatible:
-#      method: com.google.protobuf.ManifestSchemaFactory.createSchema
-
+#
 #  - org.openrewrite.DeleteSourceFiles:
-#      filePattern:
+#      filePattern: '**/UnsafeUtil.java'
+
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+        methodPattern: com.google.protobuf.ByteBufferWriter writeToChannel(..)
+        replacement: 'false'
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+        methodPattern: com.google.protobuf.ByteBufferWriter getChannelFieldOffset(..)
+        replacement: '-1'
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+        methodPattern: com.google.protobuf.ByteBufferWriter safeGetClass(..)
+        replacement: 'null'
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageLite getDefaultInstance(java.lang.Class)
+
+  - com.example.gwt.RemoveMethod:
+        target: com.google.protobuf.ByteBufferWriter writeToChannel(..)
+  - com.example.gwt.RemoveMethod:
+        target: com.google.protobuf.ByteBufferWriter getChannelFieldOffset(..)
+  - com.example.gwt.RemoveMethod:
+        target: com.google.protobuf.ByteBufferWriter safeGetClass(..)
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+        methodPattern: java.nio.ByteBuffer hasArray()
+        replacement: 'false'
+
