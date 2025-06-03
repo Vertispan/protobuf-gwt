@@ -9,10 +9,10 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
-import org.openrewrite.java.tree.TypeTree;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,28 +61,31 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
     public TreeVisitor<?, ExecutionContext> getVisitor(Map<String, TypeModel> acc) {
         // Given the discovered map and the provided set of entrypoints, first work out the
         // reachable types, then visit to keep those types.
-        Set<JavaType.Class> keep = new HashSet<>();
+        Set<String> keep = new LinkedHashSet<>();
         for (String entrypointType : entrypointTypes) {
-            JavaType.Class type = (JavaType.Class) TypeTree.build(entrypointType).getType();
-            if (type == null) {
-                throw new IllegalStateException("Cannot find type " + entrypointType);
-            }
+//            JavaType.Class type = (JavaType.Class) TypeTree.build(entrypointType).getType();
+//            if (type == null) {
+//                throw new IllegalStateException("Cannot find type " + entrypointType);
+//            }
             TypeModel typeModel = acc.get(entrypointType);
             if (typeModel == null) {
                 throw new IllegalStateException("Didn't find type " + entrypointType + " in the sources");
             }
-            recordDependencies(acc, keep, Set.of(type));
+            recordDependencies(acc, keep, Set.of(typeModel.type));
+            if (!keep.contains(typeModel.type.getFullyQualifiedName())) {
+                throw new IllegalStateException("Didn't actually keep " + entrypointType);
+            }
         }
         return new EliminateUnreachableTypesVisitor(keep);
     }
 
-    private void recordDependencies(Map<String, TypeModel> acc, Set<JavaType.Class> keep, Set<JavaType.Class> types) {
+    private void recordDependencies(Map<String, TypeModel> acc, Set<String> keep, Set<JavaType.Class> types) {
         recordDependencies(acc, keep, types, 0);
     }
-    private void recordDependencies(Map<String, TypeModel> acc, Set<JavaType.Class> keep, Set<JavaType.Class> types, int depth) {
+    private void recordDependencies(Map<String, TypeModel> acc, Set<String> keep, Set<JavaType.Class> types, int depth) {
         for (JavaType.Class type : types) {
-            TypeModel typeModel = acc.get(type.toString());
-            if (typeModel != null && keep.add(type)) {
+            TypeModel typeModel = acc.get(type.getFullyQualifiedName());
+            if (typeModel != null && keep.add(type.getFullyQualifiedName())) {
 //                System.out.println("  ".repeat(depth) + type);
                 // If we have sources for this type and haven't already added it, add it and all its dependencies
                 recordDependencies(acc, keep, typeModel.getDependencies(), depth + 1);
@@ -94,11 +97,11 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
         // The compilation unit that the type appears in - if null, it is from a dependency, and we can't prune it.
         private J.CompilationUnit compilationUnit;
         // The type itself that this represents
-        private final JavaType type;
+        private final JavaType.Class type;
         // Types that this type depends on
         private final Set<JavaType.Class> dependencies = new HashSet<>();
 
-        public TypeModel(JavaType type) {
+        public TypeModel(JavaType.Class type) {
             this.type = type;
         }
 
@@ -113,15 +116,28 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
     public class ScanAllDependencies extends JavaIsoVisitor<ExecutionContext> {
         private final Map<String, TypeModel> typeModels;
         private TypeModel currentTypeModel;
+        private final Set<TypeModel> inCompilationUnit = new HashSet<>();
 
         public ScanAllDependencies(Map<String, TypeModel> typeModels) {
             this.typeModels = typeModels;
         }
 
         @Override
+        public J.CompilationUnit visitCompilationUnit(J.CompilationUnit cu, ExecutionContext executionContext) {
+            assert inCompilationUnit.isEmpty();
+            J.CompilationUnit compilationUnit = super.visitCompilationUnit(cu, executionContext);
+            for (TypeModel typeModel : inCompilationUnit) {
+                typeModel.compilationUnit = compilationUnit;
+            }
+            inCompilationUnit.clear();
+            return compilationUnit;
+        }
+
+        @Override
         public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext executionContext) {
             TypeModel prev = currentTypeModel;
-            currentTypeModel = new TypeModel(classDecl.getType());
+            currentTypeModel = new TypeModel(raw(classDecl.getType()).get());
+            inCompilationUnit.add(currentTypeModel);
             typeModels.put(classDecl.getType().getFullyQualifiedName(), currentTypeModel);
             J.ClassDeclaration classDeclaration = super.visitClassDeclaration(classDecl, executionContext);
             currentTypeModel = prev;
@@ -148,9 +164,9 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
     }
 
     public class EliminateUnreachableTypesVisitor extends JavaIsoVisitor<ExecutionContext> {
-        private final Set<JavaType.Class> keep;
+        private final Set<String> keep;
 
-        public EliminateUnreachableTypesVisitor(Set<JavaType.Class> keep) {
+        public EliminateUnreachableTypesVisitor(Set<String> keep) {
             this.keep = keep;
         }
 
@@ -168,7 +184,7 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
         @Override
         public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext executionContext) {
             Optional<JavaType.Class> raw = raw(classDecl.getType());
-            if (raw.isEmpty() || !keep.contains(raw.get())) {
+            if (raw.isEmpty() || !keep.contains(raw.get().getFullyQualifiedName())) {
                 // If the type is not in the keep set, remove it.
                 // Despite the warning about returning null, this seems to work?
                 return null;

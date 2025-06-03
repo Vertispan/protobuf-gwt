@@ -1,4 +1,4 @@
-package com.example.gwt.protobuf;
+package com.example.gwt.protobuf.codedinputstream;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite;

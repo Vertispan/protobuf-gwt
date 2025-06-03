@@ -1,4 +1,4 @@
-package com.example.gwt.protobuf;
+package com.example.gwt.protobuf.codedinputstream;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite;
@@ -23,6 +23,11 @@ public class CodedInputStreamNewInstanceByteBuffer extends Recipe {
     @Override
     public String getDescription() {
         return "Removes the isArray check and unsafe nio implementation, and only copies the bytes and reads as a plain array";
+    }
+
+    @Override
+    public boolean causesAnotherCycle() {
+        return true;
     }
 
     @Override
