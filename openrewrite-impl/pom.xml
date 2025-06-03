@@ -53,6 +53,11 @@
             <artifactId>gwt-nio</artifactId>
             <version>${gwt.nio.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.elemental2</groupId>
+            <artifactId>elemental2-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.gwtproject</groupId>
@@ -111,6 +116,9 @@
                         <recipe>com.example.gwt.ProtobufForGwt</recipe>
                     </activeRecipes>
                     <configLocation>/home/colin/workspace/gwt-protobuf/openrewrite-impl/rewrite.yaml</configLocation>
+                    <exclusions>
+                        <exclusion>**/src/test/**</exclusion>
+                    </exclusions>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -128,10 +136,10 @@
                 <configuration>
                     <skipModule>true</skipModule>
                     <moduleName>com.google.protobuf.ProtocolBuffers</moduleName>
-                    <testArgs>
-                        <testArg>-runStyle</testArg>
-                        <testArg>Manual</testArg>
-                    </testArgs>
+<!--                    <testArgs>-->
+<!--                        <testArg>-runStyle</testArg>-->
+<!--                        <testArg>Manual</testArg>-->
+<!--                    </testArgs>-->
                 </configuration>
             </plugin>
         </plugins>

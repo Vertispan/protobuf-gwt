@@ -2,6 +2,7 @@ package com.vertispan.protobuf;
 
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.junit.tools.GWTTestSuite;
+import com.google.protobuf.CodedInputStreamTest;
 import junit.framework.Test;
 
 @GwtIncompatible

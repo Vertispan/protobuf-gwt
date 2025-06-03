@@ -1,4 +1,5 @@
 <module>
+    <inherits name="elemental2.core.Core" />
     <inherits name="org.gwtproject.nio.GwtNioSupport" />
 
     <source path="" />
