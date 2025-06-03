@@ -44,8 +44,7 @@ public class CodedInputStreamNewInstanceIterable extends Recipe {
                 if (matcher.matches(method, cisClassDecl)) {
                     String iterable = method.getParameters().size() == 1 ? "input" : "bufs";
                     final JavaTemplate replacementTemplate = JavaTemplate
-                            .builder("return newInstance(new IterableByteBufferInputStream(" + iterable + ");\n")
-                            .imports("com.google.protobuf.IterableByteBufferInputStream")
+                            .builder("return newInstance(new com.google.protobuf.gwt.IterableByteBufferInputStream(" + iterable + ");\n")
                             .build();
 
                     return replacementTemplate.apply(getCursor(), method.getCoordinates().replaceBody());

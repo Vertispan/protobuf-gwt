@@ -63,10 +63,6 @@ public class EliminateUnreachableTypes extends ScanningRecipe<Map<String, Elimin
         // reachable types, then visit to keep those types.
         Set<String> keep = new LinkedHashSet<>();
         for (String entrypointType : entrypointTypes) {
-//            JavaType.Class type = (JavaType.Class) TypeTree.build(entrypointType).getType();
-//            if (type == null) {
-//                throw new IllegalStateException("Cannot find type " + entrypointType);
-//            }
             TypeModel typeModel = acc.get(entrypointType);
             if (typeModel == null) {
                 throw new IllegalStateException("Didn't find type " + entrypointType + " in the sources");

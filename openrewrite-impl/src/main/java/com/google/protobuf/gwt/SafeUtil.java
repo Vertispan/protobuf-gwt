@@ -1,4 +1,6 @@
-package com.google.protobuf;
+package com.google.protobuf.gwt;
+
+import java.nio.ByteBuffer;
 
 public class SafeUtil {
 
@@ -16,5 +18,10 @@ public class SafeUtil {
 
     public static int getByte(byte[] bytes, long position) {
         return bytes[(int) position];
+    }
+
+    public static long addressOffset(ByteBuffer buffer) {
+        // OpenRewrite doesn't prune this import correctly, so we just leave the method unimplemented.s
+        throw new UnsupportedOperationException("addressOffset");
     }
 }

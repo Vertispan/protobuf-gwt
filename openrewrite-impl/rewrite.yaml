@@ -52,7 +52,7 @@ recipeList:
   - com.example.gwt.protobuf.codedinputstream.CodedInputStreamNewInstanceIterable
   - com.example.gwt.protobuf.utf8.Utf8SafeProcessor
 
-  - org.openrewrite.java.RemoveUnusedImports: { }
+  - org.openrewrite.java.RemoveUnusedImports
 
   - com.example.gwt.EliminateUnreachableTypes:
       entrypointTypes:
@@ -60,19 +60,25 @@ recipeList:
         - com.google.protobuf.CodedOutputStream
         - com.google.protobuf.AbstractMessageLite
         # Need to explicitly keep our own replacement type
-        - com.google.protobuf.SafeUtil
+        - com.google.protobuf.gwt.SafeUtil
+        - com.google.protobuf.gwt.IterableByteBufferInputStream
         # OpenRewrite seems to lose track of these
-        - com.google.protobuf.IterableByteBufferInputStream
         - com.google.protobuf.Utf8$SafeProcessor
 
-# # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
-#  - org.openrewrite.java.ChangeType:
-#      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
-#      newFullyQualifiedTypeName: com.google.protobuf.SafeUtil
-#      ignoreDefinition: true
-#
-#  - org.openrewrite.DeleteSourceFiles:
-#      filePattern: '**/UnsafeUtil.java'
+ # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
+      newFullyQualifiedTypeName: com.google.protobuf.gwt.SafeUtil
+      ignoreDefinition: true
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.google.protobuf.IterableByteBufferInputStream
+      newFullyQualifiedTypeName: com.google.protobuf.gwt.IterableByteBufferInputStream
+      ignoreDefinition: true
+
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: '**/UnsafeUtil.java'
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: '**/protobuf/IterableByteBufferInputStream.java'
 
   - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
         methodPattern: com.google.protobuf.ByteBufferWriter writeToChannel(..)
