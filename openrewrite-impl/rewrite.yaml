@@ -103,3 +103,12 @@ recipeList:
         methodPattern: java.nio.ByteBuffer hasArray()
         replacement: 'false'
 
+  - org.openrewrite.java.ChangeMethodTargetToStatic:
+      methodPattern: java.nio.ByteBuffer wrap(..)
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.SafeUtil
+  - org.openrewrite.java.ChangeMethodTargetToStatic:
+      methodPattern: java.lang.Double doubleToRawLongBits(double)
+      fullyQualifiedTargetTypeName: org.gwtproject.nio.Numbers
+  - org.openrewrite.java.ChangeMethodTargetToStatic:
+      methodPattern: java.lang.Float floatToRawIntBits(float)
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.SafeUtil
