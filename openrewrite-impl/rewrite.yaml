@@ -112,3 +112,19 @@ recipeList:
   - org.openrewrite.java.ChangeMethodTargetToStatic:
       methodPattern: java.lang.Float floatToRawIntBits(float)
       fullyQualifiedTargetTypeName: com.google.protobuf.gwt.SafeUtil
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistryFactory isFullRegistry(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistryLite add(..)
+
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.ExtensionRegistryFactory reflectExtensionRegistry()
+      replacement: 'null'
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistryFactory reflectExtensionRegistry()
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.ExtensionRegistryFactory invokeSubclassFactory(..)
+      replacement: 'null'
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistryFactory invokeSubclassFactory(..)
