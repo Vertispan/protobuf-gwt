@@ -128,3 +128,14 @@ recipeList:
       replacement: 'null'
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.ExtensionRegistryFactory invokeSubclassFactory(..)
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.JavaType isValidType(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage newMessageScopedGeneratedExtension(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage newFileScopedGeneratedExtension(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistry add(..)
+
+  - com.example.gwt.StringFormatToConcat
