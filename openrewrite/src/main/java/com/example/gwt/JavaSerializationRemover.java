@@ -11,7 +11,7 @@ import org.openrewrite.java.tree.J;
 import java.util.List;
 
 /**
- * Takes out readResolve and friends.
+ * Takes out readResolve and friends from all classes.
  */
 public class JavaSerializationRemover extends Recipe {
     private static final MethodMatcher readResolve = new MethodMatcher("* readResolve()");

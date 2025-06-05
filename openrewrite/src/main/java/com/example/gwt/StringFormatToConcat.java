@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.openrewrite.Tree.randomId;
 
 /**
- * Rewrite calls to String.format(). Currently only keeps the main body and loses the other strings
+ * Rewrite all calls to String.format(). Currently only keeps the main body and loses the other strings
  */
 public class StringFormatToConcat extends Recipe {
     private static final MethodMatcher FORMAT_MATCHER = new MethodMatcher("java.lang.String format(java.lang.String,..)");
