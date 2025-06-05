@@ -78,7 +78,6 @@ public class IterableByteBufferInputStream extends InputStream {
         }
     }
 
-    @Override
     public int read() throws IOException {
         if (currentIndex == dataSize) {
             return -1;
@@ -94,7 +93,6 @@ public class IterableByteBufferInputStream extends InputStream {
         }
     }
 
-    @Override
     public int read(byte[] output, int offset, int length) throws IOException {
         if (currentIndex == dataSize) {
             return -1;

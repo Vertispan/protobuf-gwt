@@ -59,8 +59,10 @@ recipeList:
         - com.google.protobuf.CodedInputStream
         - com.google.protobuf.CodedOutputStream
         - com.google.protobuf.AbstractMessageLite
-        # Need to explicitly keep our own replacement type
+        - com.google.protobuf.AbstractMessageLite$InternalOneOfEnum
+        # Need to explicitly keep our own replacement types
         - com.google.protobuf.gwt.SafeUtil
+        - com.google.protobuf.gwt.StaticImpls
         - com.google.protobuf.gwt.IterableByteBufferInputStream
         # OpenRewrite seems to lose track of these
         - com.google.protobuf.Utf8$SafeProcessor
@@ -105,13 +107,13 @@ recipeList:
 
   - org.openrewrite.java.ChangeMethodTargetToStatic:
       methodPattern: java.nio.ByteBuffer wrap(..)
-      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.SafeUtil
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
   - org.openrewrite.java.ChangeMethodTargetToStatic:
       methodPattern: java.lang.Double doubleToRawLongBits(double)
       fullyQualifiedTargetTypeName: org.gwtproject.nio.Numbers
   - org.openrewrite.java.ChangeMethodTargetToStatic:
       methodPattern: java.lang.Float floatToRawIntBits(float)
-      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.SafeUtil
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
 
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.ExtensionRegistryFactory isFullRegistry(..)
@@ -137,5 +139,158 @@ recipeList:
       target: com.google.protobuf.GeneratedMessage newFileScopedGeneratedExtension(..)
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.ExtensionRegistry add(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder hasExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtensionCount(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder hasExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtensionCount(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder hasExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder getExtension(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder getExtensionCount(..)
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage.ExtendableBuilder.setExtension(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.ExtensionRegistry newExtensionInfo(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.MessageOrBuilder getInitializationErrorString()
+      matchOverrides: true
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.MessageOrBuilder findInitializationErrors()
+      matchOverrides: true
 
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.AbstractMessage getSerializedSize()
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.AbstractMessage writeTo(..)
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.AbstractMessage.Builder.mergeFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.AbstractMessage isInitialized()
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3 getSerializedSize()
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3 writeTo(..)
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3.Builder.mergeFrom(com.google.protobuf.CodedInputStream,com.google.protobuf.ExtensionRegistryLite)
+      matchOverrides: false
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3 isInitialized()
+      matchOverrides: false
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.GeneratedMessageV3 getDescriptorForType()
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.GeneratedMessageV3.FieldAccessorTable ensureFieldAccessorsInitialized(..)
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.GeneratedMessageV3.ExtendableMessage isInitialized()
   - com.example.gwt.StringFormatToConcat
+
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.TextFormat parse(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Internal getDefaultInstance(..)
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Internal mergeMessage(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.LazyFieldLite merge(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.MessageLite$Builder mergeFrom(com.google.protobuf.MessageLite)
+      matchOverrides: true
+
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.MessageLiteToString reflectivePrintWithIndent(..)
+  - 'com.example.gwt.RemoveClassInternals':
+      fullyQualifiedClassName: com.google.protobuf.GeneratedMessage$GeneratedExtension
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Descriptors.FileDescriptor internalBuildGeneratedFileFrom(java.lang.String[],java.lang.Class,java.lang.String[],java.lang.String[],com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Descriptors.FileDescriptor internalBuildGeneratedFileFrom(java.lang.String[],java.lang.Class,java.lang.String[],java.lang.String[])
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Descriptors.FileDescriptor internalUpdateFileDescriptor(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Descriptors.FileDescriptor findDescriptors(..)
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageLite getMethodOrDie(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageLite invokeOrDie(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3 getMethodOrDie(..)
+
+  - com.example.gwt.JavaSerializationRemover
+
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.Android isOnAndroidDevice()
+      replacement: 'false'
+
+  # This is probably not safe to do, but we don't use Map as far as I can tell:
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.MapEntry$Builder setField(..)
+
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)
+  - 'com.example.gwt.RemoveClassInternals':
+      fullyQualifiedClassName: com.google.protobuf.GeneratedMessage$FieldAccessorTable$OneofAccessor
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage getMethodOrDie(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessage invokeOrDie(..)
+
+  - com.example.gwt.RemoveAnnotationFromMethod:
+      target: java.lang.Object clone()
+      annotationPattern: '@java.lang.Override'
+      matchOverrides: true
+
+  # Temporary, prohibit any use of proto+text, to avoid java regex packages
+  - com.example.gwt.RemoveClassInternals:
+      fullyQualifiedClassName: com.google.protobuf.TextFormat
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.TextFormat$Printer *(..)
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.TextFormat$TextGenerator *(..)
+  - com.example.gwt.MethodThrowsException:
+      target: com.google.protobuf.TextFormat$Tokenizer *(..)
+  - com.example.gwt.RemoveClassInternals:
+      fullyQualifiedClassName: com.google.protobuf.TextFormat$Parser
+  - com.example.gwt.RemoveClassInternals:
+      fullyQualifiedClassName: com.google.protobuf.TextFormat$Parser$Builder
+
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: '**/FieldType.java'
+
+  - com.example.gwt.RetargetInstanceMethodToStatic:
+      methodPattern: Array clone()
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
+  - com.example.gwt.RetargetInstanceMethodToStatic:
+      methodPattern: java.util.TreeMap clone()
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
+  - com.example.gwt.RetargetInstanceMethodToStatic:
+      methodPattern: java.nio.ByteBuffer asReadOnlyBuffer()
+      fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
