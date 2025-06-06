@@ -294,3 +294,7 @@ recipeList:
   - com.example.gwt.RetargetInstanceMethodToStatic:
       methodPattern: java.nio.ByteBuffer asReadOnlyBuffer()
       fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
+
+  - com.example.gwt.RemoveField:
+      fullyQualifiedClassName: com.google.protobuf.Internal
+      fieldName: US_ASCII

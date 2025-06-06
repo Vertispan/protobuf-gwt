@@ -13,9 +13,12 @@ import java.util.TreeMap;
 public class StaticImpls {
     public static ByteBuffer wrap(byte[] array, int offset, int length) {
         ByteBuffer bb = ByteBuffer.allocate(length);
-        bb.put(array, offset, length);
+        bb.put(array);
+        bb.position(offset);
+        bb.limit(offset + length);
         return bb;
     }
+
     public static ByteBuffer wrap(byte[] array) {
         return wrap(array, 0, array.length);
     }
@@ -76,5 +79,4 @@ public class StaticImpls {
         readOnlyBuffer.flip(); // Prepare the buffer for reading
         return readOnlyBuffer;
     }
-
 }
