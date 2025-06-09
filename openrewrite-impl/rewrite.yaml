@@ -243,6 +243,8 @@ recipeList:
       target: com.google.protobuf.GeneratedMessageLite invokeOrDie(..)
   - com.example.gwt.RemoveMethod:
       target: com.google.protobuf.GeneratedMessageV3 getMethodOrDie(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.GeneratedMessageV3 invokeOrDie(..)
 
   - com.example.gwt.JavaSerializationRemover
 
