@@ -61,6 +61,8 @@ recipeList:
         - com.google.protobuf.AbstractMessageLite
         - com.google.protobuf.AbstractMessageLite$InternalOneOfEnum
         - com.google.protobuf.MapFieldBuilder
+        - com.google.protobuf.Any
+        - com.google.protobuf.AnyOrBuilder
         # Need to explicitly keep our own replacement types
         - com.google.protobuf.gwt.SafeUtil
         - com.google.protobuf.gwt.StaticImpls
@@ -307,3 +309,8 @@ recipeList:
   - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
       methodPattern: java.lang.Class isInstance(..)
       replacement: 'false'
+
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Any unpack(..)
+  - com.example.gwt.RemoveMethod:
+      target: com.google.protobuf.Any is(..)
