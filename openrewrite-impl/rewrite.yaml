@@ -60,6 +60,7 @@ recipeList:
         - com.google.protobuf.CodedOutputStream
         - com.google.protobuf.AbstractMessageLite
         - com.google.protobuf.AbstractMessageLite$InternalOneOfEnum
+        - com.google.protobuf.MapFieldBuilder
         # Need to explicitly keep our own replacement types
         - com.google.protobuf.gwt.SafeUtil
         - com.google.protobuf.gwt.StaticImpls
@@ -300,3 +301,9 @@ recipeList:
   - com.example.gwt.RemoveField:
       fullyQualifiedClassName: com.google.protobuf.Internal
       fieldName: US_ASCII
+
+  # Terrible hack, forces MapFieldBuilder to always pass objects to the converter instance, but there's a risk this
+  # will break other code
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: java.lang.Class isInstance(..)
+      replacement: 'false'
