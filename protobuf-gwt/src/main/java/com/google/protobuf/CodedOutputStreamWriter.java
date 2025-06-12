@@ -33,7 +33,6 @@ final class CodedOutputStreamWriter implements Writer {
     this.output.wrapper = this;
   }
 
-  @Override
   public FieldOrder fieldOrder() {
     return FieldOrder.ASCENDING;
   }
@@ -42,120 +41,97 @@ final class CodedOutputStreamWriter implements Writer {
     return output.getTotalBytesWritten();
   }
 
-  @Override
   public void writeSFixed32(int fieldNumber, int value) throws IOException {
     output.writeSFixed32(fieldNumber, value);
   }
 
-  @Override
   public void writeInt64(int fieldNumber, long value) throws IOException {
     output.writeInt64(fieldNumber, value);
   }
 
-  @Override
   public void writeSFixed64(int fieldNumber, long value) throws IOException {
     output.writeSFixed64(fieldNumber, value);
   }
 
-  @Override
   public void writeFloat(int fieldNumber, float value) throws IOException {
     output.writeFloat(fieldNumber, value);
   }
 
-  @Override
   public void writeDouble(int fieldNumber, double value) throws IOException {
     output.writeDouble(fieldNumber, value);
   }
 
-  @Override
   public void writeEnum(int fieldNumber, int value) throws IOException {
     output.writeEnum(fieldNumber, value);
   }
 
-  @Override
   public void writeUInt64(int fieldNumber, long value) throws IOException {
     output.writeUInt64(fieldNumber, value);
   }
 
-  @Override
   public void writeInt32(int fieldNumber, int value) throws IOException {
     output.writeInt32(fieldNumber, value);
   }
 
-  @Override
   public void writeFixed64(int fieldNumber, long value) throws IOException {
     output.writeFixed64(fieldNumber, value);
   }
 
-  @Override
   public void writeFixed32(int fieldNumber, int value) throws IOException {
     output.writeFixed32(fieldNumber, value);
   }
 
-  @Override
   public void writeBool(int fieldNumber, boolean value) throws IOException {
     output.writeBool(fieldNumber, value);
   }
 
-  @Override
   public void writeString(int fieldNumber, String value) throws IOException {
     output.writeString(fieldNumber, value);
   }
 
-  @Override
   public void writeBytes(int fieldNumber, ByteString value) throws IOException {
     output.writeBytes(fieldNumber, value);
   }
 
-  @Override
   public void writeUInt32(int fieldNumber, int value) throws IOException {
     output.writeUInt32(fieldNumber, value);
   }
 
-  @Override
   public void writeSInt32(int fieldNumber, int value) throws IOException {
     output.writeSInt32(fieldNumber, value);
   }
 
-  @Override
   public void writeSInt64(int fieldNumber, long value) throws IOException {
     output.writeSInt64(fieldNumber, value);
   }
 
-  @Override
   public void writeMessage(int fieldNumber, Object value) throws IOException {
     output.writeMessage(fieldNumber, (MessageLite) value);
   }
 
-  @Override
   public void writeMessage(int fieldNumber, Object value, Schema schema) throws IOException {
     output.writeMessage(fieldNumber, (MessageLite) value, schema);
   }
 
   @Deprecated
-  @Override
   public void writeGroup(int fieldNumber, Object value) throws IOException {
     output.writeGroup(fieldNumber, (MessageLite) value);
   }
 
-  @Override
   public void writeGroup(int fieldNumber, Object value, Schema schema) throws IOException {
     output.writeGroup(fieldNumber, (MessageLite) value, schema);
   }
 
   @Deprecated
-  @Override
   public void writeStartGroup(int fieldNumber) throws IOException {
     output.writeTag(fieldNumber, WireFormat.WIRETYPE_START_GROUP);
   }
 
   @Deprecated
-  @Override
   public void writeEndGroup(int fieldNumber) throws IOException {
     output.writeTag(fieldNumber, WireFormat.WIRETYPE_END_GROUP);
   }
 
-  @Override
   public final void writeMessageSetItem(int fieldNumber, Object value) throws IOException {
     if (value instanceof ByteString) {
       output.writeRawMessageSetExtension(fieldNumber, (ByteString) value);
@@ -164,7 +140,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeInt32List(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -188,7 +163,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeFixed32List(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -212,7 +186,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeInt64List(int fieldNumber, List<Long> value, boolean packed) throws IOException {
     if (packed) {
       output.writeTag(fieldNumber, WIRETYPE_LENGTH_DELIMITED);
@@ -235,7 +208,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeUInt64List(int fieldNumber, List<Long> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -259,7 +231,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeFixed64List(int fieldNumber, List<Long> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -283,7 +254,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeFloatList(int fieldNumber, List<Float> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -307,7 +277,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeDoubleList(int fieldNumber, List<Double> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -331,7 +300,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeEnumList(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -355,7 +323,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeBoolList(int fieldNumber, List<Boolean> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -379,7 +346,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeStringList(int fieldNumber, List<String> value) throws IOException {
     if (value instanceof LazyStringList) {
       final LazyStringList lazyList = (LazyStringList) value;
@@ -401,14 +367,12 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeBytesList(int fieldNumber, List<ByteString> value) throws IOException {
     for (int i = 0; i < value.size(); ++i) {
       output.writeBytes(fieldNumber, value.get(i));
     }
   }
 
-  @Override
   public void writeUInt32List(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -432,7 +396,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeSFixed32List(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -456,7 +419,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeSFixed64List(int fieldNumber, List<Long> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -480,7 +442,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeSInt32List(int fieldNumber, List<Integer> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -504,7 +465,6 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeSInt64List(int fieldNumber, List<Long> value, boolean packed)
       throws IOException {
     if (packed) {
@@ -528,14 +488,12 @@ final class CodedOutputStreamWriter implements Writer {
     }
   }
 
-  @Override
   public void writeMessageList(int fieldNumber, List<?> value) throws IOException {
     for (int i = 0; i < value.size(); ++i) {
       writeMessage(fieldNumber, value.get(i));
     }
   }
 
-  @Override
   public void writeMessageList(int fieldNumber, List<?> value, Schema schema) throws IOException {
     for (int i = 0; i < value.size(); ++i) {
       writeMessage(fieldNumber, value.get(i), schema);
@@ -543,21 +501,18 @@ final class CodedOutputStreamWriter implements Writer {
   }
 
   @Deprecated
-  @Override
   public void writeGroupList(int fieldNumber, List<?> value) throws IOException {
     for (int i = 0; i < value.size(); ++i) {
       writeGroup(fieldNumber, value.get(i));
     }
   }
 
-  @Override
   public void writeGroupList(int fieldNumber, List<?> value, Schema schema) throws IOException {
     for (int i = 0; i < value.size(); ++i) {
       writeGroup(fieldNumber, value.get(i), schema);
     }
   }
 
-  @Override
   public <K, V> void writeMap(int fieldNumber, MapEntryLite.Metadata<K, V> metadata, Map<K, V> map)
       throws IOException {
     if (output.isSerializationDeterministic()) {

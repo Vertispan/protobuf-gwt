@@ -18,14 +18,12 @@ public abstract class Extension<ContainingType extends MessageLite, Type>
   // TODO: Add package-private constructor.
 
   /** {@inheritDoc} Overridden to return {@link Message} instead of {@link MessageLite}. */
-  @Override
   public abstract Message getMessageDefaultInstance();
 
   /** Returns the descriptor of the extension. */
   public abstract Descriptors.FieldDescriptor getDescriptor();
 
   /** Returns whether or not this extension is a Lite Extension. */
-  @Override
   final boolean isLite() {
     return false;
   }

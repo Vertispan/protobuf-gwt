@@ -36,7 +36,6 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     this.size = size;
   }
 
-  @Override
   public ProtobufArrayList<E> mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -47,7 +46,6 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     return new ProtobufArrayList<E>(newArray, size, true);
   }
 
-  @Override
   public boolean add(E element) {
     ensureIsMutable();
 
@@ -65,7 +63,6 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     return true;
   }
 
-  @Override
   public void add(int index, E element) {
     ensureIsMutable();
 
@@ -94,13 +91,11 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     modCount++;
   }
 
-  @Override
   public E get(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public E remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -115,7 +110,6 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     return value;
   }
 
-  @Override
   public E set(int index, E element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -127,7 +121,6 @@ final class ProtobufArrayList<E> extends AbstractProtobufList<E> implements Rand
     return toReturn;
   }
 
-  @Override
   public int size() {
     return size;
   }

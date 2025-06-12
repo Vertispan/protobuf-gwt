@@ -357,7 +357,6 @@ class MessageReflection {
     private final Message.Builder builder;
     private boolean hasNestedBuilders = true;
 
-    @Override
     public Descriptors.Descriptor getDescriptorForType() {
       return builder.getDescriptorForType();
     }
@@ -366,7 +365,6 @@ class MessageReflection {
       this.builder = builder;
     }
 
-    @Override
     public Object getField(Descriptors.FieldDescriptor field) {
       return builder.getField(field);
     }
@@ -382,12 +380,10 @@ class MessageReflection {
       return null;
     }
 
-    @Override
     public boolean hasField(Descriptors.FieldDescriptor field) {
       return builder.hasField(field);
     }
 
-    @Override
     public MergeTarget setField(Descriptors.FieldDescriptor field, Object value) {
       if (!field.isRepeated() && value instanceof MessageLite.Builder) {
         if (value != getFieldBuilder(field)) {
@@ -399,13 +395,11 @@ class MessageReflection {
       return this;
     }
 
-    @Override
     public MergeTarget clearField(Descriptors.FieldDescriptor field) {
       builder.clearField(field);
       return this;
     }
 
-    @Override
     public MergeTarget setRepeatedField(
         Descriptors.FieldDescriptor field, int index, Object value) {
       if (value instanceof MessageLite.Builder) {
@@ -415,7 +409,6 @@ class MessageReflection {
       return this;
     }
 
-    @Override
     public MergeTarget addRepeatedField(Descriptors.FieldDescriptor field, Object value) {
       if (value instanceof MessageLite.Builder) {
         value = ((MessageLite.Builder) value).buildPartial();
@@ -424,40 +417,33 @@ class MessageReflection {
       return this;
     }
 
-    @Override
     public boolean hasOneof(Descriptors.OneofDescriptor oneof) {
       return builder.hasOneof(oneof);
     }
 
-    @Override
     public MergeTarget clearOneof(Descriptors.OneofDescriptor oneof) {
       builder.clearOneof(oneof);
       return this;
     }
 
-    @Override
     public Descriptors.FieldDescriptor getOneofFieldDescriptor(Descriptors.OneofDescriptor oneof) {
       return builder.getOneofFieldDescriptor(oneof);
     }
 
-    @Override
     public ContainerType getContainerType() {
       return ContainerType.MESSAGE;
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByName(
         ExtensionRegistry registry, String name) {
       return registry.findImmutableExtensionByName(name);
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByNumber(
         ExtensionRegistry registry, Descriptors.Descriptor containingType, int fieldNumber) {
       return registry.findImmutableExtensionByNumber(containingType, fieldNumber);
     }
 
-    @Override
     public Object parseGroup(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -481,7 +467,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public Object parseMessage(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -505,7 +490,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public Object parseMessageFromBytes(
         ByteString bytes,
         ExtensionRegistryLite extensionRegistry,
@@ -529,7 +513,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public void mergeGroup(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -559,7 +542,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public void mergeMessage(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -599,7 +581,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public MergeTarget newMergeTargetForField(
         Descriptors.FieldDescriptor field, Message defaultInstance) {
       Message.Builder subBuilder;
@@ -620,7 +601,6 @@ class MessageReflection {
       return new BuilderAdapter(subBuilder);
     }
 
-    @Override
     public MergeTarget newEmptyTargetForField(
         Descriptors.FieldDescriptor field, Message defaultInstance) {
       Message.Builder subBuilder;
@@ -632,7 +612,6 @@ class MessageReflection {
       return new BuilderAdapter(subBuilder);
     }
 
-    @Override
     public WireFormat.Utf8Validation getUtf8Validation(Descriptors.FieldDescriptor descriptor) {
       if (descriptor.needsUtf8Check()) {
         return WireFormat.Utf8Validation.STRICT;
@@ -644,7 +623,6 @@ class MessageReflection {
       return WireFormat.Utf8Validation.LOOSE;
     }
 
-    @Override
     public Object finish() {
       return builder;
     }
@@ -658,80 +636,66 @@ class MessageReflection {
       this.extensions = extensions;
     }
 
-    @Override
     public Descriptors.Descriptor getDescriptorForType() {
       throw new UnsupportedOperationException("getDescriptorForType() called on FieldSet object");
     }
 
-    @Override
     public Object getField(Descriptors.FieldDescriptor field) {
       return extensions.getField(field);
     }
 
-    @Override
     public boolean hasField(Descriptors.FieldDescriptor field) {
       return extensions.hasField(field);
     }
 
-    @Override
     public MergeTarget setField(Descriptors.FieldDescriptor field, Object value) {
       extensions.setField(field, value);
       return this;
     }
 
-    @Override
     public MergeTarget clearField(Descriptors.FieldDescriptor field) {
       extensions.clearField(field);
       return this;
     }
 
-    @Override
     public MergeTarget setRepeatedField(
         Descriptors.FieldDescriptor field, int index, Object value) {
       extensions.setRepeatedField(field, index, value);
       return this;
     }
 
-    @Override
     public MergeTarget addRepeatedField(Descriptors.FieldDescriptor field, Object value) {
       extensions.addRepeatedField(field, value);
       return this;
     }
 
-    @Override
     public boolean hasOneof(Descriptors.OneofDescriptor oneof) {
       return false;
     }
 
-    @Override
     public MergeTarget clearOneof(Descriptors.OneofDescriptor oneof) {
       // Nothing to clear.
       return this;
     }
 
-    @Override
     public Descriptors.FieldDescriptor getOneofFieldDescriptor(Descriptors.OneofDescriptor oneof) {
       return null;
     }
 
-    @Override
     public ContainerType getContainerType() {
       return ContainerType.EXTENSION_SET;
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByName(
         ExtensionRegistry registry, String name) {
       return registry.findImmutableExtensionByName(name);
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByNumber(
         ExtensionRegistry registry, Descriptors.Descriptor containingType, int fieldNumber) {
       return registry.findImmutableExtensionByNumber(containingType, fieldNumber);
     }
 
-    @Override
     public Object parseGroup(
         CodedInputStream input,
         ExtensionRegistryLite registry,
@@ -749,7 +713,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public Object parseMessage(
         CodedInputStream input,
         ExtensionRegistryLite registry,
@@ -767,7 +730,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public void mergeGroup(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -791,7 +753,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public void mergeMessage(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -815,7 +776,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public Object parseMessageFromBytes(
         ByteString bytes,
         ExtensionRegistryLite registry,
@@ -833,19 +793,16 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public MergeTarget newMergeTargetForField(
         Descriptors.FieldDescriptor descriptor, Message defaultInstance) {
       throw new UnsupportedOperationException("newMergeTargetForField() called on FieldSet object");
     }
 
-    @Override
     public MergeTarget newEmptyTargetForField(
         Descriptors.FieldDescriptor descriptor, Message defaultInstance) {
       throw new UnsupportedOperationException("newEmptyTargetForField() called on FieldSet object");
     }
 
-    @Override
     public WireFormat.Utf8Validation getUtf8Validation(Descriptors.FieldDescriptor descriptor) {
       if (descriptor.needsUtf8Check()) {
         return WireFormat.Utf8Validation.STRICT;
@@ -854,7 +811,6 @@ class MessageReflection {
       return WireFormat.Utf8Validation.LOOSE;
     }
 
-    @Override
     public Object finish() {
       throw new UnsupportedOperationException("finish() called on FieldSet object");
     }
@@ -868,36 +824,30 @@ class MessageReflection {
       this.extensions = extensions;
     }
 
-    @Override
     public Descriptors.Descriptor getDescriptorForType() {
       throw new UnsupportedOperationException("getDescriptorForType() called on FieldSet object");
     }
 
-    @Override
     public Object getField(Descriptors.FieldDescriptor field) {
       return extensions.getField(field);
     }
 
-    @Override
     public boolean hasField(Descriptors.FieldDescriptor field) {
       return extensions.hasField(field);
     }
 
-    @Override
     @CanIgnoreReturnValue
     public MergeTarget setField(Descriptors.FieldDescriptor field, Object value) {
       extensions.setField(field, value);
       return this;
     }
 
-    @Override
     @CanIgnoreReturnValue
     public MergeTarget clearField(Descriptors.FieldDescriptor field) {
       extensions.clearField(field);
       return this;
     }
 
-    @Override
     @CanIgnoreReturnValue
     public MergeTarget setRepeatedField(
         Descriptors.FieldDescriptor field, int index, Object value) {
@@ -905,48 +855,40 @@ class MessageReflection {
       return this;
     }
 
-    @Override
     @CanIgnoreReturnValue
     public MergeTarget addRepeatedField(Descriptors.FieldDescriptor field, Object value) {
       extensions.addRepeatedField(field, value);
       return this;
     }
 
-    @Override
     public boolean hasOneof(Descriptors.OneofDescriptor oneof) {
       return false;
     }
 
-    @Override
     @CanIgnoreReturnValue
     public MergeTarget clearOneof(Descriptors.OneofDescriptor oneof) {
       // Nothing to clear.
       return this;
     }
 
-    @Override
     public Descriptors.FieldDescriptor getOneofFieldDescriptor(Descriptors.OneofDescriptor oneof) {
       return null;
     }
 
-    @Override
     public ContainerType getContainerType() {
       return ContainerType.EXTENSION_SET;
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByName(
         ExtensionRegistry registry, String name) {
       return registry.findImmutableExtensionByName(name);
     }
 
-    @Override
     public ExtensionRegistry.ExtensionInfo findExtensionByNumber(
         ExtensionRegistry registry, Descriptors.Descriptor containingType, int fieldNumber) {
       return registry.findImmutableExtensionByNumber(containingType, fieldNumber);
     }
 
-    @Override
     public Object parseGroup(
         CodedInputStream input,
         ExtensionRegistryLite registry,
@@ -964,7 +906,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public Object parseMessage(
         CodedInputStream input,
         ExtensionRegistryLite registry,
@@ -982,7 +923,6 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public void mergeGroup(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -1012,7 +952,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public void mergeMessage(
         CodedInputStream input,
         ExtensionRegistryLite extensionRegistry,
@@ -1042,7 +981,6 @@ class MessageReflection {
       }
     }
 
-    @Override
     public Object parseMessageFromBytes(
         ByteString bytes,
         ExtensionRegistryLite registry,
@@ -1060,19 +998,16 @@ class MessageReflection {
       return subBuilder.buildPartial();
     }
 
-    @Override
     public MergeTarget newMergeTargetForField(
         Descriptors.FieldDescriptor descriptor, Message defaultInstance) {
       throw new UnsupportedOperationException("newMergeTargetForField() called on FieldSet object");
     }
 
-    @Override
     public MergeTarget newEmptyTargetForField(
         Descriptors.FieldDescriptor descriptor, Message defaultInstance) {
       throw new UnsupportedOperationException("newEmptyTargetForField() called on FieldSet object");
     }
 
-    @Override
     public WireFormat.Utf8Validation getUtf8Validation(Descriptors.FieldDescriptor descriptor) {
       if (descriptor.needsUtf8Check()) {
         return WireFormat.Utf8Validation.STRICT;
@@ -1081,7 +1016,6 @@ class MessageReflection {
       return WireFormat.Utf8Validation.LOOSE;
     }
 
-    @Override
     public Object finish() {
       throw new UnsupportedOperationException("finish() called on FieldSet object");
     }

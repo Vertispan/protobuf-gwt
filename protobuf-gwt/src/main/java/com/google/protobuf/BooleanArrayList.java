@@ -52,7 +52,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     this.size = size;
   }
 
-  @Override
   protected void removeRange(int fromIndex, int toIndex) {
     ensureIsMutable();
     if (toIndex < fromIndex) {
@@ -64,7 +63,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     modCount++;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -87,7 +85,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 1;
     for (int i = 0; i < size; i++) {
@@ -96,7 +93,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return result;
   }
 
-  @Override
   public BooleanList mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -104,18 +100,15 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return new BooleanArrayList(Arrays.copyOf(array, capacity), size, true);
   }
 
-  @Override
   public Boolean get(int index) {
     return getBoolean(index);
   }
 
-  @Override
   public boolean getBoolean(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public int indexOf(Object element) {
     if (!(element instanceof Boolean)) {
       return -1;
@@ -130,22 +123,18 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return -1;
   }
 
-  @Override
   public boolean contains(Object element) {
     return indexOf(element) != -1;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override
   public Boolean set(int index, Boolean element) {
     return setBoolean(index, element);
   }
 
-  @Override
   public boolean setBoolean(int index, boolean element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -154,19 +143,16 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return previousValue;
   }
 
-  @Override
   public boolean add(Boolean element) {
     addBoolean(element);
     return true;
   }
 
-  @Override
   public void add(int index, Boolean element) {
     addBoolean(index, element);
   }
 
   /** Like {@link #add(Boolean)} but more efficient in that it doesn't box the element. */
-  @Override
   public void addBoolean(boolean element) {
     ensureIsMutable();
     if (size == array.length) {
@@ -209,7 +195,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     modCount++;
   }
 
-  @Override
   public boolean addAll(Collection<? extends Boolean> collection) {
     ensureIsMutable();
 
@@ -242,7 +227,6 @@ final class BooleanArrayList extends AbstractProtobufList<Boolean>
     return true;
   }
 
-  @Override
   public Boolean remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);

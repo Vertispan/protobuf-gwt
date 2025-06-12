@@ -51,7 +51,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     this.size = size;
   }
 
-  @Override
   protected void removeRange(int fromIndex, int toIndex) {
     ensureIsMutable();
     if (toIndex < fromIndex) {
@@ -63,7 +62,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     modCount++;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -86,7 +84,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 1;
     for (int i = 0; i < size; i++) {
@@ -95,7 +92,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return result;
   }
 
-  @Override
   public FloatList mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -103,18 +99,15 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return new FloatArrayList(Arrays.copyOf(array, capacity), size, true);
   }
 
-  @Override
   public Float get(int index) {
     return getFloat(index);
   }
 
-  @Override
   public float getFloat(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public int indexOf(Object element) {
     if (!(element instanceof Float)) {
       return -1;
@@ -129,22 +122,18 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return -1;
   }
 
-  @Override
   public boolean contains(Object element) {
     return indexOf(element) != -1;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override
   public Float set(int index, Float element) {
     return setFloat(index, element);
   }
 
-  @Override
   public float setFloat(int index, float element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -153,19 +142,16 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return previousValue;
   }
 
-  @Override
   public boolean add(Float element) {
     addFloat(element);
     return true;
   }
 
-  @Override
   public void add(int index, Float element) {
     addFloat(index, element);
   }
 
   /** Like {@link #add(Float)} but more efficient in that it doesn't box the element. */
-  @Override
   public void addFloat(float element) {
     ensureIsMutable();
     if (size == array.length) {
@@ -208,7 +194,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     modCount++;
   }
 
-  @Override
   public boolean addAll(Collection<? extends Float> collection) {
     ensureIsMutable();
 
@@ -241,7 +226,6 @@ final class FloatArrayList extends AbstractProtobufList<Float>
     return true;
   }
 
-  @Override
   public Float remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);

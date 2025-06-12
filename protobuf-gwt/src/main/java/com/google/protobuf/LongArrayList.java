@@ -51,7 +51,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     this.size = size;
   }
 
-  @Override
   protected void removeRange(int fromIndex, int toIndex) {
     ensureIsMutable();
     if (toIndex < fromIndex) {
@@ -63,7 +62,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     modCount++;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -86,7 +84,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 1;
     for (int i = 0; i < size; i++) {
@@ -95,7 +92,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return result;
   }
 
-  @Override
   public LongList mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -103,18 +99,15 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return new LongArrayList(Arrays.copyOf(array, capacity), size, true);
   }
 
-  @Override
   public Long get(int index) {
     return getLong(index);
   }
 
-  @Override
   public long getLong(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public int indexOf(Object element) {
     if (!(element instanceof Long)) {
       return -1;
@@ -129,22 +122,18 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return -1;
   }
 
-  @Override
   public boolean contains(Object element) {
     return indexOf(element) != -1;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override
   public Long set(int index, Long element) {
     return setLong(index, element);
   }
 
-  @Override
   public long setLong(int index, long element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -153,19 +142,16 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return previousValue;
   }
 
-  @Override
   public boolean add(Long element) {
     addLong(element);
     return true;
   }
 
-  @Override
   public void add(int index, Long element) {
     addLong(index, element);
   }
 
   /** Like {@link #add(Long)} but more efficient in that it doesn't box the element. */
-  @Override
   public void addLong(long element) {
     ensureIsMutable();
     if (size == array.length) {
@@ -208,7 +194,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     modCount++;
   }
 
-  @Override
   public boolean addAll(Collection<? extends Long> collection) {
     ensureIsMutable();
 
@@ -241,7 +226,6 @@ final class LongArrayList extends AbstractProtobufList<Long>
     return true;
   }
 
-  @Override
   public Long remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);

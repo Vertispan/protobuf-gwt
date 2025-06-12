@@ -7,7 +7,6 @@
 
 package com.google.protobuf;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,24 +19,7 @@ import java.util.Map;
 public interface MessageOrBuilder extends MessageLiteOrBuilder {
 
   // (From MessageLite, re-declared here only for return type covariance.)
-  @Override
   Message getDefaultInstanceForType();
-
-  /**
-   * Returns a list of field paths (e.g. "foo.bar.baz") of required fields which are not set in this
-   * message. You should call {@link MessageLiteOrBuilder#isInitialized()} first to check if there
-   * are any missing fields, as that method is likely to be much faster than this one even when the
-   * message is fully-initialized.
-   */
-  List<String> findInitializationErrors();
-
-  /**
-   * Returns a comma-delimited list of required fields which are not set in this message object. You
-   * should call {@link MessageLiteOrBuilder#isInitialized()} first to check if there are any
-   * missing fields, as that method is likely to be much faster than this one even when the message
-   * is fully-initialized.
-   */
-  String getInitializationErrorString();
 
   /**
    * Get the message's type's descriptor. This differs from the {@code getDescriptor()} method of

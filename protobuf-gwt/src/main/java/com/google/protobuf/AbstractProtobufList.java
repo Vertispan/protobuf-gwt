@@ -37,7 +37,6 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Protob
     this.isMutable = isMutable;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -65,7 +64,6 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Protob
     return true;
   }
 
-  @Override
   public int hashCode() {
     final int size = size();
     int hashCode = 1;
@@ -75,55 +73,46 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Protob
     return hashCode;
   }
 
-  @Override
   public boolean add(E e) {
     ensureIsMutable();
     return super.add(e);
   }
 
-  @Override
   public void add(int index, E element) {
     ensureIsMutable();
     super.add(index, element);
   }
 
-  @Override
   public boolean addAll(Collection<? extends E> c) {
     ensureIsMutable();
     return super.addAll(c);
   }
 
-  @Override
   public boolean addAll(int index, Collection<? extends E> c) {
     ensureIsMutable();
     return super.addAll(index, c);
   }
 
-  @Override
   public void clear() {
     ensureIsMutable();
     super.clear();
   }
 
-  @Override
   public boolean isModifiable() {
     return isMutable;
   }
 
-  @Override
   public final void makeImmutable() {
     if (isMutable) {
       isMutable = false;
     }
   }
 
-  @Override
   public E remove(int index) {
     ensureIsMutable();
     return super.remove(index);
   }
 
-  @Override
   public boolean remove(Object o) {
     ensureIsMutable();
     int index = indexOf(o);
@@ -134,19 +123,16 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Protob
     return true;
   }
 
-  @Override
   public boolean removeAll(Collection<?> c) {
     ensureIsMutable();
     return super.removeAll(c);
   }
 
-  @Override
   public boolean retainAll(Collection<?> c) {
     ensureIsMutable();
     return super.retainAll(c);
   }
 
-  @Override
   public E set(int index, E element) {
     ensureIsMutable();
     return super.set(index, element);

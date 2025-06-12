@@ -51,7 +51,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     this.size = size;
   }
 
-  @Override
   protected void removeRange(int fromIndex, int toIndex) {
     ensureIsMutable();
     if (toIndex < fromIndex) {
@@ -63,7 +62,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     modCount++;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -86,7 +84,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 1;
     for (int i = 0; i < size; i++) {
@@ -96,7 +93,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return result;
   }
 
-  @Override
   public DoubleList mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -104,18 +100,15 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return new DoubleArrayList(Arrays.copyOf(array, capacity), size, true);
   }
 
-  @Override
   public Double get(int index) {
     return getDouble(index);
   }
 
-  @Override
   public double getDouble(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public int indexOf(Object element) {
     if (!(element instanceof Double)) {
       return -1;
@@ -130,22 +123,18 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return -1;
   }
 
-  @Override
   public boolean contains(Object element) {
     return indexOf(element) != -1;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override
   public Double set(int index, Double element) {
     return setDouble(index, element);
   }
 
-  @Override
   public double setDouble(int index, double element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -154,19 +143,16 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return previousValue;
   }
 
-  @Override
   public boolean add(Double element) {
     addDouble(element);
     return true;
   }
 
-  @Override
   public void add(int index, Double element) {
     addDouble(index, element);
   }
 
   /** Like {@link #add(Double)} but more efficient in that it doesn't box the element. */
-  @Override
   public void addDouble(double element) {
     ensureIsMutable();
     if (size == array.length) {
@@ -209,7 +195,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     modCount++;
   }
 
-  @Override
   public boolean addAll(Collection<? extends Double> collection) {
     ensureIsMutable();
 
@@ -242,7 +227,6 @@ final class DoubleArrayList extends AbstractProtobufList<Double>
     return true;
   }
 
-  @Override
   public Double remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);

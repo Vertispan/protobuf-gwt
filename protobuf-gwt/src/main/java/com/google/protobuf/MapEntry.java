@@ -8,7 +8,6 @@
 package com.google.protobuf;
 
 import com.google.protobuf.Descriptors.Descriptor;
-import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import java.io.IOException;
 import java.util.Collections;
@@ -41,7 +40,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
       this.parser =
           new AbstractParser<MapEntry<K, V>>() {
 
-            @Override
             public MapEntry<K, V> parsePartialFrom(
                 CodedInputStream input, ExtensionRegistryLite extensionRegistry)
                 throws InvalidProtocolBufferException {
@@ -115,7 +113,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
 
   private volatile int cachedSerializedSize = -1;
 
-  @Override
   public int getSerializedSize() {
     if (cachedSerializedSize != -1) {
       return cachedSerializedSize;
@@ -126,42 +123,34 @@ public final class MapEntry<K, V> extends AbstractMessage {
     return size;
   }
 
-  @Override
   public void writeTo(CodedOutputStream output) throws IOException {
     MapEntryLite.writeTo(output, metadata, key, value);
   }
 
-  @Override
   public boolean isInitialized() {
     return isInitialized(metadata, value);
   }
 
-  @Override
   public Parser<MapEntry<K, V>> getParserForType() {
     return metadata.parser;
   }
 
-  @Override
   public Builder<K, V> newBuilderForType() {
     return new Builder<K, V>(metadata);
   }
 
-  @Override
   public Builder<K, V> toBuilder() {
     return new Builder<K, V>(metadata, key, value, true, true);
   }
 
-  @Override
   public MapEntry<K, V> getDefaultInstanceForType() {
     return new MapEntry<K, V>(metadata, metadata.defaultKey, metadata.defaultValue);
   }
 
-  @Override
   public Descriptor getDescriptorForType() {
     return metadata.descriptor;
   }
 
-  @Override
   public Map<FieldDescriptor, Object> getAllFields() {
     TreeMap<FieldDescriptor, Object> result = new TreeMap<FieldDescriptor, Object>();
     for (final FieldDescriptor field : metadata.descriptor.getFields()) {
@@ -182,7 +171,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
     }
   }
 
-  @Override
   public boolean hasField(FieldDescriptor field) {
     checkFieldDescriptor(field);
     ;
@@ -190,7 +178,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
     return true;
   }
 
-  @Override
   public Object getField(FieldDescriptor field) {
     checkFieldDescriptor(field);
     Object result = field.getNumber() == 1 ? getKey() : getValue();
@@ -201,17 +188,14 @@ public final class MapEntry<K, V> extends AbstractMessage {
     return result;
   }
 
-  @Override
   public int getRepeatedFieldCount(FieldDescriptor field) {
     throw new RuntimeException("There is no repeated field in a map entry message.");
   }
 
-  @Override
   public Object getRepeatedField(FieldDescriptor field, int index) {
     throw new RuntimeException("There is no repeated field in a map entry message.");
   }
 
-  @Override
   public UnknownFieldSet getUnknownFields() {
     return UnknownFieldSet.getDefaultInstance();
   }
@@ -268,7 +252,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
       return this;
     }
 
-    @Override
     public MapEntry<K, V> build() {
       MapEntry<K, V> result = buildPartial();
       if (!result.isInitialized()) {
@@ -277,12 +260,10 @@ public final class MapEntry<K, V> extends AbstractMessage {
       return result;
     }
 
-    @Override
     public MapEntry<K, V> buildPartial() {
       return new MapEntry<K, V>(metadata, key, value);
     }
 
-    @Override
     public Descriptor getDescriptorForType() {
       return metadata.descriptor;
     }
@@ -297,7 +278,6 @@ public final class MapEntry<K, V> extends AbstractMessage {
       }
     }
 
-    @Override
     public Message.Builder newBuilderForField(FieldDescriptor field) {
       checkFieldDescriptor(field);
       ;
@@ -310,34 +290,10 @@ public final class MapEntry<K, V> extends AbstractMessage {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public Builder<K, V> setField(FieldDescriptor field, Object value) {
-      checkFieldDescriptor(field);
-      if (value == null) {
-        throw new NullPointerException(field.getFullName() + " is null");
-      }
-
-      if (field.getNumber() == 1) {
-        setKey((K) value);
-      } else {
-        if (field.getType() == FieldDescriptor.Type.ENUM) {
-          value = ((EnumValueDescriptor) value).getNumber();
-        } else if (field.getType() == FieldDescriptor.Type.MESSAGE) {
-          if (!metadata.defaultValue.getClass().isInstance(value)) {
-            // The value is not the exact right message type.  However, if it
-            // is an alternative implementation of the same type -- e.g. a
-            // DynamicMessage -- we should accept it.  In this case we can make
-            // a copy of the message.
-            value =
-                ((Message) metadata.defaultValue).toBuilder().mergeFrom((Message) value).build();
-          }
-        }
-        setValue((V) value);
-      }
-      return this;
+      throw new UnsupportedOperationException("com.google.protobuf.MapEntry$Builder setField(..)");
     }
 
-    @Override
     public Builder<K, V> clearField(FieldDescriptor field) {
       checkFieldDescriptor(field);
       if (field.getNumber() == 1) {
@@ -348,33 +304,27 @@ public final class MapEntry<K, V> extends AbstractMessage {
       return this;
     }
 
-    @Override
     public Builder<K, V> setRepeatedField(FieldDescriptor field, int index, Object value) {
       throw new RuntimeException("There is no repeated field in a map entry message.");
     }
 
-    @Override
     public Builder<K, V> addRepeatedField(FieldDescriptor field, Object value) {
       throw new RuntimeException("There is no repeated field in a map entry message.");
     }
 
-    @Override
     public Builder<K, V> setUnknownFields(UnknownFieldSet unknownFields) {
       // Unknown fields are discarded for MapEntry message.
       return this;
     }
 
-    @Override
     public MapEntry<K, V> getDefaultInstanceForType() {
       return new MapEntry<K, V>(metadata, metadata.defaultKey, metadata.defaultValue);
     }
 
-    @Override
     public boolean isInitialized() {
       return MapEntry.isInitialized(metadata, value);
     }
 
-    @Override
     public Map<FieldDescriptor, Object> getAllFields() {
       final TreeMap<FieldDescriptor, Object> result = new TreeMap<FieldDescriptor, Object>();
       for (final FieldDescriptor field : metadata.descriptor.getFields()) {
@@ -385,13 +335,11 @@ public final class MapEntry<K, V> extends AbstractMessage {
       return Collections.unmodifiableMap(result);
     }
 
-    @Override
     public boolean hasField(FieldDescriptor field) {
       checkFieldDescriptor(field);
       return field.getNumber() == 1 ? hasKey : hasValue;
     }
 
-    @Override
     public Object getField(FieldDescriptor field) {
       checkFieldDescriptor(field);
       Object result = field.getNumber() == 1 ? getKey() : getValue();
@@ -402,22 +350,18 @@ public final class MapEntry<K, V> extends AbstractMessage {
       return result;
     }
 
-    @Override
     public int getRepeatedFieldCount(FieldDescriptor field) {
       throw new RuntimeException("There is no repeated field in a map entry message.");
     }
 
-    @Override
     public Object getRepeatedField(FieldDescriptor field, int index) {
       throw new RuntimeException("There is no repeated field in a map entry message.");
     }
 
-    @Override
     public UnknownFieldSet getUnknownFields() {
       return UnknownFieldSet.getDefaultInstance();
     }
 
-    @Override
     public Builder<K, V> clone() {
       return new Builder<>(metadata, key, value, hasKey, hasValue);
     }

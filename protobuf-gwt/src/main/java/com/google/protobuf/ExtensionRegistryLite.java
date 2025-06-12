@@ -60,19 +60,6 @@ public class ExtensionRegistryLite {
   // Visible for testing.
   static final String EXTENSION_CLASS_NAME = "com.google.protobuf.Extension";
 
-  private static class ExtensionClassHolder {
-    static final Class<?> INSTANCE = resolveExtensionClass();
-
-    static Class<?> resolveExtensionClass() {
-      try {
-        return Class.forName(EXTENSION_CLASS_NAME);
-      } catch (ClassNotFoundException e) {
-        // See comment in ExtensionRegistryFactory on the potential expense of this.
-        return null;
-      }
-    }
-  }
-
   public static boolean isEagerlyParseMessageSets() {
     return eagerlyParseMessageSets;
   }
@@ -133,31 +120,6 @@ public class ExtensionRegistryLite {
         extensionsByNumber.get(new ObjectIntPair(containingTypeDefaultInstance, fieldNumber));
   }
 
-  /** Add an extension from a lite generated file to the registry. */
-  public final void add(final GeneratedMessageLite.GeneratedExtension<?, ?> extension) {
-    extensionsByNumber.put(
-        new ObjectIntPair(extension.getContainingTypeDefaultInstance(), extension.getNumber()),
-        extension);
-  }
-
-  /**
-   * Add an extension from a lite generated file to the registry only if it is a non-lite extension
-   * i.e. {@link GeneratedMessageLite.GeneratedExtension}.
-   */
-  public final void add(ExtensionLite<?, ?> extension) {
-    if (GeneratedMessageLite.GeneratedExtension.class.isAssignableFrom(extension.getClass())) {
-      add((GeneratedMessageLite.GeneratedExtension<?, ?>) extension);
-    }
-    if (doFullRuntimeInheritanceCheck && ExtensionRegistryFactory.isFullRegistry(this)) {
-      try {
-        this.getClass().getMethod("add", ExtensionClassHolder.INSTANCE).invoke(this, extension);
-      } catch (Exception e) {
-        throw new IllegalArgumentException(
-            String.format("Could not invoke ExtensionRegistry#add for %s", extension), e);
-      }
-    }
-  }
-
   // =================================================================
   // Private stuff.
 
@@ -196,12 +158,10 @@ public class ExtensionRegistryLite {
       this.number = number;
     }
 
-    @Override
     public int hashCode() {
       return System.identityHashCode(object) * ((1 << 16) - 1) + number;
     }
 
-    @Override
     public boolean equals(final Object obj) {
       if (!(obj instanceof ObjectIntPair)) {
         return false;

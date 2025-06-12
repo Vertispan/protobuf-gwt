@@ -35,7 +35,6 @@ public class LazyField extends LazyFieldLite {
     this.defaultInstance = defaultInstance;
   }
 
-  @Override
   public boolean containsDefaultInstance() {
     return super.containsDefaultInstance() || value == defaultInstance;
   }
@@ -44,17 +43,14 @@ public class LazyField extends LazyFieldLite {
     return getValue(defaultInstance);
   }
 
-  @Override
   public int hashCode() {
     return getValue().hashCode();
   }
 
-  @Override
   public boolean equals(Object obj) {
     return getValue().equals(obj);
   }
 
-  @Override
   public String toString() {
     return getValue().toString();
   }
@@ -72,12 +68,10 @@ public class LazyField extends LazyFieldLite {
       this.entry = entry;
     }
 
-    @Override
     public K getKey() {
       return entry.getKey();
     }
 
-    @Override
     public Object getValue() {
       LazyField field = entry.getValue();
       if (field == null) {
@@ -90,7 +84,6 @@ public class LazyField extends LazyFieldLite {
       return entry.getValue();
     }
 
-    @Override
     public Object setValue(Object value) {
       if (!(value instanceof MessageLite)) {
         throw new IllegalArgumentException(
@@ -108,12 +101,10 @@ public class LazyField extends LazyFieldLite {
       this.iterator = iterator;
     }
 
-    @Override
     public boolean hasNext() {
       return iterator.hasNext();
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public Entry<K, Object> next() {
       Entry<K, ?> entry = iterator.next();
@@ -123,7 +114,6 @@ public class LazyField extends LazyFieldLite {
       return (Entry<K, Object>) entry;
     }
 
-    @Override
     public void remove() {
       iterator.remove();
     }

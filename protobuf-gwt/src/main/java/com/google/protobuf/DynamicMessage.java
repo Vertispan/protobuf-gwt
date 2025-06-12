@@ -129,22 +129,18 @@ public final class DynamicMessage extends AbstractMessage {
   // -----------------------------------------------------------------
   // Implementation of Message interface.
 
-  @Override
   public Descriptor getDescriptorForType() {
     return type;
   }
 
-  @Override
   public DynamicMessage getDefaultInstanceForType() {
     return getDefaultInstance(type);
   }
 
-  @Override
   public Map<FieldDescriptor, Object> getAllFields() {
     return fields.getAllFields();
   }
 
-  @Override
   public boolean hasOneof(OneofDescriptor oneof) {
     verifyOneofContainingType(oneof);
     FieldDescriptor field = oneofCases[oneof.getIndex()];
@@ -154,19 +150,16 @@ public final class DynamicMessage extends AbstractMessage {
     return true;
   }
 
-  @Override
   public FieldDescriptor getOneofFieldDescriptor(OneofDescriptor oneof) {
     verifyOneofContainingType(oneof);
     return oneofCases[oneof.getIndex()];
   }
 
-  @Override
   public boolean hasField(FieldDescriptor field) {
     verifyContainingType(field);
     return fields.hasField(field);
   }
 
-  @Override
   public Object getField(FieldDescriptor field) {
     verifyContainingType(field);
     Object result = fields.getField(field);
@@ -182,19 +175,16 @@ public final class DynamicMessage extends AbstractMessage {
     return result;
   }
 
-  @Override
   public int getRepeatedFieldCount(FieldDescriptor field) {
     verifyContainingType(field);
     return fields.getRepeatedFieldCount(field);
   }
 
-  @Override
   public Object getRepeatedField(FieldDescriptor field, int index) {
     verifyContainingType(field);
     return fields.getRepeatedField(field, index);
   }
 
-  @Override
   public UnknownFieldSet getUnknownFields() {
     return unknownFields;
   }
@@ -213,12 +203,10 @@ public final class DynamicMessage extends AbstractMessage {
     return fields.isInitialized();
   }
 
-  @Override
   public boolean isInitialized() {
     return isInitialized(type, fields);
   }
 
-  @Override
   public void writeTo(CodedOutputStream output) throws IOException {
     if (type.getOptions().getMessageSetWireFormat()) {
       fields.writeMessageSetTo(output);
@@ -229,7 +217,6 @@ public final class DynamicMessage extends AbstractMessage {
     }
   }
 
-  @Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -246,20 +233,16 @@ public final class DynamicMessage extends AbstractMessage {
     return size;
   }
 
-  @Override
   public Builder newBuilderForType() {
     return new Builder(type);
   }
 
-  @Override
   public Builder toBuilder() {
     return newBuilderForType().mergeFrom(this);
   }
 
-  @Override
   public Parser<DynamicMessage> getParserForType() {
     return new AbstractParser<DynamicMessage>() {
-      @Override
       public DynamicMessage parsePartialFrom(
           CodedInputStream input, ExtensionRegistryLite extensionRegistry)
           throws InvalidProtocolBufferException {
@@ -310,14 +293,12 @@ public final class DynamicMessage extends AbstractMessage {
     // ---------------------------------------------------------------
     // Implementation of Message.Builder interface.
 
-    @Override
     public Builder clear() {
       fields = FieldSet.newBuilder();
       unknownFields = UnknownFieldSet.getDefaultInstance();
       return this;
     }
 
-    @Override
     public Builder mergeFrom(Message other) {
       if (other instanceof DynamicMessage) {
         // This should be somewhat faster than calling super.mergeFrom().
@@ -345,7 +326,6 @@ public final class DynamicMessage extends AbstractMessage {
       }
     }
 
-    @Override
     public DynamicMessage build() {
       if (!isInitialized()) {
         throw newUninitializedMessageException(
@@ -372,7 +352,6 @@ public final class DynamicMessage extends AbstractMessage {
       return buildPartial();
     }
 
-    @Override
     public DynamicMessage buildPartial() {
       // Set default values for all fields in a MapEntry.
       if (type.getOptions().getMapEntry()) {
@@ -396,7 +375,6 @@ public final class DynamicMessage extends AbstractMessage {
       return result;
     }
 
-    @Override
     public Builder clone() {
       Builder result = new Builder(type);
       result.fields.mergeFrom(fields.build());
@@ -405,7 +383,6 @@ public final class DynamicMessage extends AbstractMessage {
       return result;
     }
 
-    @Override
     public boolean isInitialized() {
       // Check that all required fields are present.
       for (FieldDescriptor field : type.getFields()) {
@@ -420,22 +397,18 @@ public final class DynamicMessage extends AbstractMessage {
       return fields.isInitialized();
     }
 
-    @Override
     public Descriptor getDescriptorForType() {
       return type;
     }
 
-    @Override
     public DynamicMessage getDefaultInstanceForType() {
       return getDefaultInstance(type);
     }
 
-    @Override
     public Map<FieldDescriptor, Object> getAllFields() {
       return fields.getAllFields();
     }
 
-    @Override
     public Builder newBuilderForField(FieldDescriptor field) {
       verifyContainingType(field);
 
@@ -447,7 +420,6 @@ public final class DynamicMessage extends AbstractMessage {
       return new Builder(field.getMessageType());
     }
 
-    @Override
     public boolean hasOneof(OneofDescriptor oneof) {
       verifyOneofContainingType(oneof);
       FieldDescriptor field = oneofCases[oneof.getIndex()];
@@ -457,13 +429,11 @@ public final class DynamicMessage extends AbstractMessage {
       return true;
     }
 
-    @Override
     public FieldDescriptor getOneofFieldDescriptor(OneofDescriptor oneof) {
       verifyOneofContainingType(oneof);
       return oneofCases[oneof.getIndex()];
     }
 
-    @Override
     public Builder clearOneof(OneofDescriptor oneof) {
       verifyOneofContainingType(oneof);
       FieldDescriptor field = oneofCases[oneof.getIndex()];
@@ -473,13 +443,11 @@ public final class DynamicMessage extends AbstractMessage {
       return this;
     }
 
-    @Override
     public boolean hasField(FieldDescriptor field) {
       verifyContainingType(field);
       return fields.hasField(field);
     }
 
-    @Override
     public Object getField(FieldDescriptor field) {
       verifyContainingType(field);
       Object result = fields.getField(field);
@@ -495,7 +463,6 @@ public final class DynamicMessage extends AbstractMessage {
       return result;
     }
 
-    @Override
     public Builder setField(FieldDescriptor field, Object value) {
       verifyContainingType(field);
       // TODO: This check should really be put in FieldSet.setField()
@@ -524,7 +491,6 @@ public final class DynamicMessage extends AbstractMessage {
       return this;
     }
 
-    @Override
     public Builder clearField(FieldDescriptor field) {
       verifyContainingType(field);
       OneofDescriptor oneofDescriptor = field.getContainingOneof();
@@ -538,19 +504,16 @@ public final class DynamicMessage extends AbstractMessage {
       return this;
     }
 
-    @Override
     public int getRepeatedFieldCount(FieldDescriptor field) {
       verifyContainingType(field);
       return fields.getRepeatedFieldCount(field);
     }
 
-    @Override
     public Object getRepeatedField(FieldDescriptor field, int index) {
       verifyContainingType(field);
       return fields.getRepeatedField(field, index);
     }
 
-    @Override
     public Builder setRepeatedField(FieldDescriptor field, int index, Object value) {
       verifyContainingType(field);
       verifySingularValueType(field, value);
@@ -558,7 +521,6 @@ public final class DynamicMessage extends AbstractMessage {
       return this;
     }
 
-    @Override
     public Builder addRepeatedField(FieldDescriptor field, Object value) {
       verifyContainingType(field);
       verifySingularValueType(field, value);
@@ -566,18 +528,15 @@ public final class DynamicMessage extends AbstractMessage {
       return this;
     }
 
-    @Override
     public UnknownFieldSet getUnknownFields() {
       return unknownFields;
     }
 
-    @Override
     public Builder setUnknownFields(UnknownFieldSet unknownFields) {
       this.unknownFields = unknownFields;
       return this;
     }
 
-    @Override
     public Builder mergeUnknownFields(UnknownFieldSet unknownFields) {
       this.unknownFields =
           UnknownFieldSet.newBuilder(this.unknownFields).mergeFrom(unknownFields).build();
@@ -628,12 +587,7 @@ public final class DynamicMessage extends AbstractMessage {
           // FieldSet.Builder accepts Message.Builder values for message fields.
           if (value instanceof Message.Builder) {
             throw new IllegalArgumentException(
-                String.format(
-                    "Wrong object type used with protocol message reflection.\n"
-                        + "Field number: %d, field java type: %s, value type: %s\n",
-                    field.getNumber(),
-                    field.getLiteType().getJavaType(),
-                    value.getClass().getName()));
+                "Wrong object type used with protocol message reflection.\nField number: " + field.getNumber() + ", field java type: " + field.getLiteType().getJavaType() + ", value type: " + value.getClass().getName() + "\n");
           }
           break;
         default:
@@ -655,7 +609,6 @@ public final class DynamicMessage extends AbstractMessage {
       }
     }
 
-    @Override
     public com.google.protobuf.Message.Builder getFieldBuilder(FieldDescriptor field) {
       verifyContainingType(field);
       // Error messages chosen for parity with GeneratedMessage.getFieldBuilder.
@@ -675,7 +628,6 @@ public final class DynamicMessage extends AbstractMessage {
       return builder;
     }
 
-    @Override
     public com.google.protobuf.Message.Builder getRepeatedFieldBuilder(
         FieldDescriptor field, int index) {
       verifyContainingType(field);
@@ -707,7 +659,7 @@ public final class DynamicMessage extends AbstractMessage {
       }
 
       throw new IllegalArgumentException(
-          String.format("Cannot convert %s to Message.Builder", o.getClass()));
+          "Cannot convert " + o.getClass() + " to Message.Builder");
     }
   }
 }

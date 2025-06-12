@@ -21,47 +21,19 @@ final class ExtensionRegistryFactory {
 
   /* Visible for Testing
   @Nullable */
-  static final Class<?> EXTENSION_REGISTRY_CLASS = reflectExtensionRegistry();
-
-  static Class<?> reflectExtensionRegistry() {
-    try {
-      return Class.forName(FULL_REGISTRY_CLASS_NAME);
-    } catch (ClassNotFoundException e) {
-      // The exception allocation is potentially expensive on Android (where it can be triggered
-      // many times at start up). Is there a way to ameliorate this?
-      return null;
-    }
-  }
+  static final Class<?> EXTENSION_REGISTRY_CLASS = null;
 
   /** Construct a new, empty instance. */
   public static ExtensionRegistryLite create() {
-    ExtensionRegistryLite result = invokeSubclassFactory("newInstance");
+    ExtensionRegistryLite result = null;
 
     return result != null ? result : new ExtensionRegistryLite();
   }
 
   /** Get the unmodifiable singleton empty instance. */
   public static ExtensionRegistryLite createEmpty() {
-    ExtensionRegistryLite result = invokeSubclassFactory("getEmptyRegistry");
+    ExtensionRegistryLite result = null;
 
     return result != null ? result : EMPTY_REGISTRY_LITE;
-  }
-
-  static boolean isFullRegistry(ExtensionRegistryLite registry) {
-    return EXTENSION_REGISTRY_CLASS != null
-        && EXTENSION_REGISTRY_CLASS.isAssignableFrom(registry.getClass());
-  }
-
-  private static final ExtensionRegistryLite invokeSubclassFactory(String methodName) {
-    if (EXTENSION_REGISTRY_CLASS == null) {
-      return null;
-    }
-
-    try {
-      return (ExtensionRegistryLite)
-          EXTENSION_REGISTRY_CLASS.getDeclaredMethod(methodName).invoke(null);
-    } catch (Exception e) {
-      return null;
-    }
   }
 }

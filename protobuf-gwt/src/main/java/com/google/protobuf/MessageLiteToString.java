@@ -7,17 +7,12 @@
 
 package com.google.protobuf;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import com.google.protobuf.gwt.StaticImpls;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
+import org.gwtproject.nio.Numbers;
 
 /** Helps generate {@link String} representations of {@link MessageLite} protos. */
 final class MessageLiteToString {
@@ -58,120 +53,7 @@ final class MessageLiteToString {
    */
   private static void reflectivePrintWithIndent(
       MessageLite messageLite, StringBuilder buffer, int indent) {
-    // Build a map of method name to method. We're looking for methods like getFoo(), hasFoo(),
-    // getFooList() and getFooMap() which might be useful for building an object's string
-    // representation.
-    Set<String> setters = new HashSet<>();
-    Map<String, Method> hazzers = new HashMap<>();
-    Map<String, Method> getters = new TreeMap<>();
-    for (Method method : messageLite.getClass().getDeclaredMethods()) {
-      if (Modifier.isStatic(method.getModifiers())) {
-        continue;
-      }
-      if (method.getName().length() < 3) {
-        continue;
-      }
-
-      if (method.getName().startsWith("set")) {
-        setters.add(method.getName());
-        continue;
-      }
-
-      if (!Modifier.isPublic(method.getModifiers())) {
-        continue;
-      }
-
-      if (method.getParameterTypes().length != 0) {
-        continue;
-      }
-
-      if (method.getName().startsWith("has")) {
-        hazzers.put(method.getName(), method);
-      } else if (method.getName().startsWith("get")) {
-        getters.put(method.getName(), method);
-      }
-    }
-
-    for (Entry<String, Method> getter : getters.entrySet()) {
-      String suffix = getter.getKey().substring(3);
-      if (suffix.endsWith(LIST_SUFFIX)
-          && !suffix.endsWith(BUILDER_LIST_SUFFIX)
-          // Sometimes people have fields named 'list' that aren't repeated.
-          && !suffix.equals(LIST_SUFFIX)) {
-        // Try to reflectively get the value and toString() the field as if it were repeated. This
-        // only works if the method names have not been proguarded out or renamed.
-        Method listMethod = getter.getValue();
-        if (listMethod != null && listMethod.getReturnType().equals(List.class)) {
-          printField(
-              buffer,
-              indent,
-              suffix.substring(0, suffix.length() - LIST_SUFFIX.length()),
-              GeneratedMessageLite.invokeOrDie(listMethod, messageLite));
-          continue;
-        }
-      }
-      if (suffix.endsWith(MAP_SUFFIX)
-          // Sometimes people have fields named 'map' that aren't maps.
-          && !suffix.equals(MAP_SUFFIX)) {
-        // Try to reflectively get the value and toString() the field as if it were a map. This only
-        // works if the method names have not been proguarded out or renamed.
-        Method mapMethod = getter.getValue();
-        if (mapMethod != null
-            && mapMethod.getReturnType().equals(Map.class)
-            // Skip the deprecated getter method with no prefix "Map" when the field name ends with
-            // "map".
-            && !mapMethod.isAnnotationPresent(Deprecated.class)
-            // Skip the internal mutable getter method.
-            && Modifier.isPublic(mapMethod.getModifiers())) {
-          printField(
-              buffer,
-              indent,
-              suffix.substring(0, suffix.length() - MAP_SUFFIX.length()),
-              GeneratedMessageLite.invokeOrDie(mapMethod, messageLite));
-          continue;
-        }
-      }
-
-      if (!setters.contains("set" + suffix)) {
-        continue;
-      }
-      if (suffix.endsWith(BYTES_SUFFIX)
-          && getters.containsKey("get" + suffix.substring(0, suffix.length() - "Bytes".length()))) {
-        // Heuristic to skip bytes based accessors for string fields.
-        continue;
-      }
-
-      // Try to reflectively get the value and toString() the field as if it were optional. This
-      // only works if the method names have not been proguarded out or renamed.
-      Method getMethod = getter.getValue();
-      Method hasMethod = hazzers.get("has" + suffix);
-      // TODO: Fix proto3 semantics.
-      if (getMethod != null) {
-        Object value = GeneratedMessageLite.invokeOrDie(getMethod, messageLite);
-        final boolean hasValue =
-            hasMethod == null
-                ? !isDefaultValue(value)
-                : (Boolean) GeneratedMessageLite.invokeOrDie(hasMethod, messageLite);
-        // TODO: This doesn't stop printing oneof case twice: value and enum style.
-        if (hasValue) {
-          printField(buffer, indent, suffix, value);
-        }
-        continue;
-      }
-    }
-
-    if (messageLite instanceof GeneratedMessageLite.ExtendableMessage) {
-      Iterator<Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object>> iter =
-          ((GeneratedMessageLite.ExtendableMessage<?, ?>) messageLite).extensions.iterator();
-      while (iter.hasNext()) {
-        Map.Entry<GeneratedMessageLite.ExtensionDescriptor, Object> entry = iter.next();
-        printField(buffer, indent, "[" + entry.getKey().getNumber() + "]", entry.getValue());
-      }
-    }
-
-    if (((GeneratedMessageLite<?, ?>) messageLite).unknownFields != null) {
-      ((GeneratedMessageLite<?, ?>) messageLite).unknownFields.printWithIndent(buffer, indent);
-    }
+    throw new UnsupportedOperationException("com.google.protobuf.MessageLiteToString reflectivePrintWithIndent(..)");
   }
 
   private static boolean isDefaultValue(Object o) {
@@ -182,10 +64,10 @@ final class MessageLiteToString {
       return ((Integer) o) == 0;
     }
     if (o instanceof Float) {
-      return Float.floatToRawIntBits((Float) o) == 0;
+      return StaticImpls.floatToRawIntBits((Float) o) == 0;
     }
     if (o instanceof Double) {
-      return Double.doubleToRawLongBits((Double) o) == 0;
+      return Numbers.doubleToRawLongBits((Double) o) == 0;
     }
     if (o instanceof String) {
       return o.equals("");

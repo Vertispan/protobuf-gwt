@@ -58,7 +58,6 @@ public final class UnknownFieldSet implements MessageLite {
     return defaultInstance;
   }
 
-  @Override
   public UnknownFieldSet getDefaultInstanceForType() {
     return defaultInstance;
   }
@@ -66,7 +65,6 @@ public final class UnknownFieldSet implements MessageLite {
   private static final UnknownFieldSet defaultInstance =
       new UnknownFieldSet(new TreeMap<Integer, Field>());
 
-  @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
@@ -74,7 +72,6 @@ public final class UnknownFieldSet implements MessageLite {
     return (other instanceof UnknownFieldSet) && fields.equals(((UnknownFieldSet) other).fields);
   }
 
-  @Override
   public int hashCode() {
     if (fields.isEmpty()) { // avoid allocation of iterator.
       // This optimization may not be helpful but it is needed for the allocation tests to pass.
@@ -85,7 +82,7 @@ public final class UnknownFieldSet implements MessageLite {
 
   /** Get a map of fields in the set by number. */
   public Map<Integer, Field> asMap() {
-    return (Map<Integer, Field>) fields.clone();
+    return (Map<Integer, Field>) com.google.protobuf.gwt.StaticImpls.clone(fields);
   }
 
   /** Check if the given field number is present in the set. */
@@ -100,7 +97,6 @@ public final class UnknownFieldSet implements MessageLite {
   }
 
   /** Serializes the set and writes it to {@code output}. */
-  @Override
   public void writeTo(CodedOutputStream output) throws IOException {
     for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
       Field field = entry.getValue();
@@ -112,7 +108,6 @@ public final class UnknownFieldSet implements MessageLite {
    * Converts the set to a string in protocol buffer text format. This is just a trivial wrapper
    * around {@link TextFormat.Printer#printToString(UnknownFieldSet)}.
    */
-  @Override
   public String toString() {
     return TextFormat.printer().printToString(this);
   }
@@ -121,7 +116,6 @@ public final class UnknownFieldSet implements MessageLite {
    * Serializes the message to a {@code ByteString} and returns it. This is just a trivial wrapper
    * around {@link #writeTo(CodedOutputStream)}.
    */
-  @Override
   public ByteString toByteString() {
     try {
       ByteString.CodedBuilder out = ByteString.newCodedBuilder(getSerializedSize());
@@ -137,7 +131,6 @@ public final class UnknownFieldSet implements MessageLite {
    * Serializes the message to a {@code byte} array and returns it. This is just a trivial wrapper
    * around {@link #writeTo(CodedOutputStream)}.
    */
-  @Override
   public byte[] toByteArray() {
     try {
       byte[] result = new byte[getSerializedSize()];
@@ -155,14 +148,12 @@ public final class UnknownFieldSet implements MessageLite {
    * Serializes the message and writes it to {@code output}. This is just a trivial wrapper around
    * {@link #writeTo(CodedOutputStream)}.
    */
-  @Override
   public void writeTo(OutputStream output) throws IOException {
     CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
     writeTo(codedOutput);
     codedOutput.flush();
   }
 
-  @Override
   public void writeDelimitedTo(OutputStream output) throws IOException {
     CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
     codedOutput.writeUInt32NoTag(getSerializedSize());
@@ -171,7 +162,6 @@ public final class UnknownFieldSet implements MessageLite {
   }
 
   /** Get the number of bytes required to encode this set. */
-  @Override
   public int getSerializedSize() {
     int result = 0;
     if (!fields.isEmpty()) {
@@ -228,7 +218,6 @@ public final class UnknownFieldSet implements MessageLite {
     return result;
   }
 
-  @Override
   public boolean isInitialized() {
     // UnknownFieldSets do not have required fields, so they are always
     // initialized.
@@ -256,12 +245,10 @@ public final class UnknownFieldSet implements MessageLite {
     return newBuilder().mergeFrom(input).build();
   }
 
-  @Override
   public Builder newBuilderForType() {
     return newBuilder();
   }
 
-  @Override
   public Builder toBuilder() {
     return newBuilder().mergeFrom(this);
   }
@@ -306,7 +293,6 @@ public final class UnknownFieldSet implements MessageLite {
     /**
      * Build the {@link UnknownFieldSet} and return it.
      */
-    @Override
     public UnknownFieldSet build() {
       UnknownFieldSet result;
       if (fieldBuilders.isEmpty()) {
@@ -321,13 +307,11 @@ public final class UnknownFieldSet implements MessageLite {
       return result;
     }
 
-    @Override
     public UnknownFieldSet buildPartial() {
       // No required fields, so this is the same as build().
       return build();
     }
 
-    @Override
     public Builder clone() {
       Builder clone = UnknownFieldSet.newBuilder();
       for (Map.Entry<Integer, Field.Builder> entry : fieldBuilders.entrySet()) {
@@ -338,13 +322,11 @@ public final class UnknownFieldSet implements MessageLite {
       return clone;
     }
 
-    @Override
     public UnknownFieldSet getDefaultInstanceForType() {
       return UnknownFieldSet.getDefaultInstance();
     }
 
     /** Reset the builder to an empty set. */
-    @Override
     public Builder clear() {
       fieldBuilders = new TreeMap<>();
       return this;
@@ -460,7 +442,6 @@ public final class UnknownFieldSet implements MessageLite {
     }
 
     /** Parse an entire message from {@code input} and merge its fields into this set. */
-    @Override
     public Builder mergeFrom(CodedInputStream input) throws IOException {
       while (true) {
         int tag = input.readTag();
@@ -508,7 +489,6 @@ public final class UnknownFieldSet implements MessageLite {
      * Parse {@code data} as an {@code UnknownFieldSet} and merge it with the set being built. This
      * is just a small wrapper around {@link #mergeFrom(CodedInputStream)}.
      */
-    @Override
     public Builder mergeFrom(ByteString data) throws InvalidProtocolBufferException {
       try {
         CodedInputStream input = data.newCodedInput();
@@ -527,7 +507,6 @@ public final class UnknownFieldSet implements MessageLite {
      * Parse {@code data} as an {@code UnknownFieldSet} and merge it with the set being built. This
      * is just a small wrapper around {@link #mergeFrom(CodedInputStream)}.
      */
-    @Override
     public Builder mergeFrom(byte[] data) throws InvalidProtocolBufferException {
       try {
         CodedInputStream input = CodedInputStream.newInstance(data);
@@ -546,7 +525,6 @@ public final class UnknownFieldSet implements MessageLite {
      * Parse an {@code UnknownFieldSet} from {@code input} and merge it with the set being built.
      * This is just a small wrapper around {@link #mergeFrom(CodedInputStream)}.
      */
-    @Override
     public Builder mergeFrom(InputStream input) throws IOException {
       CodedInputStream codedInput = CodedInputStream.newInstance(input);
       mergeFrom(codedInput);
@@ -554,7 +532,6 @@ public final class UnknownFieldSet implements MessageLite {
       return this;
     }
 
-    @Override
     public boolean mergeDelimitedFrom(InputStream input) throws IOException {
       int firstByte = input.read();
       if (firstByte == -1) {
@@ -566,28 +543,24 @@ public final class UnknownFieldSet implements MessageLite {
       return true;
     }
 
-    @Override
     public boolean mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException {
       // UnknownFieldSet has no extensions.
       return mergeDelimitedFrom(input);
     }
 
-    @Override
     public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException {
       // UnknownFieldSet has no extensions.
       return mergeFrom(input);
     }
 
-    @Override
     public Builder mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
       // UnknownFieldSet has no extensions.
       return mergeFrom(data);
     }
 
-    @Override
     public Builder mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException {
       try {
         CodedInputStream input = CodedInputStream.newInstance(data, off, len);
@@ -602,37 +575,24 @@ public final class UnknownFieldSet implements MessageLite {
       }
     }
 
-    @Override
     public Builder mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
       // UnknownFieldSet has no extensions.
       return mergeFrom(data);
     }
 
-    @Override
     public Builder mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
       // UnknownFieldSet has no extensions.
       return mergeFrom(data, off, len);
     }
 
-    @Override
     public Builder mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException {
       // UnknownFieldSet has no extensions.
       return mergeFrom(input);
     }
 
-    @Override
-    public Builder mergeFrom(MessageLite m) {
-      if (m instanceof UnknownFieldSet) {
-        return mergeFrom((UnknownFieldSet) m);
-      }
-      throw new IllegalArgumentException(
-          "mergeFrom(MessageLite) can only merge messages of the same type.");
-    }
-
-    @Override
     public boolean isInitialized() {
       // UnknownFieldSets do not have required fields, so they are always
       // initialized.
@@ -703,7 +663,6 @@ public final class UnknownFieldSet implements MessageLite {
       return group;
     }
 
-    @Override
     public boolean equals(Object other) {
       if (this == other) {
         return true;
@@ -714,7 +673,6 @@ public final class UnknownFieldSet implements MessageLite {
       return Arrays.equals(getIdentityArray(), ((Field) other).getIdentityArray());
     }
 
-    @Override
     public int hashCode() {
       return Arrays.hashCode(getIdentityArray());
     }
@@ -870,7 +828,6 @@ public final class UnknownFieldSet implements MessageLite {
 
       private Field result;
 
-      @Override
       public Builder clone() {
         Field copy = new Field();
         if (result.varint == null) {
@@ -1032,7 +989,6 @@ public final class UnknownFieldSet implements MessageLite {
 
   /** Parser to implement MessageLite interface. */
   public static final class Parser extends AbstractParser<UnknownFieldSet> {
-    @Override
     public UnknownFieldSet parsePartialFrom(
         CodedInputStream input, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
@@ -1050,7 +1006,6 @@ public final class UnknownFieldSet implements MessageLite {
 
   private static final Parser PARSER = new Parser();
 
-  @Override
   public final Parser getParserForType() {
     return PARSER;
   }

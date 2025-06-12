@@ -81,19 +81,16 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
       this.defaultEntry = defaultEntry;
     }
 
-    @Override
     public Message convertKeyAndValueToMessage(K key, V value) {
       return defaultEntry.newBuilderForType().setKey(key).setValue(value).buildPartial();
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public void convertMessageToKeyAndValue(Message message, Map<K, V> map) {
       MapEntry<K, V> entry = (MapEntry<K, V>) message;
       map.put(entry.getKey(), entry.getValue());
     }
 
-    @Override
     public Message getMessageDefaultInstance() {
       return defaultEntry;
     }
@@ -182,7 +179,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
   }
 
   @SuppressWarnings("unchecked")
-  @Override
   public boolean equals(Object object) {
     if (!(object instanceof MapField)) {
       return false;
@@ -191,7 +187,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
     return MapFieldLite.<K, V>equals(getMap(), other.getMap());
   }
 
-  @Override
   public int hashCode() {
     return MapFieldLite.<K, V>calculateHashCodeForMap(getMap());
   }
@@ -202,7 +197,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
   }
 
   /** Gets the content of this MapField as a read-only List. */
-  @Override
   List<Message> getList() {
     if (mode == StorageMode.MAP) {
       synchronized (this) {
@@ -216,7 +210,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
   }
 
   /** Gets a mutable List view of this MapField. */
-  @Override
   List<Message> getMutableList() {
     if (mode != StorageMode.LIST) {
       if (mode == StorageMode.MAP) {
@@ -229,7 +222,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
   }
 
   /** Gets the default instance of the message stored in the list view of this map field. */
-  @Override
   Message getMapEntryMessageDefaultInstance() {
     return converter.getMessageDefaultInstance();
   }
@@ -250,7 +242,6 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
   /* (non-Javadoc)
    * @see com.google.protobuf.MutabilityOracle#ensureMutable()
    */
-  @Override
   public void ensureMutable() {
     if (!isMutable()) {
       throw new UnsupportedOperationException();
@@ -267,32 +258,26 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
       this.delegate = delegate;
     }
 
-    @Override
     public int size() {
       return delegate.size();
     }
 
-    @Override
     public boolean isEmpty() {
       return delegate.isEmpty();
     }
 
-    @Override
     public boolean containsKey(Object key) {
       return delegate.containsKey(key);
     }
 
-    @Override
     public boolean containsValue(Object value) {
       return delegate.containsValue(value);
     }
 
-    @Override
     public V get(Object key) {
       return delegate.get(key);
     }
 
-    @Override
     public V put(K key, V value) {
       mutabilityOracle.ensureMutable();
       checkNotNull(key);
@@ -300,13 +285,11 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
       return delegate.put(key, value);
     }
 
-    @Override
     public V remove(Object key) {
       mutabilityOracle.ensureMutable();
       return delegate.remove(key);
     }
 
-    @Override
     public void putAll(Map<? extends K, ? extends V> m) {
       mutabilityOracle.ensureMutable();
       for (K key : m.keySet()) {
@@ -316,38 +299,31 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
       delegate.putAll(m);
     }
 
-    @Override
     public void clear() {
       mutabilityOracle.ensureMutable();
       delegate.clear();
     }
 
-    @Override
     public Set<K> keySet() {
       return new MutabilityAwareSet<K>(mutabilityOracle, delegate.keySet());
     }
 
-    @Override
     public Collection<V> values() {
       return new MutabilityAwareCollection<V>(mutabilityOracle, delegate.values());
     }
 
-    @Override
     public Set<java.util.Map.Entry<K, V>> entrySet() {
       return new MutabilityAwareSet<Entry<K, V>>(mutabilityOracle, delegate.entrySet());
     }
 
-    @Override
     public boolean equals(Object o) {
       return delegate.equals(o);
     }
 
-    @Override
     public int hashCode() {
       return delegate.hashCode();
     }
 
-    @Override
     public String toString() {
       return delegate.toString();
     }
@@ -362,88 +338,72 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
         this.delegate = delegate;
       }
 
-      @Override
       public int size() {
         return delegate.size();
       }
 
-      @Override
       public boolean isEmpty() {
         return delegate.isEmpty();
       }
 
-      @Override
       public boolean contains(Object o) {
         return delegate.contains(o);
       }
 
-      @Override
       public Iterator<E> iterator() {
         return new MutabilityAwareIterator<E>(mutabilityOracle, delegate.iterator());
       }
 
-      @Override
       public Object[] toArray() {
         return delegate.toArray();
       }
 
-      @Override
       public <T> T[] toArray(T[] a) {
         return delegate.toArray(a);
       }
 
-      @Override
       public boolean add(E e) {
         // Unsupported operation in the delegate.
         throw new UnsupportedOperationException();
       }
 
-      @Override
       public boolean remove(Object o) {
         mutabilityOracle.ensureMutable();
         return delegate.remove(o);
       }
 
-      @Override
       public boolean containsAll(Collection<?> c) {
         return delegate.containsAll(c);
       }
 
-      @Override
       public boolean addAll(Collection<? extends E> c) {
         // Unsupported operation in the delegate.
         throw new UnsupportedOperationException();
       }
 
-      @Override
       public boolean removeAll(Collection<?> c) {
         mutabilityOracle.ensureMutable();
         return delegate.removeAll(c);
       }
 
-      @Override
       public boolean retainAll(Collection<?> c) {
         mutabilityOracle.ensureMutable();
         return delegate.retainAll(c);
       }
 
-      @Override
       public void clear() {
         mutabilityOracle.ensureMutable();
         delegate.clear();
       }
 
-      @Override
       public boolean equals(Object o) {
         return delegate.equals(o);
       }
 
-      @Override
       public int hashCode() {
         return delegate.hashCode();
       }
 
-      @Override
       public String toString() {
         return delegate.toString();
       }
@@ -459,88 +419,72 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
         this.delegate = delegate;
       }
 
-      @Override
       public int size() {
         return delegate.size();
       }
 
-      @Override
       public boolean isEmpty() {
         return delegate.isEmpty();
       }
 
-      @Override
       public boolean contains(Object o) {
         return delegate.contains(o);
       }
 
-      @Override
       public Iterator<E> iterator() {
         return new MutabilityAwareIterator<E>(mutabilityOracle, delegate.iterator());
       }
 
-      @Override
       public Object[] toArray() {
         return delegate.toArray();
       }
 
-      @Override
       public <T> T[] toArray(T[] a) {
         return delegate.toArray(a);
       }
 
-      @Override
       public boolean add(E e) {
         mutabilityOracle.ensureMutable();
         return delegate.add(e);
       }
 
-      @Override
       public boolean remove(Object o) {
         mutabilityOracle.ensureMutable();
         return delegate.remove(o);
       }
 
-      @Override
       public boolean containsAll(Collection<?> c) {
         return delegate.containsAll(c);
       }
 
-      @Override
       public boolean addAll(Collection<? extends E> c) {
         mutabilityOracle.ensureMutable();
         return delegate.addAll(c);
       }
 
-      @Override
       public boolean retainAll(Collection<?> c) {
         mutabilityOracle.ensureMutable();
         return delegate.retainAll(c);
       }
 
-      @Override
       public boolean removeAll(Collection<?> c) {
         mutabilityOracle.ensureMutable();
         return delegate.removeAll(c);
       }
 
-      @Override
       public void clear() {
         mutabilityOracle.ensureMutable();
         delegate.clear();
       }
 
-      @Override
       public boolean equals(Object o) {
         return delegate.equals(o);
       }
 
-      @Override
       public int hashCode() {
         return delegate.hashCode();
       }
 
-      @Override
       public String toString() {
         return delegate.toString();
       }
@@ -556,33 +500,27 @@ public class MapField<K, V> extends MapFieldReflectionAccessor implements Mutabi
         this.delegate = delegate;
       }
 
-      @Override
       public boolean hasNext() {
         return delegate.hasNext();
       }
 
-      @Override
       public E next() {
         return delegate.next();
       }
 
-      @Override
       public void remove() {
         mutabilityOracle.ensureMutable();
         delegate.remove();
       }
 
-      @Override
       public boolean equals(Object obj) {
         return delegate.equals(obj);
       }
 
-      @Override
       public int hashCode() {
         return delegate.hashCode();
       }
 
-      @Override
       public String toString() {
         return delegate.toString();
       }

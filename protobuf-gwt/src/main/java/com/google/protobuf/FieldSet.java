@@ -121,7 +121,6 @@ final class FieldSet<T extends FieldSet.FieldDescriptorLite<T>> {
     return isImmutable;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -135,7 +134,6 @@ final class FieldSet<T extends FieldSet.FieldDescriptorLite<T>> {
     return fields.equals(other.fields);
   }
 
-  @Override
   public int hashCode() {
     return fields.hashCode();
   }
@@ -146,7 +144,6 @@ final class FieldSet<T extends FieldSet.FieldDescriptorLite<T>> {
    *
    * @return the newly cloned FieldSet
    */
-  @Override
   public FieldSet<T> clone() {
     // We can't just call fields.clone because List objects in the map
     // should not be shared.
@@ -375,12 +372,7 @@ final class FieldSet<T extends FieldSet.FieldDescriptorLite<T>> {
   private void verifyType(final T descriptor, final Object value) {
     if (!isValidType(descriptor.getLiteType(), value)) {
       throw new IllegalArgumentException(
-          String.format(
-              "Wrong object type used with protocol message reflection.\n"
-              + "Field number: %d, field java type: %s, value type: %s\n",
-              descriptor.getNumber(),
-              descriptor.getLiteType().getJavaType(),
-              value.getClass().getName()));
+          "Wrong object type used with protocol message reflection.\nField number: " + descriptor.getNumber() + ", field java type: " + descriptor.getLiteType().getJavaType() + ", value type: " + value.getClass().getName() + "\n");
     }
   }
 
@@ -1229,12 +1221,7 @@ final class FieldSet<T extends FieldSet.FieldDescriptorLite<T>> {
           return;
         }
         throw new IllegalArgumentException(
-            String.format(
-                "Wrong object type used with protocol message reflection.\n"
-                + "Field number: %d, field java type: %s, value type: %s\n",
-                descriptor.getNumber(),
-                descriptor.getLiteType().getJavaType(),
-                value.getClass().getName()));
+            "Wrong object type used with protocol message reflection.\nField number: " + descriptor.getNumber() + ", field java type: " + descriptor.getLiteType().getJavaType() + ", value type: " + value.getClass().getName() + "\n");
       }
     }
 

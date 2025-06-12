@@ -62,7 +62,7 @@ public class MapFieldBuilder<
     Class<?> valueClass = converter.defaultEntry().getValue().getClass();
     for (Message entry : messageList) {
       MapEntry<KeyT, ?> typedEntry = (MapEntry<KeyT, ?>) entry;
-      if (valueClass.isInstance(typedEntry.getValue())) {
+      if (false) {
         list.add((MapEntry<KeyT, MessageT>) typedEntry);
       } else {
         // This needs to use mergeFrom to allow MapEntry<KeyT, DynamicMessage> to be used.
@@ -165,7 +165,6 @@ public class MapFieldBuilder<
   }
 
   @SuppressWarnings("unchecked")
-  @Override
   public boolean equals(Object object) {
     if (!(object instanceof MapFieldBuilder)) {
       return false;
@@ -173,7 +172,6 @@ public class MapFieldBuilder<
     return typedEquals((MapFieldBuilder<KeyT, MessageOrBuilderT, MessageT, BuilderT>) object);
   }
 
-  @Override
   public int hashCode() {
     return MapFieldLite.<KeyT, MessageOrBuilderT>calculateHashCodeForMap(ensureBuilderMap());
   }
@@ -199,19 +197,16 @@ public class MapFieldBuilder<
 
   // MapFieldReflectionAccessor implementation.
   /** Gets the content of this MapField as a read-only List. */
-  @Override
   List<Message> getList() {
     return ensureMessageList();
   }
 
   /** Gets a mutable List view of this MapField. */
-  @Override
   List<Message> getMutableList() {
     return ensureMessageList();
   }
 
   /** Gets the default instance of the message stored in the list view of this map field. */
-  @Override
   Message getMapEntryMessageDefaultInstance() {
     return converter.defaultEntry();
   }

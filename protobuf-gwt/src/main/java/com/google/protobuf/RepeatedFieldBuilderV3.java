@@ -522,7 +522,6 @@ public class RepeatedFieldBuilderV3<
     }
   }
 
-  @Override
   public void markDirty() {
     onChanged();
   }
@@ -562,12 +561,10 @@ public class RepeatedFieldBuilderV3<
       this.builder = builder;
     }
 
-    @Override
     public int size() {
       return this.builder.getCount();
     }
 
-    @Override
     public MType get(int index) {
       return builder.getMessage(index);
     }
@@ -596,12 +593,10 @@ public class RepeatedFieldBuilderV3<
       this.builder = builder;
     }
 
-    @Override
     public int size() {
       return this.builder.getCount();
     }
 
-    @Override
     public BType get(int index) {
       return builder.getBuilder(index);
     }
@@ -630,12 +625,10 @@ public class RepeatedFieldBuilderV3<
       this.builder = builder;
     }
 
-    @Override
     public int size() {
       return this.builder.getCount();
     }
 
-    @Override
     public IType get(int index) {
       return builder.getMessageOrBuilder(index);
     }

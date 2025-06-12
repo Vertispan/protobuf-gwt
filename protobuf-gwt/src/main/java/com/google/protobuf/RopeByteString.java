@@ -7,6 +7,7 @@
 
 package com.google.protobuf;
 
+import com.google.protobuf.gwt.StaticImpls;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -252,13 +253,11 @@ final class RopeByteString extends ByteString {
    * @return the value
    * @throws ArrayIndexOutOfBoundsException {@code index} is < 0 or >= size
    */
-  @Override
   public byte byteAt(int index) {
     checkIndex(index, totalLength);
     return internalByteAt(index);
   }
 
-  @Override
   byte internalByteAt(int index) {
     // Find the relevant piece by recursive descent
     if (index < leftLength) {
@@ -268,12 +267,10 @@ final class RopeByteString extends ByteString {
     return right.internalByteAt(index - leftLength);
   }
 
-  @Override
   public int size() {
     return totalLength;
   }
 
-  @Override
   public ByteIterator iterator() {
     return new AbstractByteIterator() {
       final PieceIterator pieces = new PieceIterator(RopeByteString.this);
@@ -285,12 +282,10 @@ final class RopeByteString extends ByteString {
         return pieces.hasNext() ? pieces.next().iterator() : null;
       }
 
-      @Override
       public boolean hasNext() {
         return current != null;
       }
 
-      @Override
       public byte nextByte() {
         if (current == null) {
           throw new NoSuchElementException();
@@ -307,7 +302,6 @@ final class RopeByteString extends ByteString {
   // =================================================================
   // Pieces
 
-  @Override
   protected int getTreeDepth() {
     return treeDepth;
   }
@@ -319,7 +313,6 @@ final class RopeByteString extends ByteString {
    *
    * @return true if the tree is balanced
    */
-  @Override
   protected boolean isBalanced() {
     return totalLength >= minLength(treeDepth);
   }
@@ -337,7 +330,6 @@ final class RopeByteString extends ByteString {
    * @param endIndex the last character is the one before this index
    * @return substring leaf node or tree
    */
-  @Override
   public ByteString substring(int beginIndex, int endIndex) {
     final int length = checkRange(beginIndex, endIndex, totalLength);
 
@@ -374,7 +366,6 @@ final class RopeByteString extends ByteString {
   // =================================================================
   // ByteString -> byte[]
 
-  @Override
   protected void copyToInternal(
       byte[] target, int sourceOffset, int targetOffset, int numberToCopy) {
     if (sourceOffset + numberToCopy <= leftLength) {
@@ -388,19 +379,16 @@ final class RopeByteString extends ByteString {
     }
   }
 
-  @Override
   public void copyTo(ByteBuffer target) {
     left.copyTo(target);
     right.copyTo(target);
   }
 
-  @Override
   public ByteBuffer asReadOnlyByteBuffer() {
-    ByteBuffer byteBuffer = ByteBuffer.wrap(toByteArray());
-    return byteBuffer.asReadOnlyBuffer();
+    ByteBuffer byteBuffer = StaticImpls.wrap(toByteArray());
+    return com.google.protobuf.gwt.StaticImpls.asReadOnlyBuffer(byteBuffer);
   }
 
-  @Override
   public List<ByteBuffer> asReadOnlyByteBufferList() {
     // Walk through the list of LeafByteString's that make up this
     // rope, and add each one as a read-only ByteBuffer.
@@ -413,13 +401,11 @@ final class RopeByteString extends ByteString {
     return result;
   }
 
-  @Override
   public void writeTo(OutputStream outputStream) throws IOException {
     left.writeTo(outputStream);
     right.writeTo(outputStream);
   }
 
-  @Override
   void writeToInternal(OutputStream out, int sourceOffset, int numberToWrite) throws IOException {
     if (sourceOffset + numberToWrite <= leftLength) {
       left.writeToInternal(out, sourceOffset, numberToWrite);
@@ -432,19 +418,16 @@ final class RopeByteString extends ByteString {
     }
   }
 
-  @Override
   void writeTo(ByteOutput output) throws IOException {
     left.writeTo(output);
     right.writeTo(output);
   }
 
-  @Override
   void writeToReverse(ByteOutput output) throws IOException {
     right.writeToReverse(output);
     left.writeToReverse(output);
   }
 
-  @Override
   protected String toStringInternal(Charset charset) {
     return new String(toByteArray(), charset);
   }
@@ -452,14 +435,12 @@ final class RopeByteString extends ByteString {
   // =================================================================
   // UTF-8 decoding
 
-  @Override
   public boolean isValidUtf8() {
     int leftPartial = left.partialIsValidUtf8(Utf8.COMPLETE, 0, leftLength);
     int state = right.partialIsValidUtf8(leftPartial, 0, right.size());
     return state == Utf8.COMPLETE;
   }
 
-  @Override
   protected int partialIsValidUtf8(int state, int offset, int length) {
     int toIndex = offset + length;
     if (toIndex <= leftLength) {
@@ -476,7 +457,6 @@ final class RopeByteString extends ByteString {
   // =================================================================
   // equals() and hashCode()
 
-  @Override
   public boolean equals(Object other) {
     if (other == this) {
       return true;
@@ -561,7 +541,6 @@ final class RopeByteString extends ByteString {
     }
   }
 
-  @Override
   protected int partialHash(int h, int offset, int length) {
     int toIndex = offset + length;
     if (toIndex <= leftLength) {
@@ -578,7 +557,6 @@ final class RopeByteString extends ByteString {
   // =================================================================
   // Input stream
 
-  @Override
   public CodedInputStream newCodedInput() {
     // Passing along direct references to internal ByteBuffers can support more efficient parsing
     // via aliasing in CodedInputStream for users who wish to use it.
@@ -588,7 +566,6 @@ final class RopeByteString extends ByteString {
     return CodedInputStream.newInstance(asReadOnlyByteBufferList(), /* bufferIsImmutable= */ true);
   }
 
-  @Override
   public InputStream newInput() {
     return new RopeInputStream();
   }
@@ -751,7 +728,6 @@ final class RopeByteString extends ByteString {
       }
     }
 
-    @Override
     public boolean hasNext() {
       return next != null;
     }
@@ -761,7 +737,6 @@ final class RopeByteString extends ByteString {
      *
      * @return next non-empty LeafByteString or {@code null}
      */
-    @Override
     public LeafByteString next() {
       if (next == null) {
         throw new NoSuchElementException();
@@ -771,7 +746,6 @@ final class RopeByteString extends ByteString {
       return result;
     }
 
-    @Override
     public void remove() {
       throw new UnsupportedOperationException();
     }
@@ -781,14 +755,6 @@ final class RopeByteString extends ByteString {
   // Serializable
 
   private static final long serialVersionUID = 1L;
-
-  Object writeReplace() {
-    return ByteString.wrap(toByteArray());
-  }
-
-  private void readObject(@SuppressWarnings("unused") ObjectInputStream in) throws IOException {
-    throw new InvalidObjectException("RopeByteStream instances are not to be serialized directly");
-  }
 
   /** This class is the {@link RopeByteString} equivalent for {@link ByteArrayInputStream}. */
   private class RopeInputStream extends InputStream {
@@ -819,7 +785,6 @@ final class RopeByteString extends ByteString {
      *
      * @return -1 if at EOF, otherwise the actual number of bytes read.
      */
-    @Override
     public int read(byte[] b, int offset, int length) {
       if (b == null) {
         throw new NullPointerException();
@@ -837,7 +802,6 @@ final class RopeByteString extends ByteString {
       }
     }
 
-    @Override
     public long skip(long length) {
       if (length < 0) {
         throw new IndexOutOfBoundsException();
@@ -878,7 +842,6 @@ final class RopeByteString extends ByteString {
       return length - bytesRemaining;
     }
 
-    @Override
     public int read() throws IOException {
       advanceIfCurrentPieceFullyRead();
       if (currentPiece == null) {
@@ -888,23 +851,19 @@ final class RopeByteString extends ByteString {
       }
     }
 
-    @Override
     public int available() throws IOException {
       return availableInternal();
     }
 
-    @Override
     public boolean markSupported() {
       return true;
     }
 
-    @Override
     public void mark(int readAheadLimit) {
       // Set the mark to our position in the byte string
       mark = currentPieceOffsetInRope + currentPieceIndex;
     }
 
-    @Override
     public synchronized void reset() {
       // Just reinitialize and skip the specified number of bytes.
       initialize();

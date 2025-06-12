@@ -53,18 +53,15 @@ public final class MapFieldLite<K, V> extends LinkedHashMap<K, V> {
     }
   }
 
-  @Override
   public Set<Map.Entry<K, V>> entrySet() {
     return isEmpty() ? Collections.<Map.Entry<K, V>>emptySet() : super.entrySet();
   }
 
-  @Override
   public void clear() {
     ensureMutable();
     super.clear();
   }
 
-  @Override
   public V put(K key, V value) {
     ensureMutable();
     checkNotNull(key);
@@ -77,14 +74,12 @@ public final class MapFieldLite<K, V> extends LinkedHashMap<K, V> {
     return put(entry.getKey(), entry.getValue());
   }
 
-  @Override
   public void putAll(Map<? extends K, ? extends V> m) {
     ensureMutable();
     checkForNullKeysAndValues(m);
     super.putAll(m);
   }
 
-  @Override
   public V remove(Object key) {
     ensureMutable();
     return super.remove(key);
@@ -128,7 +123,6 @@ public final class MapFieldLite<K, V> extends LinkedHashMap<K, V> {
 
   /** Checks whether two map fields are equal. */
   @SuppressWarnings("unchecked")
-  @Override
   public boolean equals(Object object) {
     return (object instanceof Map) && equals(this, (Map<K, V>) object);
   }
@@ -157,7 +151,6 @@ public final class MapFieldLite<K, V> extends LinkedHashMap<K, V> {
     return result;
   }
 
-  @Override
   public int hashCode() {
     return calculateHashCodeForMap(this);
   }

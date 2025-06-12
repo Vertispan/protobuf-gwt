@@ -95,25 +95,21 @@ public final class WireFormat {
     FIXED32(JavaType.INT, WIRETYPE_FIXED32),
     BOOL(JavaType.BOOLEAN, WIRETYPE_VARINT),
     STRING(JavaType.STRING, WIRETYPE_LENGTH_DELIMITED) {
-      @Override
       public boolean isPackable() {
         return false;
       }
     },
     GROUP(JavaType.MESSAGE, WIRETYPE_START_GROUP) {
-      @Override
       public boolean isPackable() {
         return false;
       }
     },
     MESSAGE(JavaType.MESSAGE, WIRETYPE_LENGTH_DELIMITED) {
-      @Override
       public boolean isPackable() {
         return false;
       }
     },
     BYTES(JavaType.BYTE_STRING, WIRETYPE_LENGTH_DELIMITED) {
-      @Override
       public boolean isPackable() {
         return false;
       }
@@ -165,21 +161,18 @@ public final class WireFormat {
   enum Utf8Validation {
     /** Eagerly parses to String; silently accepts invalid UTF8 bytes. */
     LOOSE {
-      @Override
       Object readString(CodedInputStream input) throws IOException {
         return input.readString();
       }
     },
     /** Eagerly parses to String; throws an IOException on invalid bytes. */
     STRICT {
-      @Override
       Object readString(CodedInputStream input) throws IOException {
         return input.readStringRequireUtf8();
       }
     },
     /** Keep data as ByteString; validation/conversion to String is lazy. */
     LAZY {
-      @Override
       Object readString(CodedInputStream input) throws IOException {
         return input.readBytes();
       }

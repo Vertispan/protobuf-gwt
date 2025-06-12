@@ -51,7 +51,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     this.size = size;
   }
 
-  @Override
   protected void removeRange(int fromIndex, int toIndex) {
     ensureIsMutable();
     if (toIndex < fromIndex) {
@@ -63,7 +62,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     modCount++;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -86,7 +84,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = 1;
     for (int i = 0; i < size; i++) {
@@ -95,7 +92,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return result;
   }
 
-  @Override
   public IntList mutableCopyWithCapacity(int capacity) {
     if (capacity < size) {
       throw new IllegalArgumentException();
@@ -103,18 +99,15 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return new IntArrayList(Arrays.copyOf(array, capacity), size, true);
   }
 
-  @Override
   public Integer get(int index) {
     return getInt(index);
   }
 
-  @Override
   public int getInt(int index) {
     ensureIndexInRange(index);
     return array[index];
   }
 
-  @Override
   public int indexOf(Object element) {
     if (!(element instanceof Integer)) {
       return -1;
@@ -129,22 +122,18 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return -1;
   }
 
-  @Override
   public boolean contains(Object element) {
     return indexOf(element) != -1;
   }
 
-  @Override
   public int size() {
     return size;
   }
 
-  @Override
   public Integer set(int index, Integer element) {
     return setInt(index, element);
   }
 
-  @Override
   public int setInt(int index, int element) {
     ensureIsMutable();
     ensureIndexInRange(index);
@@ -153,19 +142,16 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return previousValue;
   }
 
-  @Override
   public boolean add(Integer element) {
     addInt(element);
     return true;
   }
 
-  @Override
   public void add(int index, Integer element) {
     addInt(index, element);
   }
 
   /** Like {@link #add(Integer)} but more efficient in that it doesn't box the element. */
-  @Override
   public void addInt(int element) {
     ensureIsMutable();
     if (size == array.length) {
@@ -208,7 +194,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     modCount++;
   }
 
-  @Override
   public boolean addAll(Collection<? extends Integer> collection) {
     ensureIsMutable();
 
@@ -241,7 +226,6 @@ final class IntArrayList extends AbstractProtobufList<Integer>
     return true;
   }
 
-  @Override
   public Integer remove(int index) {
     ensureIsMutable();
     ensureIndexInRange(index);

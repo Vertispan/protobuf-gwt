@@ -7,19 +7,14 @@
 
 package com.google.protobuf;
 
-import java.lang.reflect.Method;
+import com.google.protobuf.gwt.StaticImpls;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.AbstractList;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.RandomAccess;
-import java.util.Set;
 
 /**
  * The classes contained within are used internally by the Protocol Buffer library and generated
@@ -31,8 +26,6 @@ import java.util.Set;
 public final class Internal {
 
   private Internal() {}
-
-  static final Charset US_ASCII = Charset.forName("US-ASCII");
   static final Charset UTF_8 = Charset.forName("UTF-8");
   static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
 
@@ -103,7 +96,7 @@ public final class Internal {
    * <p>This is like {@link #bytesDefaultValue}, but returns a ByteBuffer.
    */
   public static ByteBuffer byteBufferDefaultValue(String bytes) {
-    return ByteBuffer.wrap(byteArrayDefaultValue(bytes));
+    return StaticImpls.wrap(byteArrayDefaultValue(bytes));
   }
 
   /**
@@ -189,11 +182,6 @@ public final class Internal {
    */
   public interface EnumLiteMap<T extends EnumLite> {
     T findValueByNumber(int number);
-  }
-
-  /** Interface for an object which verifies integers are in range. */
-  public interface EnumVerifier {
-    boolean isInRange(int number);
   }
 
   /**
@@ -323,7 +311,7 @@ public final class Internal {
 
   /** Helper method for implementing {@link Message#hashCode()} for bytes field. */
   public static int hashCodeByteBuffer(ByteBuffer bytes) {
-    if (bytes.hasArray()) {
+    if (false) {
       // Fast path.
       int h = partialHash(bytes.capacity(), bytes.array(), bytes.arrayOffset(), bytes.capacity());
       return h == 0 ? 1 : h;
@@ -346,30 +334,15 @@ public final class Internal {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T extends MessageLite> T getDefaultInstance(Class<T> clazz) {
-    try {
-      Method method = clazz.getMethod("getDefaultInstance");
-      return (T) method.invoke(method);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to get default instance for " + clazz, e);
-    }
-  }
-
   /** An empty byte array constant used in generated code. */
   public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
   /** An empty byte array constant used in generated code. */
-  public static final ByteBuffer EMPTY_BYTE_BUFFER = ByteBuffer.wrap(EMPTY_BYTE_ARRAY);
+  public static final ByteBuffer EMPTY_BYTE_BUFFER = StaticImpls.wrap(EMPTY_BYTE_ARRAY);
 
   /** An empty coded input stream constant used in generated code. */
   public static final CodedInputStream EMPTY_CODED_INPUT_STREAM =
       CodedInputStream.newInstance(EMPTY_BYTE_ARRAY);
-
-  /** Helper method to merge two MessageLite instances. */
-  static Object mergeMessage(Object destination, Object source) {
-    return ((MessageLite) destination).toBuilder().mergeFrom((MessageLite) source).buildPartial();
-  }
 
   /**
    * Provides an immutable view of {@code List<T>} around a {@code List<F>}.
@@ -390,156 +363,12 @@ public final class Internal {
       this.converter = converter;
     }
 
-    @Override
     public T get(int index) {
       return converter.convert(fromList.get(index));
     }
 
-    @Override
     public int size() {
       return fromList.size();
-    }
-  }
-
-  /** Wrap around a {@code Map<K, RealValue>} and provide a {@code Map<K, V>} interface. */
-  public static class MapAdapter<K, V, RealValue> extends AbstractMap<K, V> {
-    /** An interface used to convert between two types. */
-    public interface Converter<A, B> {
-      B doForward(A object);
-
-      A doBackward(B object);
-    }
-
-    public static <T extends EnumLite> Converter<Integer, T> newEnumConverter(
-        final EnumLiteMap<T> enumMap, final T unrecognizedValue) {
-      return new Converter<Integer, T>() {
-        @Override
-        public T doForward(Integer value) {
-          T result = enumMap.findValueByNumber(value);
-          return result == null ? unrecognizedValue : result;
-        }
-
-        @Override
-        public Integer doBackward(T value) {
-          return value.getNumber();
-        }
-      };
-    }
-
-    private final Map<K, RealValue> realMap;
-    private final Converter<RealValue, V> valueConverter;
-
-    public MapAdapter(Map<K, RealValue> realMap, Converter<RealValue, V> valueConverter) {
-      this.realMap = realMap;
-      this.valueConverter = valueConverter;
-    }
-
-    @Override
-    public V get(Object key) {
-      RealValue result = realMap.get(key);
-      if (result == null) {
-        return null;
-      }
-      return valueConverter.doForward(result);
-    }
-
-    @Override
-    public V put(K key, V value) {
-      RealValue oldValue = realMap.put(key, valueConverter.doBackward(value));
-      if (oldValue == null) {
-        return null;
-      }
-      return valueConverter.doForward(oldValue);
-    }
-
-    @Override
-    public Set<java.util.Map.Entry<K, V>> entrySet() {
-      return new SetAdapter(realMap.entrySet());
-    }
-
-    private class SetAdapter extends AbstractSet<Map.Entry<K, V>> {
-      private final Set<Map.Entry<K, RealValue>> realSet;
-
-      public SetAdapter(Set<Map.Entry<K, RealValue>> realSet) {
-        this.realSet = realSet;
-      }
-
-      @Override
-      public Iterator<java.util.Map.Entry<K, V>> iterator() {
-        return new IteratorAdapter(realSet.iterator());
-      }
-
-      @Override
-      public int size() {
-        return realSet.size();
-      }
-    }
-
-    private class IteratorAdapter implements Iterator<Map.Entry<K, V>> {
-      private final Iterator<Map.Entry<K, RealValue>> realIterator;
-
-      public IteratorAdapter(Iterator<Map.Entry<K, RealValue>> realIterator) {
-        this.realIterator = realIterator;
-      }
-
-      @Override
-      public boolean hasNext() {
-        return realIterator.hasNext();
-      }
-
-      @Override
-      public java.util.Map.Entry<K, V> next() {
-        return new EntryAdapter(realIterator.next());
-      }
-
-      @Override
-      public void remove() {
-        realIterator.remove();
-      }
-    }
-
-    private class EntryAdapter implements Map.Entry<K, V> {
-      private final Map.Entry<K, RealValue> realEntry;
-
-      public EntryAdapter(Map.Entry<K, RealValue> realEntry) {
-        this.realEntry = realEntry;
-      }
-
-      @Override
-      public K getKey() {
-        return realEntry.getKey();
-      }
-
-      @Override
-      public V getValue() {
-        return valueConverter.doForward(realEntry.getValue());
-      }
-
-      @Override
-      public V setValue(V value) {
-        RealValue oldValue = realEntry.setValue(valueConverter.doBackward(value));
-        if (oldValue == null) {
-          return null;
-        }
-        return valueConverter.doForward(oldValue);
-      }
-
-      @Override
-      public boolean equals(Object o) {
-        if (o == this) {
-          return true;
-        }
-        if (!(o instanceof Map.Entry)) {
-          return false;
-        }
-        Map.Entry<?, ?> other = (Map.Entry<?, ?>) o;
-        return getKey().equals(other.getKey()) && getValue().equals(getValue());
-      }
-
-      @Override
-      public int hashCode() {
-        return realEntry.hashCode();
-      }
     }
   }
 
@@ -583,7 +412,6 @@ public final class Internal {
     int setInt(int index, int element);
 
     /** Returns a mutable clone of this list with the specified capacity. */
-    @Override
     IntList mutableCopyWithCapacity(int capacity);
   }
 
@@ -604,7 +432,6 @@ public final class Internal {
     boolean setBoolean(int index, boolean element);
 
     /** Returns a mutable clone of this list with the specified capacity. */
-    @Override
     BooleanList mutableCopyWithCapacity(int capacity);
   }
 
@@ -625,7 +452,6 @@ public final class Internal {
     long setLong(int index, long element);
 
     /** Returns a mutable clone of this list with the specified capacity. */
-    @Override
     LongList mutableCopyWithCapacity(int capacity);
   }
 
@@ -646,7 +472,6 @@ public final class Internal {
     double setDouble(int index, double element);
 
     /** Returns a mutable clone of this list with the specified capacity. */
-    @Override
     DoubleList mutableCopyWithCapacity(int capacity);
   }
 
@@ -667,7 +492,6 @@ public final class Internal {
     float setFloat(int index, float element);
 
     /** Returns a mutable clone of this list with the specified capacity. */
-    @Override
     FloatList mutableCopyWithCapacity(int capacity);
   }
 }

@@ -25,7 +25,6 @@ import java.util.Map;
 public interface Message extends MessageLite, MessageOrBuilder {
 
   // (From MessageLite, re-declared here only for return type covariance.)
-  @Override
   Parser<? extends Message> getParserForType();
 
   // -----------------------------------------------------------------
@@ -40,7 +39,6 @@ public interface Message extends MessageLite, MessageOrBuilder {
    * @param other object to be compared for equality with this message
    * @return {@code true} if the specified object is equal to this message
    */
-  @Override
   boolean equals(Object other);
 
   /**
@@ -51,7 +49,6 @@ public interface Message extends MessageLite, MessageOrBuilder {
    * @return the hash code value for this message
    * @see Map#hashCode()
    */
-  @Override
   int hashCode();
 
   // -----------------------------------------------------------------
@@ -61,24 +58,20 @@ public interface Message extends MessageLite, MessageOrBuilder {
    * Converts the message to a string in protocol buffer text format. This is just a trivial wrapper
    * around {@link TextFormat.Printer#printToString(MessageOrBuilder)}.
    */
-  @Override
   String toString();
 
   // =================================================================
   // Builders
 
   // (From MessageLite, re-declared here only for return type covariance.)
-  @Override
   Builder newBuilderForType();
 
-  @Override
   Builder toBuilder();
 
   /** Abstract interface implemented by Protocol Message builders. */
   interface Builder extends MessageLite.Builder, MessageOrBuilder {
     // (From MessageLite.Builder, re-declared here only for return type
     // covariance.)
-    @Override
     @CanIgnoreReturnValue
     Builder clear();
 
@@ -104,26 +97,20 @@ public interface Message extends MessageLite, MessageOrBuilder {
 
     // (From MessageLite.Builder, re-declared here only for return type
     // covariance.)
-    @Override
     Message build();
 
-    @Override
     Message buildPartial();
 
-    @Override
     Builder clone();
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(CodedInputStream input) throws IOException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException;
 
     /** Get the message's type's descriptor. See {@link Message#getDescriptorForType()}. */
-    @Override
     Descriptors.Descriptor getDescriptorForType();
 
     /**
@@ -221,46 +208,36 @@ public interface Message extends MessageLite, MessageOrBuilder {
 
     // (From MessageLite.Builder, re-declared here only for return type
     // covariance.)
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(ByteString data) throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(byte[] data) throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(InputStream input) throws IOException;
 
-    @Override
     @CanIgnoreReturnValue
     Builder mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException;
 
-    @Override
     boolean mergeDelimitedFrom(InputStream input) throws IOException;
 
-    @Override
     boolean mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
         throws IOException;
   }

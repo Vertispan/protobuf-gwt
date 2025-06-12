@@ -185,12 +185,10 @@ final class RawMessageInfo implements MessageInfo {
     return objects;
   }
 
-  @Override
   public MessageLite getDefaultInstance() {
     return defaultInstance;
   }
 
-  @Override
   public ProtoSyntax getSyntax() {
     if ((flags & IS_PROTO2_BIT) != 0) {
       return ProtoSyntax.PROTO2;
@@ -201,7 +199,6 @@ final class RawMessageInfo implements MessageInfo {
     }
   }
 
-  @Override
   public boolean isMessageSetWireFormat() {
     return (flags & 0x2) == 0x2;
   }

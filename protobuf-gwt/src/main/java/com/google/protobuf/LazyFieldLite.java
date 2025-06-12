@@ -111,7 +111,6 @@ public class LazyFieldLite {
     return lf;
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -140,7 +139,6 @@ public class LazyFieldLite {
     }
   }
 
-  @Override
   public int hashCode() {
     // We can't provide a memoizable hash code for lazy fields. The byte strings may have different
     // hash codes but evaluate to equivalent messages. And we have no facility for constructing
@@ -213,55 +211,6 @@ public class LazyFieldLite {
     this.memoizedBytes = null;
     this.value = value;
     return originalValue;
-  }
-
-  /**
-   * Merges another instance's contents. In some cases may drop some extensions if both fields
-   * contain data. If the other field has an {@code ExtensionRegistry} but this does not, then this
-   * field will copy over that {@code ExtensionRegistry}.
-   *
-   * <p>LazyField is not thread-safe for write access. Synchronizations are needed under read/write
-   * situations.
-   */
-  public void merge(LazyFieldLite other) {
-    if (other.containsDefaultInstance()) {
-      return;
-    }
-
-    if (this.containsDefaultInstance()) {
-      set(other);
-      return;
-    }
-
-    // If the other field has an extension registry but this does not, copy over the other extension
-    // registry.
-    if (this.extensionRegistry == null) {
-      this.extensionRegistry = other.extensionRegistry;
-    }
-
-    // In the case that both of them are not parsed we simply concatenate the bytes to save time. In
-    // the (probably rare) case that they have different extension registries there is a chance that
-    // some of the extensions may be dropped, but the tradeoff of making this operation fast seems
-    // to outway the benefits of combining the extension registries, which is not normally done for
-    // lite protos anyways.
-    if (this.delayedBytes != null && other.delayedBytes != null) {
-      this.delayedBytes = this.delayedBytes.concat(other.delayedBytes);
-      return;
-    }
-
-    // At least one is parsed and both contain data. We won't drop any extensions here directly, but
-    // in the case that the extension registries are not the same then we might in the future if we
-    // need to serialize and parse a message again.
-    if (this.value == null && other.value != null) {
-      setValue(mergeValueAndBytes(other.value, this.delayedBytes, this.extensionRegistry));
-      return;
-    } else if (this.value != null && other.value == null) {
-      setValue(mergeValueAndBytes(this.value, other.delayedBytes, other.extensionRegistry));
-      return;
-    }
-
-    // At this point we have two fully parsed messages.
-    setValue(this.value.toBuilder().mergeFrom(other.value).build());
   }
 
   /**

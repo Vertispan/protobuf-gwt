@@ -32,7 +32,7 @@ public final class TextFormatParseLocation {
     }
     if (line < 0 || column < 0) {
       throw new IllegalArgumentException(
-          String.format("line and column values must be >= 0: line %d, column: %d", line, column));
+          "line and column values must be >= 0: line " + line + ", column: " + column + "");
     }
     return new TextFormatParseLocation(line, column);
   }
@@ -53,12 +53,10 @@ public final class TextFormatParseLocation {
     return column;
   }
 
-  @Override
   public String toString() {
-    return String.format("ParseLocation{line=%d, column=%d}", line, column);
+    return "ParseLocation{line=" + line + ", column=" + column + "}";
   }
 
-  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
@@ -70,7 +68,6 @@ public final class TextFormatParseLocation {
     return (this.line == that.getLine()) && (this.column == that.getColumn());
   }
 
-  @Override
   public int hashCode() {
     int[] values = {line, column};
     return Arrays.hashCode(values);

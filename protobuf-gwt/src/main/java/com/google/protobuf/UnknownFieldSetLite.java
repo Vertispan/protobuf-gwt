@@ -298,7 +298,6 @@ public final class UnknownFieldSetLite {
     return true;
   }
 
-  @Override
   public boolean equals(Object obj) {
     if (this == obj) {
       return true;
@@ -338,7 +337,6 @@ public final class UnknownFieldSetLite {
     return hashCode;
   }
 
-  @Override
   public int hashCode() {
     int hashCode = 17;
 

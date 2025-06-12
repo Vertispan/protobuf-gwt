@@ -127,9 +127,7 @@ public class TextFormatParseInfoTree {
   private static <T> T getFromList(List<T> list, int index, FieldDescriptor fieldDescriptor) {
     if (index >= list.size() || index < 0) {
       throw new IllegalArgumentException(
-          String.format(
-              "Illegal index field: %s, index %d",
-              fieldDescriptor == null ? "<null>" : fieldDescriptor.getName(), index));
+          "Illegal index field: " + (fieldDescriptor == null ? "<null>" : fieldDescriptor.getName()) + ", index " + index + "");
     }
     return list.get(index);
   }

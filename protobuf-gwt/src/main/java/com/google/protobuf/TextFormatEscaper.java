@@ -95,12 +95,10 @@ final class TextFormatEscaper {
   static String escapeBytes(final ByteString input) {
     return escapeBytes(
         new ByteSequence() {
-          @Override
           public int size() {
             return input.size();
           }
 
-          @Override
           public byte byteAt(int offset) {
             return input.byteAt(offset);
           }
@@ -111,12 +109,10 @@ final class TextFormatEscaper {
   static String escapeBytes(final byte[] input) {
     return escapeBytes(
         new ByteSequence() {
-          @Override
           public int size() {
             return input.length;
           }
 
-          @Override
           public byte byteAt(int offset) {
             return input[offset];
           }

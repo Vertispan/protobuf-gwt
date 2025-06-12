@@ -29,7 +29,6 @@ public abstract class AbstractMessageLite<
     implements MessageLite {
   protected int memoizedHashCode = 0;
 
-  @Override
   public ByteString toByteString() {
     try {
       final ByteString.CodedBuilder out = ByteString.newCodedBuilder(getSerializedSize());
@@ -40,7 +39,6 @@ public abstract class AbstractMessageLite<
     }
   }
 
-  @Override
   public byte[] toByteArray() {
     try {
       final byte[] result = new byte[getSerializedSize()];
@@ -53,7 +51,6 @@ public abstract class AbstractMessageLite<
     }
   }
 
-  @Override
   public void writeTo(final OutputStream output) throws IOException {
     final int bufferSize = CodedOutputStream.computePreferredBufferSize(getSerializedSize());
     final CodedOutputStream codedOutput = CodedOutputStream.newInstance(output, bufferSize);
@@ -61,7 +58,6 @@ public abstract class AbstractMessageLite<
     codedOutput.flush();
   }
 
-  @Override
   public void writeDelimitedTo(final OutputStream output) throws IOException {
     final int serialized = getSerializedSize();
     final int bufferSize =
@@ -142,21 +138,17 @@ public abstract class AbstractMessageLite<
           BuilderType extends Builder<MessageType, BuilderType>>
       implements MessageLite.Builder {
     // The compiler produces an error if this is not declared explicitly.
-    @Override
     public abstract BuilderType clone();
 
-    @Override
     public BuilderType mergeFrom(final CodedInputStream input) throws IOException {
       return mergeFrom(input, ExtensionRegistryLite.getEmptyRegistry());
     }
 
     // Re-defined here for return type covariance.
-    @Override
     public abstract BuilderType mergeFrom(
         final CodedInputStream input, final ExtensionRegistryLite extensionRegistry)
         throws IOException;
 
-    @Override
     public BuilderType mergeFrom(final ByteString data) throws InvalidProtocolBufferException {
       try {
         final CodedInputStream input = data.newCodedInput();
@@ -170,7 +162,6 @@ public abstract class AbstractMessageLite<
       }
     }
 
-    @Override
     public BuilderType mergeFrom(
         final ByteString data, final ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
@@ -186,12 +177,10 @@ public abstract class AbstractMessageLite<
       }
     }
 
-    @Override
     public BuilderType mergeFrom(final byte[] data) throws InvalidProtocolBufferException {
       return mergeFrom(data, 0, data.length);
     }
 
-    @Override
     public BuilderType mergeFrom(final byte[] data, final int off, final int len)
         throws InvalidProtocolBufferException {
       try {
@@ -206,13 +195,11 @@ public abstract class AbstractMessageLite<
       }
     }
 
-    @Override
     public BuilderType mergeFrom(final byte[] data, final ExtensionRegistryLite extensionRegistry)
         throws InvalidProtocolBufferException {
       return mergeFrom(data, 0, data.length, extensionRegistry);
     }
 
-    @Override
     public BuilderType mergeFrom(
         final byte[] data,
         final int off,
@@ -231,7 +218,6 @@ public abstract class AbstractMessageLite<
       }
     }
 
-    @Override
     public BuilderType mergeFrom(final InputStream input) throws IOException {
       final CodedInputStream codedInput = CodedInputStream.newInstance(input);
       mergeFrom(codedInput);
@@ -239,7 +225,6 @@ public abstract class AbstractMessageLite<
       return (BuilderType) this;
     }
 
-    @Override
     public BuilderType mergeFrom(
         final InputStream input, final ExtensionRegistryLite extensionRegistry) throws IOException {
       final CodedInputStream codedInput = CodedInputStream.newInstance(input);
@@ -261,12 +246,10 @@ public abstract class AbstractMessageLite<
         this.limit = limit;
       }
 
-      @Override
       public int available() throws IOException {
         return Math.min(super.available(), limit);
       }
 
-      @Override
       public int read() throws IOException {
         if (limit <= 0) {
           return -1;
@@ -278,7 +261,6 @@ public abstract class AbstractMessageLite<
         return result;
       }
 
-      @Override
       public int read(final byte[] b, final int off, int len) throws IOException {
         if (limit <= 0) {
           return -1;
@@ -291,7 +273,6 @@ public abstract class AbstractMessageLite<
         return result;
       }
 
-      @Override
       public long skip(final long n) throws IOException {
         // because we take the minimum of an int and a long, result is guaranteed to be
         // less than or equal to Integer.MAX_INT so this cast is safe
@@ -304,7 +285,6 @@ public abstract class AbstractMessageLite<
       }
     }
 
-    @Override
     public boolean mergeDelimitedFrom(
         final InputStream input, final ExtensionRegistryLite extensionRegistry) throws IOException {
       final int firstByte = input.read();
@@ -317,20 +297,8 @@ public abstract class AbstractMessageLite<
       return true;
     }
 
-    @Override
     public boolean mergeDelimitedFrom(final InputStream input) throws IOException {
       return mergeDelimitedFrom(input, ExtensionRegistryLite.getEmptyRegistry());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked") // isInstance takes care of this
-    public BuilderType mergeFrom(final MessageLite other) {
-      if (!getDefaultInstanceForType().getClass().isInstance(other)) {
-        throw new IllegalArgumentException(
-            "mergeFrom(MessageLite) can only merge messages of the same type.");
-      }
-
-      return internalMergeFrom((MessageType) other);
     }
 
     protected abstract BuilderType internalMergeFrom(MessageType message);
