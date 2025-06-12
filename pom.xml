@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>openrewrite</module>
-        <module>openrewrite-impl</module>
+        <module>protobuf-gwt-rewrite</module>
+        <module>protobuf-gwt</module>
     </modules>
 
     <properties>

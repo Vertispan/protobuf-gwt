@@ -9,7 +9,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>openrewrite</artifactId>
+    <artifactId>protobuf-gwt-rewrite</artifactId>
+    <name>OpenRewrite rules to rebuild protobuf-java into protobuf-gwt</name>
 
     <dependencyManagement>
         <dependencies>
@@ -29,10 +30,6 @@
             <artifactId>rewrite-java</artifactId>
             <scope>compile</scope>
         </dependency>
-
-        <!-- You only need the version that corresponds to your current
-        Java version. It is fine to add all of them, though, as
-        they can coexist on a classpath. -->
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-java-8</artifactId>

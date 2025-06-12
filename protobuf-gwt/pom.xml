@@ -94,6 +94,7 @@
                         <configuration>
                             <artifact>com.google.protobuf:protobuf-java:${protobuf.version}:jar:sources</artifact>
                             <outputDirectory>src/main/java</outputDirectory>
+                            <excludes>META-INF/**</excludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -116,7 +117,7 @@
                     <activeRecipes>
                         <recipe>com.example.gwt.ProtobufForGwt</recipe>
                     </activeRecipes>
-                    <configLocation>${maven.multiModuleProjectDirectory}/openrewrite-impl/rewrite.yaml</configLocation>
+                    <configLocation>${maven.multiModuleProjectDirectory}/protobuf-gwt/rewrite.yaml</configLocation>
                     <exclusions>
                         <exclusion>**/src/test/**</exclusion>
                     </exclusions>
@@ -124,7 +125,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>${project.groupId}</groupId>
-                        <artifactId>openrewrite</artifactId>
+                        <artifactId>protobuf-gwt-rewrite</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                 </dependencies>
@@ -137,10 +138,6 @@
                 <configuration>
                     <skipModule>true</skipModule>
                     <moduleName>com.google.protobuf.ProtocolBuffers</moduleName>
-<!--                    <testArgs>-->
-<!--                        <testArg>-runStyle</testArg>-->
-<!--                        <testArg>Manual</testArg>-->
-<!--                    </testArgs>-->
                 </configuration>
             </plugin>
         </plugins>
