@@ -1328,7 +1328,7 @@ public abstract class GeneratedMessageV3 extends AbstractMessage implements Seri
      */
     private FieldSet<FieldDescriptor> buildExtensions() {
       return extensions == null
-          ? (FieldSet<FieldDescriptor>) FieldSet.emptySet()
+          ? (FieldSet<FieldDescriptor>) FieldSet.<FieldDescriptor>emptySet()
           : extensions.buildPartial();
     }
 

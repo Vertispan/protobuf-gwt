@@ -964,7 +964,7 @@ public abstract class GeneratedMessageLite<
 
     protected void copyOnWriteInternal() {
       super.copyOnWriteInternal();
-      if (instance.extensions != FieldSet.emptySet()) {
+      if (instance.extensions != FieldSet.<ExtensionDescriptor>emptySet()) {
         instance.extensions = instance.extensions.clone();
       }
     }
