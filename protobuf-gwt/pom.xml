@@ -94,7 +94,6 @@
                         <configuration>
                             <artifact>com.google.protobuf:protobuf-java:${protobuf.version}:jar:sources</artifact>
                             <outputDirectory>src/main/java</outputDirectory>
-                            <excludes>META-INF/**</excludes>
                         </configuration>
                     </execution>
                 </executions>
