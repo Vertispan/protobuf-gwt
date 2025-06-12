@@ -112,10 +112,11 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <runPerSubmodule>true</runPerSubmodule>
                     <activeRecipes>
                         <recipe>com.example.gwt.ProtobufForGwt</recipe>
                     </activeRecipes>
-                    <configLocation>/home/colin/workspace/gwt-protobuf/openrewrite-impl/rewrite.yaml</configLocation>
+                    <configLocation>${maven.multiModuleProjectDirectory}/openrewrite-impl/rewrite.yaml</configLocation>
                     <exclusions>
                         <exclusion>**/src/test/**</exclusion>
                     </exclusions>
