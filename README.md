@@ -26,6 +26,8 @@ over the stock classes, and to allow for manual modifications as needed.
 A fresh build will try to download the original sources, so will be missing the manual modifications - revert
 changes or apply them manually as needed.
 
+CI builds set `-Dmdep.skip=true` instead of otherwise keeping the old target/ dir or reverting changes.
+
 ## Manual changes
 
 ```patch
