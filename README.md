@@ -14,9 +14,10 @@ Add `com.vertispan.protobuf:protobuf-gwt` to your project dependencies. The vers
 protobuf-java build being used, with an integer suffix to allow for packaging changes. For example, current
 released versions:
 
-| protobuf-java | protobuf-gwt | Description |
-| -------------- | ------------- | ------------- |
-| 3.25.4 | 3.25.4-1 | Initial release, with an internal copy of StaticImpls rather than shared |
+| protobuf-java | protobuf-gwt | Description                                                                  |
+| -------------- |--------------|------------------------------------------------------------------------------|
+| 3.25.4 | 3.25.4-1     | Initial release, with an internal copy of StaticImpls rather than shared     |
+| 3.25.4 | 3.25.4-2     | Corrected License to correctly follow protobuf-java's instead of relicensing |
 
 ## Building
 
@@ -58,3 +59,10 @@ index 019a1ac..b23f833 100644
      }
  
 ```
+
+# License
+
+The protobuf-gwt project is BSD-3 licensed, in keeping with the protobuf-java license. See the [protobuf-java/LICENSE](LICENSE)
+file for details.
+
+The rest of the project is Apache 2.0 licensed at this time, though not yet distributed through Maven Central.

@@ -18,6 +18,13 @@
         A GWT compatible version of a subset of ProtocolBuffers, supporting marshalling and unmarshalling of generated messages in GWT applications.
     </description>
 
+    <licenses>
+        <license>
+            <name>BSD-3-Clause</name>
+            <url>https://opensource.org/license/BSD-3-clause</url>
+        </license>
+    </licenses>
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -74,6 +81,15 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
