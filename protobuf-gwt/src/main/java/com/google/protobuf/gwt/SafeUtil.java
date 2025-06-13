@@ -2,6 +2,14 @@ package com.google.protobuf.gwt;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Like UnsafeUtil, except no use of Unsafe - many static calls to UnsafeUtil can be simply
+ * retargetted to this class without additional rewrites.
+ * <p>
+ * It may be wise in the future to simplify this down to just putByte, and rely on replacing
+ * the other methods calls with constants, plus better unused import cleanup to remove the
+ * addressOffset reference in Utf8.
+ */
 public class SafeUtil {
 
     public static boolean hasUnsafeArrayOperations() {

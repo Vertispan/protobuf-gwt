@@ -1,12 +1,19 @@
 # protobuf-gwt
 
-Tools to unpack and rewrite the protobuf-java library into something that is roughly GWT/J2CL compatible.
+A version of the protobuf-java that is modified to be GWT/J2CL compatible. Presently only supports binary
+encoding, with a focus on CodedInputStream and CodedOutputStream, and a handful of tools that `protoc`
+output requires. Not all generated protoc output will be supported automatically.
 
 Makes use of standard OpenRewrite rules, some rules specifically written to simplify projects for GWT, and
 some custom rules just for protobuf-gwt.
 
 There appears to be a bug in JDT that we don't have a rewrite rule for yet, so there is a workaround in a
 manual patch made to this project.
+
+Presently only binary format is supported.
+
+Contrast with https://github.com/google/j2cl-protobuf, which is archived and unmaintained, was J2CL only, and
+only supported the text format.
 
 ## Usage
 

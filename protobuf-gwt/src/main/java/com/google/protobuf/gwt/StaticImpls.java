@@ -11,6 +11,11 @@ import java.util.TreeMap;
  * and have their first argument be the "this" instance.
  */
 public class StaticImpls {
+    /**
+     * Cannot be supported in GWT, as the array has to continue to be shared, so we can't copy to a typedarray.
+     * In theory an alternate implementation of ByteBuffer could be supported that wraps an array, but would
+     * be much more expensive to use and defeat the purpose.
+     */
     public static ByteBuffer wrap(byte[] array, int offset, int length) {
         ByteBuffer bb = ByteBuffer.allocate(length);
         bb.put(array);
@@ -72,6 +77,10 @@ public class StaticImpls {
         return new TreeMap<>(map);
     }
 
+    /**
+     * Currently <a href='https://github.com/Vertispan/gwt-nio/issues/9'>not supported</a> in our
+     * java.nio emulation.
+     */
     public static ByteBuffer asReadOnlyBuffer(ByteBuffer buffer) {
         // GWT does not support read-only buffers, so we return a copy
         ByteBuffer readOnlyBuffer = ByteBuffer.allocate(buffer.capacity());

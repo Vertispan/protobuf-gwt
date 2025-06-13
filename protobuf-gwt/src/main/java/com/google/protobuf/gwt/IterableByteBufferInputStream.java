@@ -14,9 +14,14 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 
+/**
+ * Lightly rewritten version of protobuf's own IterableByteBufferInputStream, which is requires
+ * unsafe access to direct ByteBuffer contents, and aditionally removes the array-backed ByteBuffer
+ * support (which doesn't make sense in GWT).
+ */
 public class IterableByteBufferInputStream extends InputStream {
     /** The {@link Iterator} with type {@link ByteBuffer} of {@code input} */
-    private Iterator<ByteBuffer> iterator;
+    private final Iterator<ByteBuffer> iterator;
     /** The current ByteBuffer; */
     private ByteBuffer currentByteBuffer;
     /** The number of ByteBuffers in the input data. */
@@ -29,15 +34,6 @@ public class IterableByteBufferInputStream extends InputStream {
     private int currentIndex;
     /** The current position for current ByteBuffer */
     private int currentByteBufferPos;
-    /** Whether current ByteBuffer has an array */
-    private boolean hasArray;
-    /**
-     * If the current ByteBuffer is unsafe-direct based, currentArray is null; otherwise should be the
-     * array inside ByteBuffer.
-     */
-    private byte[] currentArray;
-    /** Current ByteBuffer's array offset */
-    private int currentArrayOffset;
 
     public IterableByteBufferInputStream(Iterable<ByteBuffer> data) {
         iterator = data.iterator();
@@ -61,14 +57,6 @@ public class IterableByteBufferInputStream extends InputStream {
         }
         currentByteBuffer = iterator.next();
         currentByteBufferPos = currentByteBuffer.position();
-        if (false) {
-            hasArray = true;
-            currentArray = currentByteBuffer.array();
-            currentArrayOffset = currentByteBuffer.arrayOffset();
-        } else {
-            hasArray = false;
-            currentArray = null;
-        }
         return true;
     }
 
@@ -83,15 +71,9 @@ public class IterableByteBufferInputStream extends InputStream {
         if (currentIndex == dataSize) {
             return -1;
         }
-        if (hasArray) {
-            int result = currentArray[currentByteBufferPos + currentArrayOffset] & 0xFF;
-            updateCurrentByteBufferPos(1);
-            return result;
-        } else {
-            int result = currentByteBuffer.get(currentByteBufferPos) & 0xFF;
-            updateCurrentByteBufferPos(1);
-            return result;
-        }
+        int result = currentByteBuffer.get(currentByteBufferPos) & 0xFF;
+        updateCurrentByteBufferPos(1);
+        return result;
     }
 
     public int read(byte[] output, int offset, int length) throws IOException {
@@ -102,17 +84,11 @@ public class IterableByteBufferInputStream extends InputStream {
         if (length > remaining) {
             length = remaining;
         }
-        if (hasArray) {
-            System.arraycopy(
-                    currentArray, currentByteBufferPos + currentArrayOffset, output, offset, length);
-            updateCurrentByteBufferPos(length);
-        } else {
-            int prevPos = currentByteBuffer.position();
-            currentByteBuffer.position(currentByteBufferPos);
-            currentByteBuffer.get(output, offset, length);
-            currentByteBuffer.position(prevPos);
-            updateCurrentByteBufferPos(length);
-        }
+        int prevPos = currentByteBuffer.position();
+        currentByteBuffer.position(currentByteBufferPos);
+        currentByteBuffer.get(output, offset, length);
+        currentByteBuffer.position(prevPos);
+        updateCurrentByteBufferPos(length);
         return length;
     }
 }
