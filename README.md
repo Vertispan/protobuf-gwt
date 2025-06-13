@@ -14,9 +14,9 @@ Add `com.vertispan.protobuf:protobuf-gwt` to your project dependencies. The vers
 protobuf-java build being used, with an integer suffix to allow for packaging changes. For example, current
 released versions:
 
-| protobuf-java | protobuf-gwt |
-| -------------- | ------------- |
-| 3.25.4 | 3.25.4-1 |
+| protobuf-java | protobuf-gwt | Description |
+| -------------- | ------------- | ------------- |
+| 3.25.4 | 3.25.4-1 | Initial release, with an internal copy of StaticImpls rather than shared |
 
 ## Building
 

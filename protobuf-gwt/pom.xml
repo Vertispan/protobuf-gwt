@@ -12,16 +12,11 @@
     <artifactId>protobuf-gwt</artifactId>
     <packaging>gwt-lib</packaging>
 
+    <name>Protocol Buffers for GWT</name>
+
     <description>
         A GWT compatible version of a subset of ProtocolBuffers, supporting marshalling and unmarshalling of generated messages in GWT applications.
     </description>
-
-    <organization>
-        <name>Vertispan</name>
-        <url>https://www.vertispan.com/</url>
-    </organization>
-
-    <inceptionYear>2025</inceptionYear>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
