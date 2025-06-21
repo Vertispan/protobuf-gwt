@@ -146,7 +146,6 @@
                 <version>${maven.gwt.plugin}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <skipModule>true</skipModule>
                     <moduleName>com.google.protobuf.ProtocolBuffers</moduleName>
                 </configuration>
             </plugin>
