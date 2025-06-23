@@ -40,5 +40,10 @@
             <artifactId>rewrite-migrate-java</artifactId>
             <version>3.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.vertispan.recipes</groupId>
+            <artifactId>gwt-compatible-recipes</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

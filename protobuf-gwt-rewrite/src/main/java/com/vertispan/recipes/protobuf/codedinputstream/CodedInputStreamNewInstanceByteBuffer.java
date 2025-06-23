@@ -1,4 +1,4 @@
-package com.example.gwt.protobuf.codedinputstream;
+package com.vertispan.recipes.protobuf.codedinputstream;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite;

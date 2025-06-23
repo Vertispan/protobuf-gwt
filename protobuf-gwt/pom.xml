@@ -116,7 +116,7 @@
                 <configuration>
                     <runPerSubmodule>true</runPerSubmodule>
                     <activeRecipes>
-                        <recipe>com.example.gwt.ProtobufForGwt</recipe>
+                        <recipe>com.vertispan.recipes.ProtobufForGwt</recipe>
                     </activeRecipes>
                     <configLocation>${maven.multiModuleProjectDirectory}/protobuf-gwt/rewrite.yaml</configLocation>
                     <exclusions>
