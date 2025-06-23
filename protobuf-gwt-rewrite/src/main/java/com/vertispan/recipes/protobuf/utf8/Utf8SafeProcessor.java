@@ -1,4 +1,4 @@
-package com.example.gwt.protobuf.utf8;
+package com.vertispan.recipes.protobuf.utf8;
 
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite;
