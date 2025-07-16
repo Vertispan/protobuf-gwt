@@ -4,8 +4,9 @@ A version of the protobuf-java that is modified to be GWT/J2CL compatible. Prese
 encoding, with a focus on CodedInputStream and CodedOutputStream, and a handful of tools that `protoc`
 output requires. Not all generated protoc output will be supported automatically.
 
-Makes use of standard OpenRewrite rules, some rules specifically written to simplify projects for GWT, and
-some custom rules just for protobuf-gwt.
+Makes use of standard OpenRewrite rules, some rules specifically written to
+[simplify projects for GWT](https://github.com/vertispan/gwt-compatible-recipes/), and some custom rules just for
+protobuf-gwt.
 
 There appears to be a bug in JDT that we don't have a rewrite rule for yet, so there is a workaround in a
 manual patch made to this project.
