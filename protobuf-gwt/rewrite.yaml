@@ -69,6 +69,17 @@ recipeList:
         - com.google.protobuf.gwt.IterableByteBufferInputStream
         # OpenRewrite seems to lose track of these
         - com.google.protobuf.Utf8$SafeProcessor
+        # wrappers.proto types
+        - com.google.protobuf.WrappersProto
+        - com.google.protobuf.BoolValue
+        - com.google.protobuf.BytesValue
+        - com.google.protobuf.DoubleValue
+        - com.google.protobuf.FloatValue
+        - com.google.protobuf.Int32Value
+        - com.google.protobuf.Int64Value
+        - com.google.protobuf.StringValue
+        - com.google.protobuf.UInt32Value
+        - com.google.protobuf.UInt64Value
 
  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
   - org.openrewrite.java.ChangeType:
