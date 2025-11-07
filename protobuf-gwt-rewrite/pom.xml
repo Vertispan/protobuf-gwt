@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vertispan.protobuf</groupId>
         <artifactId>gwt-protobuf-parent</artifactId>
-        <version>3.25.4-3</version>
+        <version>3.25.4-4-SNAPSHOT</version>
     </parent>
 
     <artifactId>protobuf-gwt-rewrite</artifactId>
