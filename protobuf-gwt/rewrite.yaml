@@ -61,8 +61,9 @@ recipeList:
         - com.google.protobuf.AbstractMessageLite
         - com.google.protobuf.AbstractMessageLite$InternalOneOfEnum
         - com.google.protobuf.MapFieldBuilder
+
+        # google/protobuf/any.proto
         - com.google.protobuf.Any
-        - com.google.protobuf.AnyOrBuilder
         # Need to explicitly keep our own replacement types
         - com.google.protobuf.gwt.SafeUtil
         - com.google.protobuf.gwt.StaticImpls
@@ -80,6 +81,15 @@ recipeList:
         - com.google.protobuf.StringValue
         - com.google.protobuf.UInt32Value
         - com.google.protobuf.UInt64Value
+
+        # google/protobuf/struct.proto
+        - com.google.protobuf.Struct
+
+        # google/protobuf/timestamp.proto
+        - com.google.protobuf.Timestamp
+
+        # google/protobuf/duration.proto
+        - com.google.protobuf.Duration
 
  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
   - org.openrewrite.java.ChangeType:
