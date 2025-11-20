@@ -782,8 +782,7 @@ public abstract class ByteString implements Iterable<Byte>, Serializable {
    *
    * @param byteOutput the output target to receive the bytes
    * @throws IOException if an I/O error occurs
-   * @see UnsafeByteOperations#unsafeWriteTo(ByteString, ByteOutput)
-   */
+   * UnsafeByteOperations.unsafeWriteTo(ByteString, ByteOutput)*/
   abstract void writeTo(ByteOutput byteOutput) throws IOException;
 
   /**
@@ -793,8 +792,7 @@ public abstract class ByteString implements Iterable<Byte>, Serializable {
    *
    * @param byteOutput the output target to receive the bytes
    * @throws IOException if an I/O error occurs
-   * @see UnsafeByteOperations#unsafeWriteToReverse(ByteString, ByteOutput)
-   */
+   * UnsafeByteOperations.unsafeWriteToReverse(ByteString, ByteOutput)*/
   abstract void writeToReverse(ByteOutput byteOutput) throws IOException;
 
   /**

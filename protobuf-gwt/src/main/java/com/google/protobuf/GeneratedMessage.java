@@ -55,8 +55,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
   /**
    * For testing. Allows a test to disable the optimization that avoids using field builders for
    * nested messages until they are requested. By disabling this optimization, existing tests can be
-   * reused to test the field builders. See {@link RepeatedFieldBuilder} and {@link
-   * SingleFieldBuilder}.
+   * reused to test the field builders. See RepeatedFieldBuilder and SingleFieldBuilder.
    */
   static void enableAlwaysUseFieldBuildersForTesting() {
     alwaysUseFieldBuilders = true;

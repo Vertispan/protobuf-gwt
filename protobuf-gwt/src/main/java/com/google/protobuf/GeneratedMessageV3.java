@@ -77,8 +77,7 @@ public abstract class GeneratedMessageV3 extends AbstractMessage implements Seri
   /**
    * For testing. Allows a test to disable/re-enable the optimization that avoids using field
    * builders for nested messages until they are requested. By disabling this optimization, existing
-   * tests can be reused to test the field builders. See {@link RepeatedFieldBuilder} and {@link
-   * SingleFieldBuilder}.
+   * tests can be reused to test the field builders. See RepeatedFieldBuilder and SingleFieldBuilder.
    *
    * <p>TODO: Stop using SingleFieldBuilder and remove this setting
    */
