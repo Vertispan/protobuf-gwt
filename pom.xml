@@ -6,7 +6,7 @@
 
     <groupId>com.vertispan.protobuf</groupId>
     <artifactId>gwt-protobuf-parent</artifactId>
-    <version>3.25.4-4-SNAPSHOT</version>
+    <version>3.25.8.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <url>https://github.com/vertispan/protobuf-gwt/</url>
@@ -46,7 +46,7 @@
     </modules>
 
     <properties>
-        <proto.version>3.25.4</proto.version>
+        <proto.version>3.25.8</proto.version>
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
