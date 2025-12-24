@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -65,7 +64,8 @@ public final class UnknownFieldSet implements MessageLite {
   private static final UnknownFieldSet defaultInstance =
       new UnknownFieldSet(new TreeMap<Integer, Field>());
 
-  public boolean equals(Object other) {
+  public boolean equals(
+          Object other) {
     if (this == other) {
       return true;
     }
@@ -80,8 +80,17 @@ public final class UnknownFieldSet implements MessageLite {
     return fields.hashCode();
   }
 
+  /** Whether the field set has no fields. */
+  public boolean isEmpty() {
+    return fields.isEmpty();
+  }
+
   /** Get a map of fields in the set by number. */
   public Map<Integer, Field> asMap() {
+    // Avoid an allocation for the common case of an empty map.
+    if (fields.isEmpty()) {
+      return Collections.emptyMap();
+    }
     return (Map<Integer, Field>) com.google.protobuf.gwt.StaticImpls.clone(fields);
   }
 
@@ -98,6 +107,10 @@ public final class UnknownFieldSet implements MessageLite {
 
   /** Serializes the set and writes it to {@code output}. */
   public void writeTo(CodedOutputStream output) throws IOException {
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return;
+    }
     for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
       Field field = entry.getValue();
       field.writeTo(entry.getKey(), output);
@@ -164,16 +177,22 @@ public final class UnknownFieldSet implements MessageLite {
   /** Get the number of bytes required to encode this set. */
   public int getSerializedSize() {
     int result = 0;
-    if (!fields.isEmpty()) {
-      for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
-        result += entry.getValue().getSerializedSize(entry.getKey());
-      }
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return result;
+    }
+    for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
+      result += entry.getValue().getSerializedSize(entry.getKey());
     }
     return result;
   }
 
   /** Serializes the set and writes it to {@code output} using {@code MessageSet} wire format. */
   public void writeAsMessageSetTo(CodedOutputStream output) throws IOException {
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return;
+    }
     for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
       entry.getValue().writeAsMessageSetExtensionTo(entry.getKey(), output);
     }
@@ -181,6 +200,10 @@ public final class UnknownFieldSet implements MessageLite {
 
   /** Serializes the set and writes it to {@code writer}. */
   void writeTo(Writer writer) throws IOException {
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return;
+    }
     if (writer.fieldOrder() == Writer.FieldOrder.DESCENDING) {
       // Write fields in descending order.
       for (Map.Entry<Integer, Field> entry : fields.descendingMap().entrySet()) {
@@ -196,6 +219,10 @@ public final class UnknownFieldSet implements MessageLite {
 
   /** Serializes the set and writes it to {@code writer} using {@code MessageSet} wire format. */
   void writeAsMessageSetTo(Writer writer) throws IOException {
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return;
+    }
     if (writer.fieldOrder() == Writer.FieldOrder.DESCENDING) {
       // Write fields in descending order.
       for (Map.Entry<Integer, Field> entry : fields.descendingMap().entrySet()) {
@@ -212,6 +239,10 @@ public final class UnknownFieldSet implements MessageLite {
   /** Get the number of bytes required to encode this set using {@code MessageSet} wire format. */
   public int getSerializedSizeAsMessageSet() {
     int result = 0;
+    if (fields.isEmpty()) {
+      // Avoid allocating an iterator.
+      return result;
+    }
     for (Map.Entry<Integer, Field> entry : fields.entrySet()) {
       result += entry.getValue().getSerializedSizeAsMessageSetExtension(entry.getKey());
     }
@@ -434,6 +465,11 @@ public final class UnknownFieldSet implements MessageLite {
      * changes may or may not be reflected in this map.
      */
     public Map<Integer, Field> asMap() {
+      // Avoid an allocation for the common case of an empty map.
+      if (fieldBuilders.isEmpty()) {
+        return Collections.emptyMap();
+      }
+
       TreeMap<Integer, Field> fields = new TreeMap<>();
       for (Map.Entry<Integer, Field.Builder> entry : fieldBuilders.entrySet()) {
         fields.put(entry.getKey(), entry.getValue().build());
@@ -476,6 +512,7 @@ public final class UnknownFieldSet implements MessageLite {
           getFieldBuilder(number).addGroup(subBuilder.build());
           return true;
         case WireFormat.WIRETYPE_END_GROUP:
+          input.checkValidEndTag();
           return false;
         case WireFormat.WIRETYPE_FIXED32:
           getFieldBuilder(number).addFixed32(input.readFixed32());
@@ -663,7 +700,8 @@ public final class UnknownFieldSet implements MessageLite {
       return group;
     }
 
-    public boolean equals(Object other) {
+    public boolean equals(
+            Object other) {
       if (this == other) {
         return true;
       }
@@ -700,40 +738,52 @@ public final class UnknownFieldSet implements MessageLite {
     }
 
     /** Serializes the field, including field number, and writes it to {@code output}. */
+    @SuppressWarnings({"ForeachList", "ForeachListWithUserVar"}) // No iterator allocation.
     public void writeTo(int fieldNumber, CodedOutputStream output) throws IOException {
-      for (long value : varint) {
+      for (int i = 0; i < varint.size(); i++) {
+        long value = varint.get(i);
         output.writeUInt64(fieldNumber, value);
       }
-      for (int value : fixed32) {
+      for (int i = 0; i < fixed32.size(); i++) {
+        int value = fixed32.get(i);
         output.writeFixed32(fieldNumber, value);
       }
-      for (long value : fixed64) {
+      for (int i = 0; i < fixed64.size(); i++) {
+        long value = fixed64.get(i);
         output.writeFixed64(fieldNumber, value);
       }
-      for (ByteString value : lengthDelimited) {
+      for (int i = 0; i < lengthDelimited.size(); i++) {
+        ByteString value = lengthDelimited.get(i);
         output.writeBytes(fieldNumber, value);
       }
-      for (UnknownFieldSet value : group) {
+      for (int i = 0; i < group.size(); i++) {
+        UnknownFieldSet value = group.get(i);
         output.writeGroup(fieldNumber, value);
       }
     }
 
     /** Get the number of bytes required to encode this field, including field number. */
+    @SuppressWarnings({"ForeachList", "ForeachListWithUserVar"}) // No iterator allocation.
     public int getSerializedSize(int fieldNumber) {
       int result = 0;
-      for (long value : varint) {
+      for (int i = 0; i < varint.size(); i++) {
+        long value = varint.get(i);
         result += CodedOutputStream.computeUInt64Size(fieldNumber, value);
       }
-      for (int value : fixed32) {
+      for (int i = 0; i < fixed32.size(); i++) {
+        int value = fixed32.get(i);
         result += CodedOutputStream.computeFixed32Size(fieldNumber, value);
       }
-      for (long value : fixed64) {
+      for (int i = 0; i < fixed64.size(); i++) {
+        long value = fixed64.get(i);
         result += CodedOutputStream.computeFixed64Size(fieldNumber, value);
       }
-      for (ByteString value : lengthDelimited) {
+      for (int i = 0; i < lengthDelimited.size(); i++) {
+        ByteString value = lengthDelimited.get(i);
         result += CodedOutputStream.computeBytesSize(fieldNumber, value);
       }
-      for (UnknownFieldSet value : group) {
+      for (int i = 0; i < group.size(); i++) {
+        UnknownFieldSet value = group.get(i);
         result += CodedOutputStream.computeGroupSize(fieldNumber, value);
       }
       return result;
@@ -743,9 +793,11 @@ public final class UnknownFieldSet implements MessageLite {
      * Serializes the field, including field number, and writes it to {@code output}, using {@code
      * MessageSet} wire format.
      */
+    @SuppressWarnings({"ForeachList", "ForeachListWithUserVar"}) // No iterator allocation.
     public void writeAsMessageSetExtensionTo(int fieldNumber, CodedOutputStream output)
         throws IOException {
-      for (ByteString value : lengthDelimited) {
+      for (int i = 0; i < lengthDelimited.size(); i++) {
+        ByteString value = lengthDelimited.get(i);
         output.writeRawMessageSetExtension(fieldNumber, value);
       }
     }
@@ -776,17 +828,18 @@ public final class UnknownFieldSet implements MessageLite {
      * Serializes the field, including field number, and writes it to {@code writer}, using {@code
      * MessageSet} wire format.
      */
-    private void writeAsMessageSetExtensionTo(int fieldNumber, Writer writer)
-        throws IOException {
+    @SuppressWarnings({"ForeachList", "ForeachListWithUserVar"}) // No iterator allocation.
+    private void writeAsMessageSetExtensionTo(int fieldNumber, Writer writer) throws IOException {
       if (writer.fieldOrder() == Writer.FieldOrder.DESCENDING) {
         // Write in descending field order.
-        ListIterator<ByteString> iter = lengthDelimited.listIterator(lengthDelimited.size());
-        while (iter.hasPrevious()) {
-          writer.writeMessageSetItem(fieldNumber, iter.previous());
+        for (int i = lengthDelimited.size() - 1; i >= 0; i--) {
+          ByteString value = lengthDelimited.get(i);
+          writer.writeMessageSetItem(fieldNumber, value);
         }
       } else {
         // Write in ascending field order.
-        for (ByteString value : lengthDelimited) {
+        for (int i = 0; i < lengthDelimited.size(); i++) {
+          ByteString value = lengthDelimited.get(i);
           writer.writeMessageSetItem(fieldNumber, value);
         }
       }
@@ -796,9 +849,11 @@ public final class UnknownFieldSet implements MessageLite {
      * Get the number of bytes required to encode this field, including field number, using {@code
      * MessageSet} wire format.
      */
+    @SuppressWarnings({"ForeachList", "ForeachListWithUserVar"}) // No iterator allocation.
     public int getSerializedSizeAsMessageSetExtension(int fieldNumber) {
       int result = 0;
-      for (ByteString value : lengthDelimited) {
+      for (int i = 0; i < lengthDelimited.size(); i++) {
+        ByteString value = lengthDelimited.get(i);
         result += CodedOutputStream.computeRawMessageSetExtensionSize(fieldNumber, value);
       }
       return result;

@@ -124,6 +124,7 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
    *
    * @return Information about the extension if found, or {@code null} otherwise.
    */
+  @Deprecated
   public ExtensionInfo findMutableExtensionByName(final String fullName) {
     return mutableExtensionsByName.get(fullName);
   }
@@ -150,6 +151,7 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
    *
    * @return Information about the extension if found, or {@code null} otherwise.
    */
+  @Deprecated
   public ExtensionInfo findMutableExtensionByNumber(
       final Descriptor containingType, final int fieldNumber) {
     return mutableExtensionsByNumber.get(new DescriptorIntPair(containingType, fieldNumber));
@@ -161,6 +163,7 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
    *
    * @return Information about the extensions found, or {@code null} if there are none.
    */
+  @Deprecated
   public Set<ExtensionInfo> getAllMutableExtensionsByExtendedType(final String fullName) {
     HashSet<ExtensionInfo> extensions = new HashSet<ExtensionInfo>();
     for (DescriptorIntPair pair : mutableExtensionsByNumber.keySet()) {

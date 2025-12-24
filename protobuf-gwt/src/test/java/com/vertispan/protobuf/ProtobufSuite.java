@@ -3,6 +3,7 @@ package com.vertispan.protobuf;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.junit.tools.GWTTestSuite;
 import com.google.protobuf.CodedInputStreamTest;
+import com.vertispan.protobuf.client.MessageTest;
 import junit.framework.Test;
 
 @GwtIncompatible

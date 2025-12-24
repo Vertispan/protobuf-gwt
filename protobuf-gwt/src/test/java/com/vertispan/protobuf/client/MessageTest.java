@@ -1,4 +1,4 @@
-package com.vertispan.protobuf;
+package com.vertispan.protobuf.client;
 
 import com.google.gwt.junit.client.GWTTestCase;
 

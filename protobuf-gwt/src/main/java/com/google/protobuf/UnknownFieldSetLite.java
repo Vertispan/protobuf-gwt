@@ -298,7 +298,8 @@ public final class UnknownFieldSetLite {
     return true;
   }
 
-  public boolean equals(Object obj) {
+  public boolean equals(
+          Object obj) {
     if (this == obj) {
       return true;
     }
@@ -424,6 +425,7 @@ public final class UnknownFieldSetLite {
         storeField(tag, subFieldSet);
         return true;
       case WireFormat.WIRETYPE_END_GROUP:
+        input.checkValidEndTag();
         return false;
       default:
         throw InvalidProtocolBufferException.invalidWireType();

@@ -1,5 +1,6 @@
 <module>
     <inherits name="com.google.protobuf.ProtocolBuffers" />
 
-    <source path="" />
+    <source path="client" />
+    <super-source path="super" />
 </module>

@@ -37,7 +37,8 @@ abstract class AbstractProtobufList<E> extends AbstractList<E> implements Protob
     this.isMutable = isMutable;
   }
 
-  public boolean equals(Object o) {
+  public boolean equals(
+          Object o) {
     if (o == this) {
       return true;
     }

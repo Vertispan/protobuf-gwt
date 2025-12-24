@@ -7,6 +7,7 @@
 
 package com.google.protobuf;
 
+import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,10 @@ public final class TextFormat {
    * Generates a human readable form of this message, useful for debugging and other purposes, with
    * no newline characters. This is just a trivial wrapper around {@link
    * TextFormat.Printer#shortDebugString(MessageOrBuilder)}.
+   *
+   * @deprecated Use {@code printer().emittingSingleLine(true).printToString(MessageOrBuilder)}
    */
+  @Deprecated
   public static String shortDebugString(final MessageOrBuilder message) {
     throw new UnsupportedOperationException("shortDebugString");
   }
@@ -48,24 +52,94 @@ public final class TextFormat {
     throw new UnsupportedOperationException("printer");
   }
 
+  /** Printer instance which escapes non-ASCII characters and prints in the debug format. */
+  public static Printer debugFormatPrinter() {
+    throw new UnsupportedOperationException("debugFormatPrinter");
+  }
+
   /** Helper class for converting protobufs to text. */
   public static final class Printer {
 
-    // Printer instance which escapes non-ASCII characters.
-    private static final Printer DEFAULT =
+    // Printer instance which escapes non-ASCII characters and prints in the text format.
+    private static final Printer DEFAULT_TEXT_FORMAT =
         new Printer(
-            true, TypeRegistry.getEmptyTypeRegistry(), ExtensionRegistryLite.getEmptyRegistry());
+            /* escapeNonAscii= */ true,
+            /* useShortRepeatedPrimitives= */ false,
+            TypeRegistry.getEmptyTypeRegistry(),
+            ExtensionRegistryLite.getEmptyRegistry(),
+            /* enablingSafeDebugFormat= */ false,
+            /* singleLine= */ false);
+
+    // Printer instance which escapes non-ASCII characters and prints in the debug format.
+    private static final Printer DEFAULT_DEBUG_FORMAT =
+        new Printer(
+            /* escapeNonAscii= */ true,
+            /* useShortRepeatedPrimitives= */ false,
+            TypeRegistry.getEmptyTypeRegistry(),
+            ExtensionRegistryLite.getEmptyRegistry(),
+            /* enablingSafeDebugFormat= */ true,
+            /* singleLine= */ false);
+
+    /**
+     * A list of the public APIs that output human-readable text from a message. A higher-level API
+     * must be larger than any lower-level APIs it calls under the hood, e.g
+     * DEBUG_MULTILINE.compareTo(PRINTER_PRINT_TO_STRING) > 0. The inverse is not necessarily true.
+     */
+    static enum FieldReporterLevel {
+      REPORT_ALL(0),
+      TEXT_GENERATOR(1),
+      PRINT(2),
+      PRINTER_PRINT_TO_STRING(3),
+      TEXTFORMAT_PRINT_TO_STRING(4),
+      PRINT_UNICODE(5),
+      SHORT_DEBUG_STRING(6),
+      LEGACY_MULTILINE(7),
+      LEGACY_SINGLE_LINE(8),
+      DEBUG_MULTILINE(9),
+      DEBUG_SINGLE_LINE(10),
+      ABSTRACT_TO_STRING(11),
+      ABSTRACT_MUTABLE_TO_STRING(12),
+      REPORT_NONE(13);
+      private final int index;
+
+      FieldReporterLevel(int index) {
+        this.index = index;
+      }
+    }
 
     /** Whether to escape non ASCII characters with backslash and octal. */
     private final boolean escapeNonAscii;
 
+    /** Whether to print repeated primitive fields using short square bracket notation. */
+    private final boolean useShortRepeatedPrimitives;
+
     private final TypeRegistry typeRegistry;
     private final ExtensionRegistryLite extensionRegistry;
 
+    /**
+     * Whether to enable redaction of sensitive fields and introduce randomization. Note that when
+     * this is enabled, the output will no longer be deserializable.
+     */
+    private final boolean enablingSafeDebugFormat;
+
+    private final boolean singleLine;
+
+    // Any API level equal to or greater than this level will be reported. This is set to
+    // REPORT_NONE by default to prevent reporting for now.
+    private static final ThreadLocal<FieldReporterLevel> sensitiveFieldReportingLevel =
+        new ThreadLocal<FieldReporterLevel>() {
+          protected FieldReporterLevel initialValue() {
+            throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+          }
+        };
+
     private Printer(
         boolean escapeNonAscii,
+        boolean useShortRepeatedPrimitives,
         TypeRegistry typeRegistry,
-        ExtensionRegistryLite extensionRegistry) {
+        ExtensionRegistryLite extensionRegistry,
+        boolean enablingSafeDebugFormat,
+        boolean singleLine) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
@@ -103,11 +177,56 @@ public final class TextFormat {
     }
 
     /**
+     * Return a new Printer instance that outputs a redacted and unstable format suitable for
+     * debugging.
+     *
+     * @param enablingSafeDebugFormat If true, the new Printer will redact all proto fields that are
+     *     marked by a debug_redact=true option, and apply an unstable prefix to the output.
+     * @return a new Printer that clones all other configurations from the current {@link Printer},
+     *     with the enablingSafeDebugFormat mode set to the given parameter.
+     */
+    Printer enablingSafeDebugFormat(boolean enablingSafeDebugFormat) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    /**
+     * Return a new Printer instance that outputs primitive repeated fields in short notation
+     *
+     * @param useShortRepeatedPrimitives If true, repeated fields with a primitive type are printed
+     *     using the short hand notation with comma-delimited field values in square brackets.
+     * @return a new Printer that clones all other configurations from the current {@link Printer},
+     *     with the useShortRepeatedPrimitives mode set to the given parameter.
+     */
+    public Printer usingShortRepeatedPrimitives(boolean useShortRepeatedPrimitives) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    /**
+     * Return a new Printer instance with the specified line formatting status.
+     *
+     * @param singleLine If true, the new Printer will output no newline characters.
+     * @return a new Printer that clones all other configurations from the current {@link Printer},
+     *     with the singleLine mode set to the given parameter.
+     */
+    public Printer emittingSingleLine(boolean singleLine) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    void setSensitiveFieldReportingLevel(FieldReporterLevel level) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    /**
      * Outputs a textual representation of the Protocol Message supplied into the parameter output.
      * (This representation is the new version of the classic "ProtocolPrinter" output from the
      * original Protocol Buffer system)
      */
     public void print(final MessageOrBuilder message, final Appendable output) throws IOException {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    void print(final MessageOrBuilder message, final Appendable output, FieldReporterLevel level)
+        throws IOException {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
@@ -118,6 +237,10 @@ public final class TextFormat {
 
     private void print(final MessageOrBuilder message, final TextGenerator generator)
         throws IOException {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    private void applyUnstablePrefix(final Appendable output) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
@@ -167,10 +290,24 @@ public final class TextFormat {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
+    // The criteria for redacting a field is as follows: 1) The enablingSafeDebugFormat printer
+    // option must be on. 2) The field must be considered "sensitive". A sensitive field can be
+    // marked as sensitive via two methods: a) via a direct debug_redact=true annotation on the
+    // field, b) via an enum field marked with debug_redact=true that is within the proto's
+    // FieldOptions, either directly or indirectly via a message option.
+    private boolean shouldRedact(final FieldDescriptor field, TextGenerator generator) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
     /** Like {@code print()}, but writes directly to a {@code String} and returns it. */
     public String printToString(final MessageOrBuilder message) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
+
+    String printToString(final MessageOrBuilder message, FieldReporterLevel level) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
     /** Like {@code print()}, but writes directly to a {@code String} and returns it. */
     public String printToString(final UnknownFieldSet fields) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
@@ -179,7 +316,11 @@ public final class TextFormat {
     /**
      * Generates a human readable form of this message, useful for debugging and other purposes,
      * with no newline characters.
+     *
+     * @deprecated Use {@code
+     *     this.printer().emittingSingleLine(true).printToString(MessageOrBuilder)}
      */
+    @Deprecated
     public String shortDebugString(final MessageOrBuilder message) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
@@ -187,7 +328,12 @@ public final class TextFormat {
     /**
      * Generates a human readable form of the field, useful for debugging and other purposes, with
      * no newline characters.
+     *
+     * @deprecated Use {@code this.emittingSingleLine(true).printFieldToString(FieldDescriptor,
+     *     Object)}
      */
+    @Deprecated
+    @InlineMe(replacement = "this.emittingSingleLine(true).printFieldToString(field, value)")
     public String shortDebugString(final FieldDescriptor field, final Object value) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
@@ -195,17 +341,28 @@ public final class TextFormat {
     /**
      * Generates a human readable form of the unknown fields, useful for debugging and other
      * purposes, with no newline characters.
+     *
+     * @deprecated Use {@code this.emittingSingleLine(true).printToString(UnknownFieldSet)}
      */
+    @Deprecated
+    @InlineMe(replacement = "this.emittingSingleLine(true).printToString(fields)")
     public String shortDebugString(final UnknownFieldSet fields) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
     private static void printUnknownFieldValue(
-        final int tag, final Object value, final TextGenerator generator) throws IOException {
+        final int tag, final Object value, final TextGenerator generator, boolean redact)
+        throws IOException {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
     private void printMessage(final MessageOrBuilder message, final TextGenerator generator)
+        throws IOException {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    private void printShortRepeatedField(
+        final FieldDescriptor field, final Object value, final TextGenerator generator)
         throws IOException {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
@@ -217,12 +374,17 @@ public final class TextFormat {
     }
 
     private static void printUnknownFields(
-        final UnknownFieldSet unknownFields, final TextGenerator generator) throws IOException {
+        final UnknownFieldSet unknownFields, final TextGenerator generator, boolean redact)
+        throws IOException {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
     private static void printUnknownField(
-        final int number, final int wireType, final List<?> values, final TextGenerator generator)
+        final int number,
+        final int wireType,
+        final List<?> values,
+        final TextGenerator generator,
+        boolean redact)
         throws IOException {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
@@ -247,8 +409,18 @@ public final class TextFormat {
     // we would do in response to this is emit the (zero length) indentation, so it has no effect.
     // Setting it false here does however suppress an unwanted leading space in single-line mode.
     private boolean atStartOfLine = false;
+    // Indicate which Protobuf public stringification API (e.g AbstractMessage.toString()) is
+    // called.
+    private final Printer.FieldReporterLevel fieldReporterLevel;
+    // The root message type being printed. Null if the root message type is not known (e.g.
+    // printing a field).
+    private final Descriptor rootMessageType;
 
-    private TextGenerator(final Appendable output, boolean singleLineMode) {
+    private TextGenerator(
+        final Appendable output,
+        boolean singleLineMode,
+        Descriptor rootMessageType,
+        Printer.FieldReporterLevel fieldReporterLevel) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$TextGenerator *(..)");
     }
 
@@ -376,7 +548,6 @@ public final class TextFormat {
    * control the parser behavior.
    */
   public static class Parser {
-
     /**
      * Determines if repeated values for non-repeated fields and oneofs are permitted. For example,
      * given required/optional field "foo" and a oneof containing "baz" and "moo":

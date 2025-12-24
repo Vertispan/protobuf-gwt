@@ -345,26 +345,26 @@ public final class Internal {
       CodedInputStream.newInstance(EMPTY_BYTE_ARRAY);
 
   /**
-   * Provides an immutable view of {@code List<T>} around a {@code List<F>}.
+   * Provides an immutable view of {@code List<T>} around an {@code IntList}.
    *
    * <p>Protobuf internal. Used in protobuf generated code only.
    */
-  public static class ListAdapter<F, T> extends AbstractList<T> {
-    /** Convert individual elements of the List from F to T. */
-    public interface Converter<F, T> {
-      T convert(F from);
+  public static class IntListAdapter<T> extends AbstractList<T> {
+    /** Convert individual elements of the List from int to T. */
+    public interface IntConverter<T> {
+      T convert(int from);
     }
 
-    private final List<F> fromList;
-    private final Converter<F, T> converter;
+    private final IntList fromList;
+    private final IntConverter<T> converter;
 
-    public ListAdapter(List<F> fromList, Converter<F, T> converter) {
+    public IntListAdapter(IntList fromList, IntConverter<T> converter) {
       this.fromList = fromList;
       this.converter = converter;
     }
 
     public T get(int index) {
-      return converter.convert(fromList.get(index));
+      return converter.convert(fromList.getInt(index));
     }
 
     public int size() {

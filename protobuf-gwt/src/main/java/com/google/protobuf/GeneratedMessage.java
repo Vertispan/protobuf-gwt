@@ -467,9 +467,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      */
     private Object unknownFieldsOrBuilder = UnknownFieldSet.getDefaultInstance();
 
-    protected Builder() {
-      this(null);
-    }
+    protected Builder() {}
 
     protected Builder(BuilderParent builderParent) {
       this.builderParent = builderParent;
@@ -796,7 +794,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * the generated API only allows us to access it as a map. This method returns the underlying
      * map field directly and thus enables us to access the map field as a list.
      */
-    @SuppressWarnings({"unused", "rawtypes"})
+    @SuppressWarnings("unused")
     protected MapFieldReflectionAccessor internalGetMapFieldReflection(int fieldNumber) {
       return internalGetMapField(fieldNumber);
     }
@@ -811,7 +809,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
     }
 
     /** Like {@link #internalGetMapFieldReflection} but return a mutable version. */
-    @SuppressWarnings({"unused", "rawtypes"})
+    @SuppressWarnings("unused")
     protected MapFieldReflectionAccessor internalGetMutableMapFieldReflection(int fieldNumber) {
       return internalGetMutableMapField(fieldNumber);
     }
@@ -910,17 +908,26 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
       verifyExtensionContainingType(extension);
       FieldDescriptor descriptor = extension.getDescriptor();
       final Object value = extensions.getField(descriptor);
+      T result = null;
       if (value == null) {
         if (descriptor.isRepeated()) {
-          return (T) Collections.emptyList();
+          result = (T) ProtobufArrayList.emptyList();
         } else if (descriptor.getJavaType() == FieldDescriptor.JavaType.MESSAGE) {
-          return (T) extension.getMessageDefaultInstance();
+          result = (T) extension.getMessageDefaultInstance();
         } else {
-          return (T) extension.fromReflectionType(descriptor.getDefaultValue());
+          result = (T) extension.fromReflectionType(descriptor.getDefaultValue());
         }
       } else {
-        return (T) extension.fromReflectionType(value);
+        result = (T) extension.fromReflectionType(value);
       }
+
+      // If the lazy field is corrupted, we need to invalidate the memoized size in case the
+      // corrupted message data was replaced with an empty ByteString and yet a previous serialized
+      // size was memoized.
+      if (extensions.lazyFieldCorrupted(descriptor)) {
+        setMemoizedSerializedSize(-1);
+      }
+      return result;
     }
 
     /** Get one element of a repeated extension. */
@@ -947,10 +954,27 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
 
     /**
      * Used by subclasses to serialize extensions. Extension ranges may be interleaved with field
-     * numbers, but we must write them in canonical (sorted by field number) order. ExtensionWriter
-     * helps us write individual ranges of extensions at once.
+     * numbers, but we must write them in canonical (sorted by field number) order.
+     * ExtensionSerializer helps us write individual ranges of extensions at once.
      */
-    protected class ExtensionWriter {
+    protected interface ExtensionSerializer {
+      public void writeUntil(final int end, final CodedOutputStream output) throws IOException;
+    }
+
+    /** No-op implementation that writes nothing, for messages with no extensions. */
+    private static final class NoOpExtensionSerializer implements ExtensionSerializer {
+      // Singleton instance so we can avoid allocating a new one for each message serialization.
+      private static final NoOpExtensionSerializer INSTANCE = new NoOpExtensionSerializer();
+
+      public void writeUntil(final int end, final CodedOutputStream output) {
+        // no-op
+      }
+    }
+
+    /**
+     * ExtensionSerializer that writes extensions from the FieldSet, for messages with extensions.
+     */
+    protected class ExtensionWriter implements ExtensionSerializer {
       // Imagine how much simpler this code would be if Java iterators had
       // a way to get the next element without advancing the iterator.
 
@@ -998,11 +1022,36 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
       }
     }
 
+    /**
+     * For compatibility with older gencode.
+     *
+     * <p>TODO Remove this in the next breaking release.
+     *
+     * @deprecated Use {@link newExtensionSerializer()} instead.
+     */
+    @Deprecated
     protected ExtensionWriter newExtensionWriter() {
       return new ExtensionWriter(false);
     }
 
+    protected ExtensionSerializer newExtensionSerializer() {
+      // Avoid allocation in the common case of no extensions.
+      if (extensions.isEmpty()) {
+        return NoOpExtensionSerializer.INSTANCE;
+      }
+      return new ExtensionWriter(false);
+    }
+
+    // TODO: Remove, replace with newMessageSetExtensionSerializer().
     protected ExtensionWriter newMessageSetExtensionWriter() {
+      return new ExtensionWriter(true);
+    }
+
+    protected ExtensionSerializer newMessageSetExtensionSerializer() {
+      // Avoid allocation in the common case of no extensions.
+      if (extensions.isEmpty()) {
+        return NoOpExtensionSerializer.INSTANCE;
+      }
       return new ExtensionWriter(true);
     }
 

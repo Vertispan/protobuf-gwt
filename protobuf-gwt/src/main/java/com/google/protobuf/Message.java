@@ -39,7 +39,8 @@ public interface Message extends MessageLite, MessageOrBuilder {
    * @param other object to be compared for equality with this message
    * @return {@code true} if the specified object is equal to this message
    */
-  boolean equals(Object other);
+  boolean equals(
+          Object other);
 
   /**
    * Returns the hash code value for this message. The hash code of a message should mix the
@@ -95,6 +96,46 @@ public interface Message extends MessageLite, MessageOrBuilder {
     @CanIgnoreReturnValue
     Builder mergeFrom(Message other);
 
+    @CanIgnoreReturnValue
+    Builder mergeFrom(CodedInputStream input) throws IOException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
+        throws IOException;
+
+    // ---------------------------------------------------------------
+    // Convenience methods.
+
+    // (From MessageLite.Builder, re-declared here only for return type
+    // covariance.)
+    @CanIgnoreReturnValue
+    Builder mergeFrom(ByteString data) throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry)
+        throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(byte[] data) throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry)
+        throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry)
+        throws InvalidProtocolBufferException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(InputStream input) throws IOException;
+
+    @CanIgnoreReturnValue
+    Builder mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
+        throws IOException;
+
     // (From MessageLite.Builder, re-declared here only for return type
     // covariance.)
     Message build();
@@ -103,26 +144,18 @@ public interface Message extends MessageLite, MessageOrBuilder {
 
     Builder clone();
 
-    @CanIgnoreReturnValue
-    Builder mergeFrom(CodedInputStream input) throws IOException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
-        throws IOException;
-
     /** Get the message's type's descriptor. See {@link Message#getDescriptorForType()}. */
     Descriptors.Descriptor getDescriptorForType();
 
     /**
-     * Create a builder for messages of the appropriate type for the given field. The
-     * builder is NOT nested in the current builder. However, messages built with the
-     * builder can then be passed to the {@link #setField(Descriptors.FieldDescriptor, Object)},
-     * {@link #setRepeatedField(Descriptors.FieldDescriptor, int, Object)}, or
-     * {@link #addRepeatedField(Descriptors.FieldDescriptor, Object)}
-     * method of the current builder.
+     * Create a builder for messages of the appropriate type for the given field. The builder is NOT
+     * nested in the current builder. However, messages built with the builder can then be passed to
+     * the {@link #setField(Descriptors.FieldDescriptor, Object)}, {@link
+     * #setRepeatedField(Descriptors.FieldDescriptor, int, Object)}, or {@link
+     * #addRepeatedField(Descriptors.FieldDescriptor, Object)} method of the current builder.
      *
-     * <p>To obtain a builder nested in the current builder, use
-     * {@link #getFieldBuilder(Descriptors.FieldDescriptor)} instead.
+     * <p>To obtain a builder nested in the current builder, use {@link
+     * #getFieldBuilder(Descriptors.FieldDescriptor)} instead.
      */
     Builder newBuilderForField(Descriptors.FieldDescriptor field);
 
@@ -130,13 +163,12 @@ public interface Message extends MessageLite, MessageOrBuilder {
      * Get a nested builder instance for the given field.
      *
      * <p>Normally, we hold a reference to the immutable message object for the message type field.
-     * Some implementations (the generated message builders) can also hold a reference to
-     * the builder object (a nested builder) for the field.
+     * Some implementations (the generated message builders) can also hold a reference to the
+     * builder object (a nested builder) for the field.
      *
-     * <p>If the field is already backed up by a nested builder, the nested builder is
-     * returned. Otherwise, a new field builder is created and returned. The original message
-     * field (if one exists) is merged into the field builder, which is then nested into its
-     * parent builder.
+     * <p>If the field is already backed up by a nested builder, the nested builder is returned.
+     * Otherwise, a new field builder is created and returned. The original message field (if one
+     * exists) is merged into the field builder, which is then nested into its parent builder.
      */
     Builder getFieldBuilder(Descriptors.FieldDescriptor field);
 
@@ -144,13 +176,12 @@ public interface Message extends MessageLite, MessageOrBuilder {
      * Get a nested builder instance for the given repeated field instance.
      *
      * <p>Normally, we hold a reference to the immutable message object for the message type field.
-     * Some implementations (the generated message builders) can also hold a reference to
-     * the builder object (a nested builder) for the field.
+     * Some implementations (the generated message builders) can also hold a reference to the
+     * builder object (a nested builder) for the field.
      *
-     * <p>If the field is already backed up by a nested builder, the nested builder is
-     * returned. Otherwise, a new field builder is created and returned. The original message
-     * field (if one exists) is merged into the field builder, which is then nested into its
-     * parent builder.
+     * <p>If the field is already backed up by a nested builder, the nested builder is returned.
+     * Otherwise, a new field builder is created and returned. The original message field (if one
+     * exists) is merged into the field builder, which is then nested into its parent builder.
      */
     Builder getRepeatedFieldBuilder(Descriptors.FieldDescriptor field, int index);
 
@@ -208,34 +239,6 @@ public interface Message extends MessageLite, MessageOrBuilder {
 
     // (From MessageLite.Builder, re-declared here only for return type
     // covariance.)
-    @CanIgnoreReturnValue
-    Builder mergeFrom(ByteString data) throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry)
-        throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(byte[] data) throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry)
-        throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry)
-        throws InvalidProtocolBufferException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(InputStream input) throws IOException;
-
-    @CanIgnoreReturnValue
-    Builder mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry)
-        throws IOException;
-
     boolean mergeDelimitedFrom(InputStream input) throws IOException;
 
     boolean mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry)

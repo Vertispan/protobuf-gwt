@@ -140,6 +140,26 @@ public class LazyStringArrayList extends AbstractProtobufList<String>
     modCount++;
   }
 
+  @CanIgnoreReturnValue
+  public boolean add(String element) {
+    ensureIsMutable();
+    list.add(element);
+    modCount++;
+    return true;
+  }
+
+  public void add(ByteString element) {
+    ensureIsMutable();
+    list.add(element);
+    modCount++;
+  }
+
+  public void add(byte[] element) {
+    ensureIsMutable();
+    list.add(element);
+    modCount++;
+  }
+
   public boolean addAll(Collection<? extends String> c) {
     // The default implementation of AbstractCollection.addAll(Collection)
     // delegates to add(Object). This implementation instead delegates to
@@ -183,18 +203,6 @@ public class LazyStringArrayList extends AbstractProtobufList<String>
   public void clear() {
     ensureIsMutable();
     list.clear();
-    modCount++;
-  }
-
-  public void add(ByteString element) {
-    ensureIsMutable();
-    list.add(element);
-    modCount++;
-  }
-
-  public void add(byte[] element) {
-    ensureIsMutable();
-    list.add(element);
     modCount++;
   }
 

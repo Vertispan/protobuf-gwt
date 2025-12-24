@@ -47,7 +47,8 @@ public class LazyField extends LazyFieldLite {
     return getValue().hashCode();
   }
 
-  public boolean equals(Object obj) {
+  public boolean equals(
+          Object obj) {
     return getValue().equals(obj);
   }
 
