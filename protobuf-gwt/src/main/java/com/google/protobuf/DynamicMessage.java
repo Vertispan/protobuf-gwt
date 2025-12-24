@@ -219,7 +219,9 @@ public final class DynamicMessage extends AbstractMessage {
 
   public int getSerializedSize() {
     int size = memoizedSize;
-    if (size != -1) return size;
+    if (size != -1) {
+      return size;
+    }
 
     if (type.getOptions().getMessageSetWireFormat()) {
       size = fields.getMessageSetSerializedSize();
