@@ -1947,7 +1947,7 @@ public abstract class CodedInputStream {
       if (bytesRead > 0) {
         bufferSize += bytesRead;
         recomputeBufferSizeAfterLimit();
-        return (bufferSize >= n) ? true : tryRefillBuffer(n);
+        return (bufferSize >= n) || tryRefillBuffer(n);
       }
 
       return false;

@@ -24,6 +24,13 @@ import java.util.Map;
  * A partial implementation of the {@link Message} interface which implements as many methods of
  * that interface as possible in terms of other methods.
  *
+ * <p>Users should generally ignore this class and use the Message interface instead.
+ *
+ * <p>This class is intended to only be extended by protoc created gencode. It is not intended or
+ * supported to extend this class, and any protected methods may be removed without it being
+ * considered a breaking change as long as all supported gencode does not depend on the changed
+ * methods.
+ *
  * @author kenton@google.com Kenton Varda
  */
 public abstract class AbstractMessage
@@ -66,11 +73,8 @@ public abstract class AbstractMessage
   }
 
   public final String toString() {
-    TextFormat.Printer printer =
-        ProtobufToStringOutput.shouldOutputDebugFormat()
-            ? TextFormat.debugFormatPrinter()
-            : TextFormat.printer();
-    return printer.printToString(this, TextFormat.Printer.FieldReporterLevel.ABSTRACT_TO_STRING);
+    return TextFormat.Printer.getOutputModePrinter()
+        .printToString(this, TextFormat.Printer.FieldReporterLevel.ABSTRACT_TO_STRING);
   }
 
   protected int memoizedSize = -1;
@@ -390,12 +394,8 @@ public abstract class AbstractMessage
     }
 
     public String toString() {
-      TextFormat.Printer printer =
-          ProtobufToStringOutput.shouldOutputDebugFormat()
-              ? TextFormat.debugFormatPrinter()
-              : TextFormat.printer();
-      return printer.printToString(
-          this, TextFormat.Printer.FieldReporterLevel.ABSTRACT_BUILDER_TO_STRING);
+      return TextFormat.Printer.getOutputModePrinter()
+          .printToString(this, TextFormat.Printer.FieldReporterLevel.ABSTRACT_BUILDER_TO_STRING);
     }
 
     /** Construct an UninitializedMessageException reporting missing fields in the given message. */

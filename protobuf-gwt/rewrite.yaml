@@ -287,13 +287,13 @@ recipeList:
   - com.vertispan.recipes.RemoveClassInternals:
       fullyQualifiedClassName: com.google.protobuf.TextFormat
   - com.vertispan.recipes.MethodThrowsException:
-      target: com.google.protobuf.TextFormat$Printer *(..)
-  - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.TextFormat$TextGenerator *(..)
   - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.TextFormat$Tokenizer *(..)
   - com.vertispan.recipes.RemoveClassInternals:
       fullyQualifiedClassName: com.google.protobuf.TextFormat$Parser
+  - com.vertispan.recipes.RemoveClassInternals:
+      fullyQualifiedClassName: com.google.protobuf.TextFormat$Printer
   - com.vertispan.recipes.RemoveClassInternals:
       fullyQualifiedClassName: com.google.protobuf.TextFormat$Parser$Builder
 

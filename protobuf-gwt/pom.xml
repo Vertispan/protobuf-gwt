@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vertispan.protobuf</groupId>
         <artifactId>gwt-protobuf-parent</artifactId>
-        <version>4.31.1-1-SNAPSHOT</version>
+        <version>4.32.1-1-SNAPSHOT</version>
     </parent>
 
     <artifactId>protobuf-gwt</artifactId>
@@ -31,7 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- The protobuf-java version to copy and customize for GWT -->
-        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf.version>4.32.1</protobuf.version>
 
         <maven.gwt.plugin>1.1.0</maven.gwt.plugin>
         <gwt.nio.version>1.0-alpha-2</gwt.nio.version>
