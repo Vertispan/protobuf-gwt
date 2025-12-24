@@ -28,6 +28,9 @@ released versions:
 | 3.25.4 | 3.25.4-2     | Corrected License to correctly follow protobuf-java's instead of relicensing |
 | 3.25.4 | 3.25.4-3     | Restored WrappersProto types, for downstream projects that use them          |
 | 3.25.8 | 3.25.8-1     | Updated to protobuf-java 3.25.8                                             |
+| 4.33.2 | 4.33.2-1     | Updated to protobuf-java 4.33.2                                             |
+
+Other intermediate versions can be tested and released upon request.
 
 ## Building
 
@@ -42,11 +45,24 @@ CI builds set `-Dmdep.skip=true` instead of otherwise keeping the old target/ di
 ## Manual changes
 
 ```patch
+diff --git a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessage.java b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessage.java
+index 1b3adc8..c255d61 100644
+--- a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessage.java
++++ b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessage.java
+@@ -1476,7 +1476,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
+      */
+     private FieldSet<FieldDescriptor> buildExtensions() {
+       return extensions == null
+-          ? (FieldSet<FieldDescriptor>) FieldSet.emptySet()
++          ? (FieldSet<FieldDescriptor>) FieldSet.<FieldDescriptor>emptySet()
+           : extensions.buildPartial();
+     }
+
 diff --git a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageLite.java b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageLite.java
-index df2842a..a7a4fcb 100644
+index 2ac95a2..cb6eeca 100644
 --- a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageLite.java
 +++ b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageLite.java
-@@ -964,7 +964,7 @@ public abstract class GeneratedMessageLite<
+@@ -963,7 +963,7 @@ public abstract class GeneratedMessageLite<
  
      protected void copyOnWriteInternal() {
        super.copyOnWriteInternal();
@@ -55,19 +71,7 @@ index df2842a..a7a4fcb 100644
          instance.extensions = instance.extensions.clone();
        }
      }
-diff --git a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageV3.java b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageV3.java
-index 019a1ac..b23f833 100644
---- a/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageV3.java
-+++ b/protobuf-gwt/src/main/java/com/google/protobuf/GeneratedMessageV3.java
-@@ -1328,7 +1328,7 @@ public abstract class GeneratedMessageV3 extends AbstractMessage implements Seri
-      */
-     private FieldSet<FieldDescriptor> buildExtensions() {
-       return extensions == null
--          ? (FieldSet<FieldDescriptor>) FieldSet.emptySet()
-+          ? (FieldSet<FieldDescriptor>) FieldSet.<FieldDescriptor>emptySet()
-           : extensions.buildPartial();
-     }
- 
+
 ```
 
 # License

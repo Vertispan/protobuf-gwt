@@ -822,12 +822,8 @@ final class Utf8 {
         Java8Compatibility.position(out, outIx);
       } catch (IndexOutOfBoundsException e) {
         // TODO: Consider making the API throw IndexOutOfBoundsException instead.
-
-        // If we failed in the outer ASCII loop, outIx will not have been updated. In this case,
-        // use inIx to determine the bad write index.
-        int badWriteIndex = out.position() + Math.max(inIx, outIx - out.position() + 1);
         throw new ArrayIndexOutOfBoundsException(
-            "Failed writing " + in.charAt(inIx) + " at index " + badWriteIndex);
+            "Not enough space in output buffer to encode UTF-8 string");
       }
     }
   }
@@ -1051,7 +1047,8 @@ final class Utf8 {
               && (i + 1 == in.length() || !Character.isSurrogatePair(c, in.charAt(i + 1)))) {
             throw new UnpairedSurrogateException(i, utf16Length);
           }
-          throw new ArrayIndexOutOfBoundsException("Failed writing " + c + " at index " + j);
+          throw new ArrayIndexOutOfBoundsException(
+              "Not enough space in output buffer to encode UTF-8 string");
         }
       }
       return j;

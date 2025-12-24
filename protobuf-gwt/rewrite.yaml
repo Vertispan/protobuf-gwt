@@ -91,6 +91,17 @@ recipeList:
         # google/protobuf/duration.proto
         - com.google.protobuf.Duration
 
+        # Keep deprecated GeneratedMessageV3 as long as there might be old protos on the classpath.
+        # Note if backporting this that there are some 4.x releases which do not include this class,
+        # they are simply stuck being incompatible.
+        - com.google.protobuf.GeneratedMessageV3
+        - com.google.protobuf.GeneratedMessageV3$Builder
+        - com.google.protobuf.RepeatedFieldBuilderV3
+        - com.google.protobuf.RepeatedFieldBuilderV3$BuilderExternalList
+        - com.google.protobuf.RepeatedFieldBuilderV3$MessageExternalList
+        - com.google.protobuf.RepeatedFieldBuilderV3$MessageOrBuilderExternalList
+        - com.google.protobuf.SingleFieldBuilderV3
+
  # Unsafe obviously won't work in GWT, this was used for array access, the safe impl should just access directly
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: com.google.protobuf.UnsafeUtil
@@ -324,3 +335,22 @@ recipeList:
       target: com.google.protobuf.Any unpack(..)
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.Any is(..)
+
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.Android getClassForName(..)
+      replacement: 'null'
+  - com.vertispan.recipes.RemoveMethod:
+      target: com.google.protobuf.Android getClassForName(..)
+  - com.vertispan.recipes.RemoveMethod:
+      target: com.google.protobuf.GeneratedFile addOptionalExtension(..)
+
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.RuntimeVersion checkDisabled(..)
+      replacement: 'false'
+  - com.vertispan.recipes.RemoveMethod:
+      target: com.google.protobuf.RuntimeVersion checkDisabled(..)
+
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: java.util.concurrent.CopyOnWriteArraySet
+      newFullyQualifiedTypeName: java.util.HashSet
+      ignoreDefinition: true

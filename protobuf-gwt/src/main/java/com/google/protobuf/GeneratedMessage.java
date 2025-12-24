@@ -396,8 +396,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
           + " security vulnerability:"
           + " https://github.com/protocolbuffers/protobuf/security/advisories/GHSA-h4h5-3hr4-j3g2";
 
-  protected static final Set<String> loggedPre22TypeNames =
-      Collections.synchronizedSet(new HashSet<String>());
+  protected static final Set<String> loggedPre22TypeNames = new HashSet<String>();
 
   static void warnPre22Gencode(Class<?> messageClass) {
     if (System.getProperty(PRE22_GENCODE_SILENCE_PROPERTY) != null) {
@@ -971,12 +970,20 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
       this.extensions = builder.buildExtensions();
     }
 
-    private void verifyExtensionContainingType(final Extension<? extends MessageT, ?> extension) {
-      if (extension.getDescriptor().getContainingType() != getDescriptorForType()) {
+    /**
+     * Returns an iterator over the set extensions lazily wrapped in {@link FieldEntry} objects.
+     * Order is unspecified.
+     */
+    public final Iterator<FieldEntry> extensionsIterator() {
+      return new FieldEntryIterator(extensions);
+    }
+
+    private void verifyExtensionContainingType(final FieldDescriptor descriptor) {
+      if (descriptor.getContainingType() != getDescriptorForType()) {
         // This can only happen if someone uses unchecked operations.
         throw new IllegalArgumentException(
             "Extension is for type \""
-                + extension.getDescriptor().getContainingType().getFullName()
+                + descriptor.getContainingType().getFullName()
                 + "\" which does not match message type \""
                 + getDescriptorForType().getFullName()
                 + "\".");
@@ -988,8 +995,8 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
     public final <T> T getExtension(final ExtensionLite<? extends MessageT, T> extensionLite) {
       Extension<MessageT, T> extension = checkNotLite(extensionLite);
 
-      verifyExtensionContainingType(extension);
-      FieldDescriptor descriptor = extension.getDescriptor();
+      final FieldDescriptor descriptor = extension.getDescriptor();
+      verifyExtensionContainingType(descriptor);
       final Object value = extensions.getField(descriptor);
       T result = null;
       if (value == null) {
@@ -1019,8 +1026,8 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
         final ExtensionLite<? extends MessageT, List<T>> extensionLite, final int index) {
       Extension<MessageT, List<T>> extension = checkNotLite(extensionLite);
 
-      verifyExtensionContainingType(extension);
-      FieldDescriptor descriptor = extension.getDescriptor();
+      final FieldDescriptor descriptor = extension.getDescriptor();
+      verifyExtensionContainingType(descriptor);
       return (T)
           extension.singularFromReflectionType(extensions.getRepeatedField(descriptor, index));
     }
@@ -1231,6 +1238,43 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
         throw new IllegalArgumentException("FieldDescriptor does not match message type.");
       }
     }
+
+    /** A wrapper for a field descriptor and its value. */
+    public static final class FieldEntry {
+      private final FieldDescriptor descriptor;
+      private final Object value;
+
+      public FieldDescriptor getDescriptor() {
+        return descriptor;
+      }
+
+      public Object getValue() {
+        return value;
+      }
+
+      FieldEntry(FieldDescriptor descriptor, Object value) {
+        this.descriptor = descriptor;
+        this.value = value;
+      }
+    }
+
+    private static final class FieldEntryIterator implements Iterator<FieldEntry> {
+      private final Iterator<Map.Entry<FieldDescriptor, Object>> iter;
+
+      FieldEntryIterator(FieldSet<FieldDescriptor> fieldSet) {
+        this.iter = fieldSet.iterator();
+      }
+
+      public final boolean hasNext() {
+        return iter.hasNext();
+      }
+
+      public final FieldEntry next() {
+        // Just let the inner iterator throw the NoSuchElementException.
+        Map.Entry<FieldDescriptor, Object> entry = iter.next();
+        return new FieldEntry(entry.getKey(), entry.getValue());
+      }
+    }
   }
 
   /**
@@ -1432,7 +1476,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      */
     private FieldSet<FieldDescriptor> buildExtensions() {
       return extensions == null
-          ? (FieldSet<FieldDescriptor>) FieldSet.emptySet()
+          ? (FieldSet<FieldDescriptor>) FieldSet.<FieldDescriptor>emptySet()
           : extensions.buildPartial();
     }
 

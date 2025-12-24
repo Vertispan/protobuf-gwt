@@ -71,7 +71,7 @@ public class ExtensionRegistryLite {
    * available.
    */
   public static ExtensionRegistryLite newInstance() {
-    return Protobuf.assumeLiteRuntime
+    return Android.assumeLiteRuntime
         ? new ExtensionRegistryLite()
         : ExtensionRegistryFactory.create();
   }
@@ -83,7 +83,7 @@ public class ExtensionRegistryLite {
    * ExtensionRegistry} (if the full (non-Lite) proto libraries are available).
    */
   public static ExtensionRegistryLite getEmptyRegistry() {
-    if (Protobuf.assumeLiteRuntime) {
+    if (Android.assumeLiteRuntime) {
       return EMPTY_REGISTRY_LITE;
     }
     ExtensionRegistryLite result = emptyRegistry;
