@@ -212,24 +212,24 @@ final class Utf8 {
    * @throws IllegalArgumentException if {@code sequence} contains ill-formed UTF-16 (unpaired
    *     surrogates)
    */
-  static int encodedLength(CharSequence sequence) {
+  static int encodedLength(String string) {
     // Warning to maintainers: this implementation is highly optimized.
-    int utf16Length = sequence.length();
+    int utf16Length = string.length();
     int utf8Length = utf16Length;
     int i = 0;
 
     // This loop optimizes for pure ASCII.
-    while (i < utf16Length && sequence.charAt(i) < 0x80) {
+    while (i < utf16Length && string.charAt(i) < 0x80) {
       i++;
     }
 
     // This loop optimizes for chars less than 0x800.
     for (; i < utf16Length; i++) {
-      char c = sequence.charAt(i);
+      char c = string.charAt(i);
       if (c < 0x800) {
         utf8Length += ((0x7f - c) >>> 31); // branch free!
       } else {
-        utf8Length += encodedLengthGeneral(sequence, i);
+        utf8Length += encodedLengthGeneral(string, i);
         break;
       }
     }
@@ -242,11 +242,11 @@ final class Utf8 {
     return utf8Length;
   }
 
-  private static int encodedLengthGeneral(CharSequence sequence, int start) {
-    int utf16Length = sequence.length();
+  private static int encodedLengthGeneral(String string, int start) {
+    int utf16Length = string.length();
     int utf8Length = 0;
     for (int i = start; i < utf16Length; i++) {
-      char c = sequence.charAt(i);
+      char c = string.charAt(i);
       if (c < 0x800) {
         utf8Length += (0x7f - c) >>> 31; // branch free!
       } else {
@@ -254,7 +254,7 @@ final class Utf8 {
         // jdk7+: if (Character.isSurrogate(c)) {
         if (Character.MIN_SURROGATE <= c && c <= Character.MAX_SURROGATE) {
           // Check that we have a well-formed surrogate pair.
-          int cp = Character.codePointAt(sequence, i);
+          int cp = Character.codePointAt(string, i);
           if (cp < MIN_SUPPLEMENTARY_CODE_POINT) {
             throw new UnpairedSurrogateException(i, utf16Length);
           }
@@ -265,7 +265,7 @@ final class Utf8 {
     return utf8Length;
   }
 
-  static int encode(CharSequence in, byte[] out, int offset, int length) {
+  static int encode(String in, byte[] out, int offset, int length) {
     return processor.encodeUtf8(in, out, offset, length);
   }
   // End Guava UTF-8 methods.
@@ -324,9 +324,9 @@ final class Utf8 {
    *
    * @param in the source string to be encoded
    * @param out the target buffer to receive the encoded string.
-   * @see Utf8#encode(CharSequence, byte[], int, int)
+   * @see Utf8#encode(String, byte[], int, int)
    */
-  static void encodeUtf8(CharSequence in, ByteBuffer out) {
+  static void encodeUtf8(String in, ByteBuffer out) {
     processor.encodeUtf8(in, out);
   }
 
@@ -722,7 +722,7 @@ final class Utf8 {
      *     {@code bytes.length - offset}
      * @return the new offset, equivalent to {@code offset + Utf8.encodedLength(sequence)}
      */
-    abstract int encodeUtf8(CharSequence in, byte[] out, int offset, int length);
+    abstract int encodeUtf8(String in, byte[] out, int offset, int length);
 
     /**
      * Encodes an input character sequence ({@code in}) to UTF-8 in the target buffer ({@code out}).
@@ -741,7 +741,7 @@ final class Utf8 {
      * @throws ArrayIndexOutOfBoundsException if {@code in} encoded in UTF-8 is longer than {@code
      *     out.remaining()}
      */
-    final void encodeUtf8(CharSequence in, ByteBuffer out) {
+    final void encodeUtf8(String in, ByteBuffer out) {
       if (false) {
         final int offset = out.arrayOffset();
         int endIndex = Utf8.encode(in, out.array(), offset + out.position(), out.remaining());
@@ -754,13 +754,13 @@ final class Utf8 {
     }
 
     /** Encodes the input character sequence to a direct {@link ByteBuffer} instance. */
-    abstract void encodeUtf8Direct(CharSequence in, ByteBuffer out);
+    abstract void encodeUtf8Direct(String in, ByteBuffer out);
 
     /**
      * Encodes the input character sequence to a {@link ByteBuffer} instance using the {@link
      * ByteBuffer} API, rather than potentially faster approaches.
      */
-    final void encodeUtf8Default(CharSequence in, ByteBuffer out) {
+    final void encodeUtf8Default(String in, ByteBuffer out) {
       final int inLength = in.length();
       int outIx = out.position();
       int inIx = 0;
@@ -1006,7 +1006,7 @@ final class Utf8 {
       return decodeUtf8Default(buffer, index, size);
     }
 
-    int encodeUtf8(CharSequence in, byte[] out, int offset, int length) {
+    int encodeUtf8(String in, byte[] out, int offset, int length) {
       int utf16Length = in.length();
       int j = offset;
       int i = 0;
@@ -1057,7 +1057,7 @@ final class Utf8 {
       return j;
     }
 
-    void encodeUtf8Direct(CharSequence in, ByteBuffer out) {
+    void encodeUtf8Direct(String in, ByteBuffer out) {
       // For safe processing, we have to use the ByteBuffer API.
       encodeUtf8Default(in, out);
     }

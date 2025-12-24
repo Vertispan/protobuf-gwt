@@ -139,10 +139,15 @@ recipeList:
       methodPattern: java.lang.Float floatToRawIntBits(float)
       fullyQualifiedTargetTypeName: com.google.protobuf.gwt.StaticImpls
 
-  - com.vertispan.recipes.RemoveMethod:
+  - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.ExtensionRegistryFactory isFullRegistry(..)
-  - com.vertispan.recipes.RemoveMethod:
-      target: com.google.protobuf.ExtensionRegistryLite add(..)
+  - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
+      methodPattern: com.google.protobuf.ExtensionRegistryLite isFullRegistry(..)
+      replacement: 'false'
+#  - com.vertispan.recipes.RemoveMethod:
+#      target: com.google.protobuf.ExtensionRegistryLite add(..)
+  - com.vertispan.recipes.MethodThrowsException:
+      target: com.google.protobuf.ExtensionRegistryLite add(com.google.protobuf.ExtensionLite)
 
   - org.openrewrite.java.ReplaceMethodInvocationWithConstant:
       methodPattern: com.google.protobuf.ExtensionRegistryFactory reflectExtensionRegistry()
@@ -159,16 +164,16 @@ recipeList:
       target: com.google.protobuf.JavaType isValidType(..)
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessage newMessageScopedGeneratedExtension(..)
-  - com.vertispan.recipes.RemoveMethod:
+  - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.GeneratedMessage newFileScopedGeneratedExtension(..)
-  - com.vertispan.recipes.RemoveMethod:
+  - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.ExtensionRegistry add(..)
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder hasExtension(..)
       matchOverrides: true
-  - com.vertispan.recipes.RemoveMethod:
-      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtension(..)
-      matchOverrides: true
+#  - com.vertispan.recipes.MethodThrowsException:
+#      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtension(..)
+#      matchOverrides: true
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtensionCount(..)
       matchOverrides: true
@@ -176,17 +181,11 @@ recipeList:
       target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder hasExtension(..)
       matchOverrides: true
   - com.vertispan.recipes.RemoveMethod:
-      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtension(..)
-      matchOverrides: true
-  - com.vertispan.recipes.RemoveMethod:
-      target: com.google.protobuf.GeneratedMessage$ExtendableMessageOrBuilder getExtensionCount(..)
-      matchOverrides: true
-  - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder hasExtension(..)
       matchOverrides: true
-  - com.vertispan.recipes.RemoveMethod:
-      target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder getExtension(..)
-      matchOverrides: true
+#  - com.vertispan.recipes.MethodThrowsException:
+#      target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder getExtension(..)
+#      matchOverrides: true
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessageV3$ExtendableMessageOrBuilder getExtensionCount(..)
       matchOverrides: true
@@ -282,8 +281,6 @@ recipeList:
 
   - com.vertispan.recipes.MethodThrowsException:
       target: com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)
-  - 'com.vertispan.recipes.RemoveClassInternals':
-      fullyQualifiedClassName: com.google.protobuf.GeneratedMessage$FieldAccessorTable$OneofAccessor
   - com.vertispan.recipes.RemoveMethod:
       target: com.google.protobuf.GeneratedMessage getMethodOrDie(..)
   - com.vertispan.recipes.RemoveMethod:

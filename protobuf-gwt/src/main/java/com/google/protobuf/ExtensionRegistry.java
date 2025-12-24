@@ -188,6 +188,26 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
     return extensions;
   }
 
+  /** Add an extension from a generated file to the registry. */
+  public void add(final Extension<?, ?> extension) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+  }
+
+  /** Add an extension from a generated file to the registry. */
+  public void add(final GeneratedMessage.GeneratedExtension<?, ?> extension) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+  }
+
+  /** Add a non-message-type extension to the registry by descriptor. */
+  public void add(final FieldDescriptor type) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+  }
+
+  /** Add a message-type extension to the registry by descriptor. */
+  public void add(final FieldDescriptor type, final Message defaultInstance) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+  }
+
   // =================================================================
   // Private stuff.
 
@@ -221,6 +241,10 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
   }
 
   static final ExtensionRegistry EMPTY_REGISTRY = new ExtensionRegistry(true);
+
+  private void add(final ExtensionInfo extension, final Extension.ExtensionType extensionType) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+  }
 
   /** A (GenericDescriptor, int) pair, used as a map key. */
   private static final class DescriptorIntPair {

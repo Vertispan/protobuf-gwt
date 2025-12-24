@@ -36,4 +36,8 @@ final class ExtensionRegistryFactory {
 
     return result != null ? result : EMPTY_REGISTRY_LITE;
   }
+
+  static boolean isFullRegistry(ExtensionRegistryLite registry) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistryFactory isFullRegistry(..)");
+  }
 }

@@ -21,188 +21,12 @@ import java.util.List;
 public final class TextFormat {
 
   /**
-   * Outputs a textual representation of the Protocol Message supplied into the parameter output.
-   * (This representation is the new version of the classic "ProtocolPrinter" output from the
-   * original Protocol Buffer system)
-   *
-   * @deprecated Use {@code printer().print(MessageOrBuilder, Appendable)}
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "TextFormat.printer().print(message, output)",
-      imports = "com.google.protobuf.TextFormat")
-  public static void print(final MessageOrBuilder message, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("print");
-  }
-
-  /**
-   * Outputs a textual representation of {@code fields} to {@code output}.
-   *
-   * @deprecated Use {@code printer().print(UnknownFieldSet, Appendable)}
-   */
-  @Deprecated
-  public static void print(final UnknownFieldSet fields, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("print");
-  }
-
-  /**
-   * Same as {@code print()}, except that non-ASCII characters are not escaped.
-   *
-   * @deprecated Use {@code printer().escapingNonAscii(false).print(MessageOrBuilder, Appendable)}
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "TextFormat.printer().escapingNonAscii(false).print(message, output)",
-      imports = "com.google.protobuf.TextFormat")
-  public static void printUnicode(final MessageOrBuilder message, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("printUnicode");
-  }
-
-  /**
-   * Same as {@code print()}, except that non-ASCII characters are not escaped.
-   *
-   * @deprecated Use {@code printer().escapingNonAscii(false).print(UnknownFieldSet, Appendable)}
-   */
-  @Deprecated
-  public static void printUnicode(final UnknownFieldSet fields, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("printUnicode");
-  }
-
-  /**
    * Generates a human readable form of this message, useful for debugging and other purposes, with
    * no newline characters. This is just a trivial wrapper around {@link
    * TextFormat.Printer#shortDebugString(MessageOrBuilder)}.
    */
   public static String shortDebugString(final MessageOrBuilder message) {
     throw new UnsupportedOperationException("shortDebugString");
-  }
-
-  /**
-   * Generates a human readable form of the field, useful for debugging and other purposes, with
-   * no newline characters.
-   *
-   * @deprecated Use {@code printer().shortDebugString(FieldDescriptor, Object)}
-   */
-  @Deprecated
-  public static String shortDebugString(final FieldDescriptor field, final Object value) {
-    throw new UnsupportedOperationException("shortDebugString");
-  }
-
-  /**
-   * Generates a human readable form of the unknown fields, useful for debugging and other
-   * purposes, with no newline characters.
-   *
-   * @deprecated Use {@code printer().shortDebugString(UnknownFieldSet)}
-   */
-  @Deprecated
-  public static String shortDebugString(final UnknownFieldSet fields) {
-    throw new UnsupportedOperationException("shortDebugString");
-  }
-
-  /**
-   * Like {@code print()}, but writes directly to a {@code String} and returns it.
-   *
-   * @deprecated Use {@code message.toString()}
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "TextFormat.printer().printToString(message)",
-      imports = "com.google.protobuf.TextFormat")
-  public static String printToString(final MessageOrBuilder message) {
-    throw new UnsupportedOperationException("printToString");
-  }
-
-  /**
-   * Like {@code print()}, but writes directly to a {@code String} and returns it.
-   *
-   * @deprecated Use {@link UnknownFieldSet#toString()}
-   */
-  @Deprecated
-  public static String printToString(final UnknownFieldSet fields) {
-    throw new UnsupportedOperationException("printToString");
-  }
-
-  /**
-   * Same as {@code printToString()}, except that non-ASCII characters in string type fields are not
-   * escaped in backslash+octals.
-   *
-   * @deprecated Use {@code printer().escapingNonAscii(false).printToString(MessageOrBuilder)}
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "TextFormat.printer().escapingNonAscii(false).printToString(message)",
-      imports = "com.google.protobuf.TextFormat")
-  public static String printToUnicodeString(final MessageOrBuilder message) {
-    throw new UnsupportedOperationException("printToUnicodeString");
-  }
-
-  /**
-   * Same as {@code printToString()}, except that non-ASCII characters in string type fields are
-   * not escaped in backslash+octals.
-   *
-   * @deprecated Use {@code printer().escapingNonAscii(false).printToString(UnknownFieldSet)}
-   */
-  @Deprecated
-  public static String printToUnicodeString(final UnknownFieldSet fields) {
-    throw new UnsupportedOperationException("printToUnicodeString");
-  }
-
-  /** @deprecated Use {@code printer().printField(FieldDescriptor, Object, Appendable)} */
-  @Deprecated
-  public static void printField(
-      final FieldDescriptor field, final Object value, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("printField");
-  }
-
-  /** @deprecated Use {@code printer().printFieldToString(FieldDescriptor, Object)} */
-  @Deprecated
-  public static String printFieldToString(final FieldDescriptor field, final Object value) {
-    throw new UnsupportedOperationException("printFieldToString");
-  }
-
-  /**
-   * Outputs a unicode textual representation of the value of given field value.
-   *
-   * <p>Same as {@code printFieldValue()}, except that non-ASCII characters in string type fields
-   * are not escaped in backslash+octals.
-   *
-   * @deprecated Use {@code printer().escapingNonAscii(false).printFieldValue(FieldDescriptor,
-   *     Object, Appendable)}
-   * @param field the descriptor of the field
-   * @param value the value of the field
-   * @param output the output to which to append the formatted value
-   * @throws ClassCastException if the value is not appropriate for the given field descriptor
-   * @throws IOException if there is an exception writing to the output
-   */
-  @Deprecated
-  public static void printUnicodeFieldValue(
-      final FieldDescriptor field, final Object value, final Appendable output)
-      throws IOException {
-    throw new UnsupportedOperationException("printUnicodeFieldValue");
-  }
-
-  /**
-   * Outputs a textual representation of the value of given field value.
-   *
-   * @deprecated Use {@code printer().printFieldValue(FieldDescriptor, Object, Appendable)}
-   * @param field the descriptor of the field
-   * @param value the value of the field
-   * @param output the output to which to append the formatted value
-   * @throws ClassCastException if the value is not appropriate for the given field descriptor
-   * @throws IOException if there is an exception writing to the output
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "TextFormat.printer().printFieldValue(field, value, output)",
-      imports = "com.google.protobuf.TextFormat")
-  public static void printFieldValue(
-      final FieldDescriptor field, final Object value, final Appendable output) throws IOException {
-    throw new UnsupportedOperationException("printFieldValue");
   }
 
   /**
@@ -228,14 +52,20 @@ public final class TextFormat {
   public static final class Printer {
 
     // Printer instance which escapes non-ASCII characters.
-    private static final Printer DEFAULT = new Printer(true, TypeRegistry.getEmptyTypeRegistry());
+    private static final Printer DEFAULT =
+        new Printer(
+            true, TypeRegistry.getEmptyTypeRegistry(), ExtensionRegistryLite.getEmptyRegistry());
 
     /** Whether to escape non ASCII characters with backslash and octal. */
     private final boolean escapeNonAscii;
 
     private final TypeRegistry typeRegistry;
+    private final ExtensionRegistryLite extensionRegistry;
 
-    private Printer(boolean escapeNonAscii, TypeRegistry typeRegistry) {
+    private Printer(
+        boolean escapeNonAscii,
+        TypeRegistry typeRegistry,
+        ExtensionRegistryLite extensionRegistry) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 
@@ -259,6 +89,16 @@ public final class TextFormat {
      * @throws IllegalArgumentException if a registry is already set.
      */
     public Printer usingTypeRegistry(TypeRegistry typeRegistry) {
+      throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
+    }
+
+    /**
+     * Creates a new {@link Printer} using the given extensionRegistry. The new Printer clones all
+     * other configurations from the current {@link Printer}.
+     *
+     * @throws IllegalArgumentException if a registry is already set.
+     */
+    public Printer usingExtensionRegistry(ExtensionRegistryLite extensionRegistry) {
       throw new UnsupportedOperationException("com.google.protobuf.TextFormat$Printer *(..)");
     }
 

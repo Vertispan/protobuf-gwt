@@ -145,6 +145,7 @@ public abstract class CodedInputStream {
       throw InvalidProtocolBufferException.recursionLimitExceeded();
     }
   }
+
   /** Disable construction/inheritance outside of this class. */
   private CodedInputStream() {}
 
@@ -191,13 +192,41 @@ public abstract class CodedInputStream {
    * Reads and discards an entire message. This will read either until EOF or until an endgroup tag,
    * whichever comes first.
    */
-  public abstract void skipMessage() throws IOException;
+  public void skipMessage() throws IOException {
+    while (true) {
+      final int tag = readTag();
+      if (tag == 0) {
+        return;
+      }
+      checkRecursionLimit();
+      ++recursionDepth;
+      boolean fieldSkipped = skipField(tag);
+      --recursionDepth;
+      if (!fieldSkipped) {
+        return;
+      }
+    }
+  }
 
   /**
    * Reads an entire message and writes it to output in wire format. This will read either until EOF
    * or until an endgroup tag, whichever comes first.
    */
-  public abstract void skipMessage(CodedOutputStream output) throws IOException;
+  public void skipMessage(CodedOutputStream output) throws IOException {
+    while (true) {
+      final int tag = readTag();
+      if (tag == 0) {
+        return;
+      }
+      checkRecursionLimit();
+      ++recursionDepth;
+      boolean fieldSkipped = skipField(tag, output);
+      --recursionDepth;
+      if (!fieldSkipped) {
+        return;
+      }
+    }
+  }
 
   // -----------------------------------------------------------------
 
@@ -659,24 +688,6 @@ public abstract class CodedInputStream {
           }
         default:
           throw InvalidProtocolBufferException.invalidWireType();
-      }
-    }
-
-    public void skipMessage() throws IOException {
-      while (true) {
-        final int tag = readTag();
-        if (tag == 0 || !skipField(tag)) {
-          return;
-        }
-      }
-    }
-
-    public void skipMessage(CodedOutputStream output) throws IOException {
-      while (true) {
-        final int tag = readTag();
-        if (tag == 0 || !skipField(tag, output)) {
-          return;
-        }
       }
     }
 
@@ -1179,6 +1190,7 @@ public abstract class CodedInputStream {
   private static final class StreamDecoder extends CodedInputStream {
     private final InputStream input;
     private final byte[] buffer;
+
     /** bufferSize represents how many bytes are currently filled in the buffer */
     private int bufferSize;
 
@@ -1342,24 +1354,6 @@ public abstract class CodedInputStream {
           }
         default:
           throw InvalidProtocolBufferException.invalidWireType();
-      }
-    }
-
-    public void skipMessage() throws IOException {
-      while (true) {
-        final int tag = readTag();
-        if (tag == 0 || !skipField(tag)) {
-          return;
-        }
-      }
-    }
-
-    public void skipMessage(CodedOutputStream output) throws IOException {
-      while (true) {
-        final int tag = readTag();
-        if (tag == 0 || !skipField(tag, output)) {
-          return;
-        }
       }
     }
 
@@ -1563,7 +1557,7 @@ public abstract class CodedInputStream {
         throw InvalidProtocolBufferException.negativeSize();
       }
       // Slow path: Build a byte array first then copy it.
-      
+
       // We must copy as the byte array was handed off to the InputStream and a malicious
       // implementation could retain a reference.
       return StaticImpls.wrap(readRawBytesSlowPath(size, /* ensureNoLeakedReferences= */ true));
@@ -1958,12 +1952,12 @@ public abstract class CodedInputStream {
     /**
      * Exactly like readRawBytes, but caller must have already checked the fast path: (size <=
      * (bufferSize - pos) && size > 0)
-     * 
-     * If ensureNoLeakedReferences is true, the value is guaranteed to have not escaped to
+     *
+     * <p>If ensureNoLeakedReferences is true, the value is guaranteed to have not escaped to
      * untrusted code.
      */
-    private byte[] readRawBytesSlowPath(
-        final int size, boolean ensureNoLeakedReferences) throws IOException {
+    private byte[] readRawBytesSlowPath(final int size, boolean ensureNoLeakedReferences)
+        throws IOException {
       // Attempt to read the data in one byte array when it's safe to do.
       byte[] result = readRawBytesSlowPathOneChunk(size);
       if (result != null) {
@@ -2063,8 +2057,8 @@ public abstract class CodedInputStream {
 
     /**
      * Reads the remaining data in small chunks from the input stream.
-     * 
-     * Returns a byte[] that may have escaped to user code via InputStream APIs.
+     *
+     * <p>Returns a byte[] that may have escaped to user code via InputStream APIs.
      */
     private List<byte[]> readRawBytesSlowPathRemainingChunks(int sizeLeft) throws IOException {
       // The size is very large.  For security reasons, we can't allocate the
@@ -2134,7 +2128,7 @@ public abstract class CodedInputStream {
         System.arraycopy(chunk, 0, bytes, tempPos, chunk.length);
         tempPos += chunk.length;
       }
-      
+
       return ByteString.wrap(bytes);
     }
 

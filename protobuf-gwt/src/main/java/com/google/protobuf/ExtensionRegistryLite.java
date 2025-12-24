@@ -120,6 +120,21 @@ public class ExtensionRegistryLite {
         extensionsByNumber.get(new ObjectIntPair(containingTypeDefaultInstance, fieldNumber));
   }
 
+  /** Add an extension from a lite generated file to the registry. */
+  public final void add(final GeneratedMessageLite.GeneratedExtension<?, ?> extension) {
+    extensionsByNumber.put(
+        new ObjectIntPair(extension.getContainingTypeDefaultInstance(), extension.getNumber()),
+        extension);
+  }
+
+  /**
+   * Add an extension from a lite generated file to the registry only if it is a non-lite extension
+   * i.e. {@link GeneratedMessageLite.GeneratedExtension}.
+   */
+  public final void add(ExtensionLite<?, ?> extension) {
+    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistryLite add(com.google.protobuf.ExtensionLite)");
+  }
+
   // =================================================================
   // Private stuff.
 

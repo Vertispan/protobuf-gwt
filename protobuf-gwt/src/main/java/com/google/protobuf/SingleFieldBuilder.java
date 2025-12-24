@@ -10,7 +10,7 @@ package com.google.protobuf;
 import static com.google.protobuf.Internal.checkNotNull;
 
 /**
- * {@code SingleFieldBuilderV3} implements a structure that a protocol message uses to hold a single
+ * {@code SingleFieldBuilder} implements a structure that a protocol message uses to hold a single
  * field of another protocol message. It supports the classical use case of setting an immutable
  * {@link Message} as the value of the field and is highly optimized around this.
  *
@@ -20,8 +20,8 @@ import static com.google.protobuf.Internal.checkNotNull;
  * <br>
  * Logically, one can think of a tree of builders as converting the entire tree to messages when
  * build is called on the root or when any method is called that desires a Message instead of a
- * Builder. In terms of the implementation, the {@code SingleFieldBuilderV3} and {@code
- * RepeatedFieldBuilderV3} classes cache messages that were created so that messages only need to be
+ * Builder. In terms of the implementation, the {@code SingleFieldBuilder} and {@code
+ * RepeatedFieldBuilder} classes cache messages that were created so that messages only need to be
  * created when some change occurred in its builder or a builder for one of its descendants.
  *
  * @param <MType> the type of message for the field
@@ -29,14 +29,14 @@ import static com.google.protobuf.Internal.checkNotNull;
  * @param <IType> the common interface for the message and the builder
  * @author jonp@google.com (Jon Perlow)
  */
-public class SingleFieldBuilderV3<
-        MType extends AbstractMessage,
-        BType extends AbstractMessage.Builder,
+public class SingleFieldBuilder<
+        MType extends GeneratedMessage,
+        BType extends GeneratedMessage.Builder,
         IType extends MessageOrBuilder>
-    implements AbstractMessage.BuilderParent {
+    implements GeneratedMessage.BuilderParent {
 
   // Parent to send changes to.
-  private AbstractMessage.BuilderParent parent;
+  private GeneratedMessage.BuilderParent parent;
 
   // Invariant: one of builder or message fields must be non-null.
 
@@ -50,10 +50,10 @@ public class SingleFieldBuilderV3<
   private MType message;
 
   // Indicates that we've built a message and so we are now obligated
-  // to dispatch dirty invalidations. See AbstractMessage.BuilderListener.
+  // to dispatch dirty invalidations. See GeneratedMessage.BuilderListener.
   private boolean isClean;
 
-  public SingleFieldBuilderV3(MType message, AbstractMessage.BuilderParent parent, boolean isClean) {
+  public SingleFieldBuilder(MType message, GeneratedMessage.BuilderParent parent, boolean isClean) {
     this.message = checkNotNull(message);
     this.parent = parent;
     this.isClean = isClean;
@@ -134,7 +134,7 @@ public class SingleFieldBuilderV3<
    * @return the builder
    */
   @CanIgnoreReturnValue
-  public SingleFieldBuilderV3<MType, BType, IType> setMessage(MType message) {
+  public SingleFieldBuilder<MType, BType, IType> setMessage(MType message) {
     this.message = checkNotNull(message);
     if (builder != null) {
       builder.dispose();
@@ -151,7 +151,7 @@ public class SingleFieldBuilderV3<
    * @return the builder
    */
   @CanIgnoreReturnValue
-  public SingleFieldBuilderV3<MType, BType, IType> mergeFrom(MType value) {
+  public SingleFieldBuilder<MType, BType, IType> mergeFrom(MType value) {
     if (builder == null && message == message.getDefaultInstanceForType()) {
       message = value;
     } else {
@@ -168,7 +168,7 @@ public class SingleFieldBuilderV3<
    */
   @SuppressWarnings("unchecked")
   @CanIgnoreReturnValue
-  public SingleFieldBuilderV3<MType, BType, IType> clear() {
+  public SingleFieldBuilder<MType, BType, IType> clear() {
     message =
         (MType)
             (message != null
