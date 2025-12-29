@@ -20,6 +20,7 @@ import com.google.protobuf.gwt.SafeUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -1702,7 +1703,14 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
   public static <ContainingT extends Message, T>
       GeneratedExtension<ContainingT, T> newFileScopedGeneratedExtension(
           final Class<?> singularType, final Message defaultInstance) {
-    throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage newFileScopedGeneratedExtension(..)");
+    // For extensions scoped within a file, we rely on the outer class's
+    // static initializer to call internalInit() on the extension when the
+    // descriptor is available.
+    return new GeneratedExtension<>(
+        null, // ExtensionDescriptorRetriever is initialized in internalInit();
+        singularType,
+        defaultInstance,
+        Extension.ExtensionType.IMMUTABLE);
   }
 
   /**
@@ -1749,16 +1757,50 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
         Class<?> singularType,
         Message messageDefaultInstance,
         ExtensionType extensionType) {
-      throw new UnsupportedOperationException("GeneratedExtension");
+      if (false
+          && !false) {
+        throw new IllegalArgumentException(
+            "Bad messageDefaultInstance for " + singularType.getName());
+      }
+      this.descriptorRetriever = descriptorRetriever;
+      this.singularType = singularType;
+      this.messageDefaultInstance = messageDefaultInstance;
+
+      if (false) {
+        this.enumValueOf = null;
+        this.enumGetValueDescriptor = null;
+      } else {
+        this.enumValueOf = null;
+        this.enumGetValueDescriptor = null;
+      }
+      this.extensionType = extensionType;
     }
 
     /** For use by generated code only. */
     public void internalInit(final FieldDescriptor descriptor) {
-      throw new UnsupportedOperationException("internalInit");
+      if (descriptorRetriever != null) {
+        throw new IllegalStateException("Already initialized.");
+      }
+      descriptorRetriever =
+          new ExtensionDescriptorRetriever() {
+            public FieldDescriptor getDescriptor() {
+              return descriptor;
+            }
+          };
     }
 
+    private ExtensionDescriptorRetriever descriptorRetriever;
+    private final Class<?> singularType;
+    private final Message messageDefaultInstance;
+    private final Object enumValueOf;
+    private final Object enumGetValueDescriptor;
+    private final ExtensionType extensionType;
+
     public FieldDescriptor getDescriptor() {
-      throw new UnsupportedOperationException("getDescriptor");
+      if (descriptorRetriever == null) {
+        throw new IllegalStateException("getDescriptor() called before internalInit()");
+      }
+      return descriptorRetriever.getDescriptor();
     }
 
     /**
@@ -1766,11 +1808,11 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * message.
      */
     public Message getMessageDefaultInstance() {
-      throw new UnsupportedOperationException("getMessageDefaultInstance");
+      return messageDefaultInstance;
     }
 
     protected ExtensionType getExtensionType() {
-      throw new UnsupportedOperationException("getExtensionType");
+      return extensionType;
     }
 
     /**
@@ -1779,7 +1821,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * use the generated enum type.
      */
     protected Object fromReflectionType(final Object value) {
-      throw new UnsupportedOperationException("fromReflectionType");
+      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$GeneratedExtension fromReflectionType(..)");
     }
 
     /**
@@ -1787,7 +1829,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * single element.
      */
     protected Object singularFromReflectionType(final Object value) {
-      throw new UnsupportedOperationException("singularFromReflectionType");
+      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$GeneratedExtension singularFromReflectionType(..)");
     }
 
     /**
@@ -1796,7 +1838,21 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * use the generated enum type.
      */
     protected Object toReflectionType(final Object value) {
-      throw new UnsupportedOperationException("toReflectionType");
+      FieldDescriptor descriptor = getDescriptor();
+      if (descriptor.isRepeated()) {
+        if (descriptor.getJavaType() == FieldDescriptor.JavaType.ENUM) {
+          // Must convert the whole list.
+          final List<Object> result = new ArrayList<>();
+          for (final Object element : (List<?>) value) {
+            result.add(singularToReflectionType(element));
+          }
+          return result;
+        } else {
+          return value;
+        }
+      } else {
+        return singularToReflectionType(value);
+      }
     }
 
     /**
@@ -1804,25 +1860,52 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * single element.
      */
     protected Object singularToReflectionType(final Object value) {
-      throw new UnsupportedOperationException("singularToReflectionType");
+      FieldDescriptor descriptor = getDescriptor();
+      switch (descriptor.getJavaType()) {
+        case ENUM:
+          return invokeOrDie(enumGetValueDescriptor, value);
+        default:
+          return value;
+      }
     }
 
     public int getNumber() {
-      throw new UnsupportedOperationException("getNumber");
+      return getDescriptor().getNumber();
     }
 
     public WireFormat.FieldType getLiteType() {
-      throw new UnsupportedOperationException("getLiteType");
+      return getDescriptor().getLiteType();
     }
 
     public boolean isRepeated() {
-      throw new UnsupportedOperationException("isRepeated");
+      return getDescriptor().isRepeated();
     }
 
     @SuppressWarnings("unchecked")
     public T getDefaultValue() {
-      throw new UnsupportedOperationException("getDefaultValue");
+      if (isRepeated()) {
+        return (T) Collections.emptyList();
+      }
+      if (getDescriptor().getJavaType() == FieldDescriptor.JavaType.MESSAGE) {
+        return (T) messageDefaultInstance;
+      }
+      return (T) singularFromReflectionType(getDescriptor().getDefaultValue());
     }
+  }
+
+  // =================================================================
+
+  /** Calls Class.getMethod and throws a RuntimeException if it fails. */
+  private static Object getMethodOrDie(
+      final Class<?> clazz, final String name, final Class<?>... params) {
+    throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage getMethodOrDie(..)");
+  }
+
+  /** Calls invoke and throws a RuntimeException if it fails. */
+  @CanIgnoreReturnValue
+  private static Object invokeOrDie(
+      final Object method, final Object object, final Object... params) {
+    throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage invokeOrDie(..)");
   }
 
   /**
@@ -1870,7 +1953,8 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
         final String[] camelCaseNames,
         final Class<? extends GeneratedMessage> messageClass,
         final Class<? extends Builder<?>> builderClass) {
-      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)");
+      this(descriptor, camelCaseNames);
+      ensureFieldAccessorsInitialized(messageClass, builderClass);
     }
 
     /**
@@ -1878,7 +1962,11 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
      * FieldAccessors.
      */
     public FieldAccessorTable(final Descriptor descriptor, final String[] camelCaseNames) {
-      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)");
+      this.descriptor = descriptor;
+      this.camelCaseNames = camelCaseNames;
+      fields = new FieldAccessor[descriptor.getFieldCount()];
+      oneofs = new OneofAccessor[descriptor.getOneofCount()];
+      initialized = false;
     }
 
     /**
@@ -1891,7 +1979,7 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
     @CanIgnoreReturnValue
     public FieldAccessorTable ensureFieldAccessorsInitialized(
         Class<? extends GeneratedMessage> messageClass, Class<? extends Builder<?>> builderClass) {
-      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)");
+      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable ensureFieldAccessorsInitialized(..)");
     }
 
     private final Descriptor descriptor;
@@ -1902,12 +1990,22 @@ public abstract class GeneratedMessage extends AbstractMessage implements Serial
 
     /** Get the FieldAccessor for a particular field. */
     private FieldAccessor getField(final FieldDescriptor field) {
-      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)");
+      if (field.getContainingType() != descriptor) {
+        throw new IllegalArgumentException("FieldDescriptor does not match message type.");
+      } else if (field.isExtension()) {
+        // If this type had extensions, it would subclass ExtendableMessage,
+        // which overrides the reflection interface to handle extensions.
+        throw new IllegalArgumentException("This type does not have extensions.");
+      }
+      return fields[field.getIndex()];
     }
 
     /** Get the OneofAccessor for a particular oneof. */
     private OneofAccessor getOneof(final OneofDescriptor oneof) {
-      throw new UnsupportedOperationException("com.google.protobuf.GeneratedMessage$FieldAccessorTable *(..)");
+      if (oneof.getContainingType() != descriptor) {
+        throw new IllegalArgumentException("OneofDescriptor does not match message type.");
+      }
+      return oneofs[oneof.getIndex()];
     }
 
     /**

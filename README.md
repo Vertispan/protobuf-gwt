@@ -27,8 +27,9 @@ released versions:
 | 3.25.4 | 3.25.4-1     | Initial release, with an internal copy of StaticImpls rather than shared     |
 | 3.25.4 | 3.25.4-2     | Corrected License to correctly follow protobuf-java's instead of relicensing |
 | 3.25.4 | 3.25.4-3     | Restored WrappersProto types, for downstream projects that use them          |
-| 3.25.8 | 3.25.8-1     | Updated to protobuf-java 3.25.8                                             |
-| 4.33.2 | 4.33.2-1     | Updated to protobuf-java 4.33.2                                             |
+| 3.25.8 | 3.25.8-1     | Updated to protobuf-java 3.25.8                                              |
+| 4.33.2 | 4.33.2-1     | Updated to protobuf-java 4.33.2                                              |
+| 4.33.2 | 4.33.2-2     | Protobuf 4.x requires more metadata, restore internal methods to support this |
 
 Other intermediate versions can be tested and released upon request.
 

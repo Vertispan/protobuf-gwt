@@ -193,22 +193,52 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
 
   /** Add an extension from a generated file to the registry. */
   public void add(final Extension<?, ?> extension) {
-    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+    if (extension.getExtensionType() != Extension.ExtensionType.IMMUTABLE
+        && extension.getExtensionType() != Extension.ExtensionType.MUTABLE) {
+      // do not support other extension types. ignore
+      return;
+    }
+    add(newExtensionInfo(extension), extension.getExtensionType());
   }
 
   /** Add an extension from a generated file to the registry. */
   public void add(final GeneratedMessage.GeneratedExtension<?, ?> extension) {
-    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+    add((Extension<?, ?>) extension);
+  }
+
+  static ExtensionInfo newExtensionInfo(final Extension<?, ?> extension) {
+    if (extension.getDescriptor().getJavaType() == FieldDescriptor.JavaType.MESSAGE) {
+      if (extension.getMessageDefaultInstance() == null) {
+        throw new IllegalStateException(
+            "Registered message-type extension had null default instance: "
+                + extension.getDescriptor().getFullName());
+      }
+      return new ExtensionInfo(
+          extension.getDescriptor(), (Message) extension.getMessageDefaultInstance());
+    } else {
+      return new ExtensionInfo(extension.getDescriptor(), null);
+    }
   }
 
   /** Add a non-message-type extension to the registry by descriptor. */
   public void add(final FieldDescriptor type) {
-    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+    if (type.getJavaType() == FieldDescriptor.JavaType.MESSAGE) {
+      throw new IllegalArgumentException(
+          "ExtensionRegistry.add() must be provided a default instance when "
+              + "adding an embedded message extension.");
+    }
+    ExtensionInfo info = new ExtensionInfo(type, null);
+    add(info, Extension.ExtensionType.IMMUTABLE);
+    add(info, Extension.ExtensionType.MUTABLE);
   }
 
   /** Add a message-type extension to the registry by descriptor. */
   public void add(final FieldDescriptor type, final Message defaultInstance) {
-    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+    if (type.getJavaType() != FieldDescriptor.JavaType.MESSAGE) {
+      throw new IllegalArgumentException(
+          "ExtensionRegistry.add() provided a default instance for a non-message extension.");
+    }
+      add(new ExtensionInfo(type, defaultInstance), Extension.ExtensionType.IMMUTABLE);
   }
 
   // =================================================================
@@ -246,7 +276,44 @@ public class ExtensionRegistry extends ExtensionRegistryLite {
   static final ExtensionRegistry EMPTY_REGISTRY = new ExtensionRegistry(true);
 
   private void add(final ExtensionInfo extension, final Extension.ExtensionType extensionType) {
-    throw new UnsupportedOperationException("com.google.protobuf.ExtensionRegistry add(..)");
+    if (!extension.descriptor.isExtension()) {
+      throw new IllegalArgumentException(
+          "ExtensionRegistry.add() was given a FieldDescriptor for a regular "
+              + "(non-extension) field.");
+    }
+
+    Map<String, ExtensionInfo> extensionsByName;
+    Map<DescriptorIntPair, ExtensionInfo> extensionsByNumber;
+    switch (extensionType) {
+      case IMMUTABLE:
+        extensionsByName = immutableExtensionsByName;
+        extensionsByNumber = immutableExtensionsByNumber;
+        break;
+      case MUTABLE:
+        extensionsByName = mutableExtensionsByName;
+        extensionsByNumber = mutableExtensionsByNumber;
+        break;
+      default:
+        // Ignore the unknown supported type.
+        return;
+    }
+
+    extensionsByName.put(extension.descriptor.getFullName(), extension);
+    extensionsByNumber.put(
+        new DescriptorIntPair(
+            extension.descriptor.getContainingType(), extension.descriptor.getNumber()),
+        extension);
+
+    final FieldDescriptor field = extension.descriptor;
+    if (field.getContainingType().getOptions().getMessageSetWireFormat()
+        && field.getType() == FieldDescriptor.Type.MESSAGE
+        && field.isOptional()
+        && field.getExtensionScope() == field.getMessageType()) {
+      // This is an extension of a MessageSet type defined within the extension
+      // type's own scope.  For backwards-compatibility, allow it to be looked
+      // up by type name.
+      extensionsByName.put(field.getMessageType().getFullName(), extension);
+    }
   }
 
   /** A (GenericDescriptor, int) pair, used as a map key. */
